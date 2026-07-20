@@ -75,24 +75,27 @@
         </field>
     </record>
 
-    <record id="view_boq_variation_order_search" model="ir.ui.view">
-        <field name="name">boq.variation.order.search</field>
-        <field name="model">boq.variation.order</field>
-        <field name="arch" type="xml">
-            <search string="Search Variation Orders">
-                <field name="name"/>
-                <field name="project_id"/>
-                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
-                <filter string="Pending Approval" name="pending"
-                        domain="[('state', 'in', ('submitted', 'approved_l1'))]"/>
-                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
-                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
+<!--    <record id="view_boq_variation_order_search" model="ir.ui.view">-->
+<!--        <field name="name">boq.variation.order.search</field>-->
+<!--        <field name="model">boq.variation.order</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <search string="Search Variation Orders">-->
+<!--                <field name="name"/>-->
+<!--                <field name="project_id"/>-->
+<!--                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>-->
+<!--                <filter-->
+<!--                        string="Pending Approval"-->
+<!--                        name="pending"-->
+<!--                        domain="[('state','in',['submitted','approved_l1'])]"-->
+<!--                />-->
+<!--                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>-->
+<!--                <group expand="0" string="Group By">-->
+<!--                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>-->
+<!--                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>-->
+<!--                </group>-->
+<!--            </search>-->
+<!--        </field>-->
+<!--    </record>-->
 
     <record id="action_boq_variation_order" model="ir.actions.act_window">
         <field name="name">Variation Orders</field>

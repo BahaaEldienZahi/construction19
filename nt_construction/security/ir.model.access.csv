@@ -14,4 +14,10 @@ access_boq_payment_certificate_manager,boq.payment.certificate.manager,model_boq
 access_boq_payment_certificate_line_user,boq.payment.certificate.line.user,model_boq_payment_certificate_line,base.group_user,1,1,1,0
 access_boq_payment_certificate_line_manager,boq.payment.certificate.line.manager,model_boq_payment_certificate_line,project.group_project_manager,1,1,1,1
 access_project_handover,project.handover.manager,model_project_handover,project.group_project_manager,1,1,1,1
+access_project_handover_punch_item,project.handover.punch.item.manager,model_project_handover_punch_item,project.group_project_manager,1,1,1,1
 access_site_daily_report,site.daily.report.manager,model_site_daily_report,project.group_project_manager,1,1,1,1
+access_site_daily_report_manpower,site.daily.report.manpower.manager,model_site_daily_report_manpower,project.group_project_manager,1,1,1,1
+access_site_daily_report_equipment,site.daily.report.equipment.manager,model_site_daily_report_equipment,project.group_project_manager,1,1,1,1
+access_subcontract_agreement,subcontract.agreement.manager,model_subcontract_agreement,project.group_project_manager,1,1,1,1
+access_subcontract_agreement_line,subcontract.agreement.line.manager,model_subcontract_agreement_line,project.group_project_manager,1,1,1,1
+access_work_measurement,work.measurement.manager,model_work_measurement,project.group_project_manager,1,1,1,1

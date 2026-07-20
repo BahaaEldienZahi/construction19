@@ -26,6 +26,10 @@ class BoqLineProgress(models.Model):
         'site.daily.report', string='Site Daily Report', ondelete='set null', index=True,
         help='التقرير اليومي (السركي) اللي اتسجلت فيه الكمية دي، لو موجود',
     )
+    work_measurement_id = fields.Many2one(
+        'work.measurement', string='Work Measurement', ondelete='set null', index=True,
+        help='قياس العمل المرتبط بهذه الكمية المنفذة، لو موجود',
+    )
 
     @api.constrains('boq_line_id')
     def _check_leaf_line_only(self):
