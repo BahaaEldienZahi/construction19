@@ -8,3 +8,5 @@ from . import boq_variation_order
 from . import boq_payment_certificate
 from . import project_handover
 from . import site_daily_report
+from . import subcontract_agreement
+from . import work_measurement
