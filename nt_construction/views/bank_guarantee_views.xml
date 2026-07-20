@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ BANK GUARANTEE ============ -->
+
+    <record id="view_bank_guarantee_form" model="ir.ui.view">
+        <field name="name">bank.guarantee.form</field>
+        <field name="model">bank.guarantee</field>
+        <field name="arch" type="xml">
+            <form string="Bank Guarantee">
+                <header>
+                    <button name="action_issue" string="Issue" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_extend" string="Extend" type="object"
+                            invisible="state not in ('issued', 'extended')"/>
+                    <button name="action_return" string="Return" type="object"
+                            class="btn-success" invisible="state not in ('issued', 'extended')"/>
+                    <button name="action_claim" string="Claim" type="object"
+                            class="btn-danger" invisible="state not in ('issued', 'extended')"/>
+                    <button name="action_expire" string="Mark Expired" type="object"
+                            invisible="state not in ('issued', 'extended')"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,issued,returned,expired"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="guarantee_type"/>
+                            <field name="project_id"/>
+                            <field name="tender_id" invisible="not tender_id"/>
+                            <field name="beneficiary_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="bank_id"/>
+                            <field name="bank_branch"/>
+                            <field name="reference_number"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="amount"/>
+                            <field name="percentage"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="issue_date"/>
+                            <field name="expiry_date"/>
+                        </group>
+                        <group invisible="state not in ('claimed')">
+                            <field name="claim_date"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1" placeholder="ملاحظات..."/>
+                    </group>
+                    <field name="attachment_ids" widget="many2many_binary" string="Attachments"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_bank_guarantee_list" model="ir.ui.view">
+        <field name="name">bank.guarantee.list</field>
+        <field name="model">bank.guarantee</field>
+        <field name="arch" type="xml">
+            <list string="Bank Guarantees" decoration-success="state == 'returned'"
+                  decoration-danger="state in ('claimed', 'expired')"
+                  decoration-info="state == 'issued'">
+                <field name="name"/>
+                <field name="guarantee_type"/>
+                <field name="project_id"/>
+                <field name="bank_id"/>
+                <field name="amount" sum="Total"/>
+                <field name="issue_date"/>
+                <field name="expiry_date"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'returned'"
+                       decoration-danger="state in ('claimed', 'expired')"
+                       decoration-info="state == 'issued'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bank_guarantee_search" model="ir.ui.view">
+        <field name="name">bank.guarantee.search</field>
+        <field name="model">bank.guarantee</field>
+        <field name="arch" type="xml">
+            <search string="Search Bank Guarantees">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="bank_id"/>
+                <field name="beneficiary_id"/>
+                <filter string="Active" name="active" domain="[('state', 'in', ('issued', 'extended'))]"/>
+                <filter string="About to Expire" name="about_to_expire"
+                        domain="[('expiry_date', '&lt;=', (context_today() + relativedelta(days=30)).strftime('%Y-%m-%d')), ('state', 'in', ('issued', 'extended'))]"/>
+                <filter string="Returned" name="returned" domain="[('state', '=', 'returned')]"/>
+                <filter string="Claimed" name="claimed" domain="[('state', '=', 'claimed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Type" name="group_type" context="{'group_by': 'guarantee_type'}"/>
+                    <filter string="Bank" name="group_bank" context="{'group_by': 'bank_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_bank_guarantee" model="ir.actions.act_window">
+        <field name="name">Bank Guarantees</field>
+        <field name="res_model">bank.guarantee</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

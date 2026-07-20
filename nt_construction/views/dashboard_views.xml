@@ -11,6 +11,8 @@
                 <field name="total_contracted" type="measure"/>
                 <field name="committed_amount" type="measure"/>
                 <field name="amount_executed_cumulative" type="measure"/>
+                <field name="actual_cost" type="measure"/>
+                <field name="cost_variance" type="measure"/>
             </pivot>
         </field>
     </record>

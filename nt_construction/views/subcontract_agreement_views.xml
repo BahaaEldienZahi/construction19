@@ -1,235 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- list View -->
-    <record id="view_subcontract_agreement_list" model="ir.ui.view">
-        <field name="name">subcontract.agreement.list</field>
-        <field name="model">subcontract.agreement</field>
-        <field name="arch" type="xml">
-            <list string="Subcontract Agreements">
-                <field name="name"/>
-                <field name="date"/>
-                <field name="project_id"/>
-                <field name="partner_id"/>
-                <field name="contract_value"/>
-                <field name="total_value"/>
-                <field name="start_date"/>
-                <field name="completion_date"/>
-            </list>
-        </field>
-    </record>
+    <!-- ============ SUBCONTRACT AGREEMENT ============ -->
 
-
-    <!-- Search View -->
-<!--    <record id="view_subcontract_agreement_search" model="ir.ui.view">-->
-<!--        <field name="name">subcontract.agreement.search</field>-->
-<!--        <field name="model">subcontract.agreement</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <search string="Search Subcontract Agreements">-->
-<!--                <field name="name"/>-->
-<!--                <field name="project_id"/>-->
-<!--                <field name="partner_id"/>-->
-<!--                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>-->
-<!--                <filter string="Pending Approval" name="pending" domain="[('state', 'in', ('submitted', 'approved_l1'))]"/>-->
-<!--                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>-->
-<!--                <filter string="Current Month" name="current_month" domain="[('date','>=',context_today().replace(day=1))]"/>-->
-<!--                <group expand="0" string="Group By">-->
-<!--                    <filter string="Project" name="group_project" context="{&quot;group_by&quot;:&quot;project_id&quot;}"/>-->
-<!--                    <filter string="Subcontractor" name="group_partner" context="{&quot;group_by&quot;:&quot;partner_id&quot;}"/>-->
-<!--                    <filter string="Status" name="group_state" context="{&quot;group_by&quot;:&quot;state&quot;}"/>-->
-<!--                    <filter string="Date" name="group_date" context="{&quot;group_by&quot;:&quot;date:month&quot;}"/>-->
-<!--                </group>-->
-<!--            </search>-->
-<!--        </field>-->
-<!--    </record>-->
-
-
-
-    <!-- Form View -->
     <record id="view_subcontract_agreement_form" model="ir.ui.view">
         <field name="name">subcontract.agreement.form</field>
         <field name="model">subcontract.agreement</field>
         <field name="arch" type="xml">
-
             <form string="Subcontract Agreement">
-
                 <header>
-
-                    <!-- Submit -->
-                    <button name="action_submit_for_approval"
-                            string="Submit For Approval"
-                            type="object"
-                            class="oe_highlight"
-                            invisible="state != 'draft'"/>
-
-
-                    <!-- Level 1 Approval -->
-                    <button name="action_approve_l1"
-                            string="Approve Level 1"
-                            type="object"
-                            class="oe_highlight"
-                            invisible="state != 'submitted'"/>
-
-
-                    <!-- Final Approval -->
-                    <button name="action_approve_l2"
-                            string="Final Approve"
-                            type="object"
-                            class="oe_highlight"
-                            invisible="state != 'approved_l1'"/>
-
-
-                    <!-- Reject -->
-                    <button name="action_reject"
-                            string="Reject"
-                            type="object"
-                            class="btn-secondary"
-                            invisible="state not in ['submitted','approved_l1']"/>
-
-
-                    <!-- Cancel -->
-                    <button name="action_cancel"
-                            string="Cancel"
-                            type="object"
-                            class="btn-secondary"
-                            invisible="state == 'approved'"/>
-
-
-                    <field name="state"
-                           widget="statusbar"
-                           statusbar_visible="draft,submitted,approved_l1,approved,rejected,cancelled"/>
-
+                    <button name="action_submit_for_approval" string="Submit for Approval" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approve_l1" string="Approve (L1)" type="object"
+                            class="btn-primary" invisible="state != 'submitted'"
+                    />
+                    <button name="action_approve_l2" string="Final Approve (L2)" type="object"
+                            class="btn-success" invisible="state != 'approved_l1'"
+                    />
+                    <button name="action_reject" string="Reject" type="object"
+                            invisible="state not in ('submitted', 'approved_l1')"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                            invisible="state != 'rejected'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,submitted,approved_l1,approved"/>
                 </header>
-
-
                 <sheet>
-
                     <div class="oe_title">
-                        <label for="name"/>
-                        <h1>
-                            <field name="name"/>
-                        </h1>
+                        <h1><field name="name" readonly="1"/></h1>
                     </div>
-
-
                     <group>
-
                         <group>
-                            <field name="project_id"/>
+                            <field name="project_id" readonly="state != 'draft'"/>
                             <field name="partner_id"/>
                             <field name="date"/>
-                            <field name="company_id" invisible="1"/>
-                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-
-
                         <group>
                             <field name="contract_value"/>
-                            <field name="total_value"/>
                             <field name="retention_percentage"/>
+                            <field name="start_date"/>
+                            <field name="completion_date"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
                         </group>
-
                     </group>
-
-
-                    <group string="Contract Period">
-
-                        <field name="start_date"/>
-                        <field name="completion_date"/>
-
+                    <group string="Scope of Work">
+                        <field name="scope_of_work" nolabel="1" placeholder="وصف نطاق عمل المقاول الباطن..."/>
                     </group>
-
-
-
                     <notebook>
-
-
-                        <page string="Scope Of Work">
-
-                            <field name="scope_of_work"
-                                   placeholder="Enter scope of work..."/>
-
-                        </page>
-
-
-
-                        <page string="BOQ Lines">
-
-                            <field name="line_ids">
-
+                        <page string="Agreement Lines">
+                            <field name="line_ids" readonly="state != 'draft'">
                                 <list editable="bottom">
-
                                     <field name="boq_line_id"/>
-
-                                    <field name="code"/>
-
-                                    <field name="name"/>
-
-                                    <field name="uom_id"/>
-
+                                    <field name="code" readonly="1"/>
+                                    <field name="name" readonly="1"/>
+                                    <field name="uom_id" readonly="1"/>
                                     <field name="quantity"/>
-
                                     <field name="unit_price"/>
-
-                                    <field name="subtotal"
-                                           readonly="1"/>
-
+                                    <field name="subtotal" sum="Total"/>
                                 </list>
-
                             </field>
-
-
-                            <group class="oe_subtotal_footer oe_right">
-
-                                <field name="total_value"
-                                       readonly="1"/>
-
-                            </group>
-
-
                         </page>
-
-
                     </notebook>
-
-
                 </sheet>
-
-
                 <chatter/>
-
             </form>
-
         </field>
     </record>
 
-
-
-
-    <!-- Action -->
-    <record id="action_subcontract_agreement" model="ir.actions.act_window">
-
-        <field name="name">Subcontract Agreements</field>
-        <field name="res_model">subcontract.agreement</field>
-
-        <field name="view_mode">list,form</field>
-
+    <record id="view_subcontract_agreement_list" model="ir.ui.view">
+        <field name="name">subcontract.agreement.list</field>
+        <field name="model">subcontract.agreement</field>
+        <field name="arch" type="xml">
+            <list string="Subcontract Agreements" decoration-success="state == 'approved'"
+                  decoration-danger="state == 'rejected'">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="partner_id"/>
+                <field name="contract_value" sum="Total Value"/>
+                <field name="date"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'rejected'"
+                       decoration-info="state in ('submitted', 'approved_l1')"/>
+            </list>
+        </field>
     </record>
 
-    <menuitem
-            id="menu_subcontract_root"
-            name="Subcontracting"
-            parent="nt_construction.menu_tender_root"
-            sequence="50"/>
+    <record id="view_subcontract_agreement_search" model="ir.ui.view">
+        <field name="name">subcontract.agreement.search</field>
+        <field name="model">subcontract.agreement</field>
+        <field name="arch" type="xml">
+            <search string="Search Subcontract Agreements">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="partner_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Pending Approval" name="pending"
+                        domain="[('state', 'in', ('submitted', 'approved_l1'))]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Subcontractor" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
+    <record id="action_subcontract_agreement" model="ir.actions.act_window">
+        <field name="name">Subcontract Agreements</field>
+        <field name="res_model">subcontract.agreement</field>
+        <field name="view_mode">list,form</field>
+    </record>
 
-    <menuitem
-            id="menu_subcontract_agreement"
-            name="Agreements"
-            parent="menu_subcontract_root"
-            action="action_subcontract_agreement"
-            sequence="10"/>
-
-
+    <menuitem id="menu_subcontract_agreement" name="Subcontract Agreements"
+              parent="menu_commercial"
+              action="action_subcontract_agreement" sequence="30"/>
 
 </odoo>

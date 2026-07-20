@@ -91,25 +91,58 @@ class BoqLine(models.Model):
     # Cost control: committed cost from subcontractor / material POs
     # ---------------------------------------------------------------
     po_line_ids = fields.One2many('purchase.order.line', 'boq_line_id', string='Purchase Order Lines')
-    # subcontract_line_ids = fields.One2many(
-    #     'subcontract.agreement.line', 'boq_line_id', string='Subcontract Agreement Lines',
-    # )
+    subcontract_line_ids = fields.One2many(
+        'subcontract.agreement.line', 'boq_line_id', string='Subcontract Agreement Lines',
+    )
     committed_amount = fields.Monetary(
         string='Committed Cost', currency_field='currency_id',
         compute='_compute_committed_amount', store=True,
         help='إجمالي قيمة أوامر الشراء (خامات/معدات) المؤكدة + اتفاقيات المقاولة من الباطن المعتمدة والمرتبطة بالبند ده',
     )
+    actual_cost = fields.Monetary(
+        string='Actual Cost', currency_field='currency_id',
+        compute='_compute_actual_cost', store=True,
+        help='التكلفة الفعلية من الفواتير المستلمة (vendor bills) المرتبطة بأوامر الشراء للمشروع',
+    )
+    cost_variance = fields.Monetary(
+        string='Cost Variance', currency_field='currency_id',
+        compute='_compute_cost_variance', store=True,
+        help='الفرق بين المتعاقد عليه والفعلي: قيمة البند - التكلفة الفعلية',
+    )
 
-    # @api.depends(
-    #     'po_line_ids.price_subtotal', 'po_line_ids.order_id.state',
-    #     'subcontract_line_ids.subtotal', 'subcontract_line_ids.agreement_id.state',
-    # )
-    # def _compute_committed_amount(self):
-    #     for line in self:
-    #         confirmed_po = line.po_line_ids.filtered(lambda l: l.order_id.state in ('purchase', 'done'))
-    #         confirmed_sub = line.subcontract_line_ids.filtered(lambda l: l.agreement_id.state == 'approved')
-    #         line.committed_amount = sum(confirmed_po.mapped('price_subtotal')) + sum(
-    #             confirmed_sub.mapped('subtotal'))
+    @api.depends(
+        'po_line_ids.price_subtotal', 'po_line_ids.order_id.state',
+        'subcontract_line_ids.subtotal', 'subcontract_line_ids.agreement_id.state',
+    )
+    def _compute_committed_amount(self):
+        for line in self:
+            confirmed_po = line.po_line_ids.filtered(lambda l: l.order_id.state in ('purchase', 'done'))
+            confirmed_sub = line.subcontract_line_ids.filtered(lambda l: l.agreement_id.state == 'approved')
+            line.committed_amount = sum(confirmed_po.mapped('price_subtotal')) + sum(
+                confirmed_sub.mapped('subtotal'))
+
+    @api.depends(
+        'po_line_ids.order_id.invoice_line_ids.price_subtotal',
+        'po_line_ids.order_id.invoice_ids.move_type',
+        'po_line_ids.order_id.invoice_ids.state',
+    )
+    def _compute_actual_cost(self):
+        for line in self:
+            total = 0.0
+            for po_line in line.po_line_ids:
+                order = po_line.order_id
+                for inv in order.invoice_ids.filtered(
+                    lambda i: i.move_type == 'in_invoice' and i.state == 'posted'
+                ):
+                    for inv_line in inv.invoice_line_ids:
+                        if inv_line.purchase_line_id == po_line:
+                            total += inv_line.price_subtotal
+            line.actual_cost = total
+
+    @api.depends('amount_executed_cumulative', 'actual_cost')
+    def _compute_cost_variance(self):
+        for line in self:
+            line.cost_variance = line.amount_executed_cumulative - line.actual_cost
 
     # ---------------------------------------------------------------
     # Compute methods

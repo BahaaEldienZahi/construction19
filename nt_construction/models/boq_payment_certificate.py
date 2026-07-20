@@ -72,6 +72,20 @@ class BoqPaymentCertificate(models.Model):
                     'note': _('Auto-created from Payment Certificate %s') % cert.name,
                 })
 
+    def action_load_from_wm(self):
+        """Open wizard to select a confirmed Work Measurement and auto-fill certificate lines."""
+        self.ensure_one()
+        if self.state != 'draft':
+            raise UserError(_('Can only load from Work Measurement when the certificate is in draft state.'))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Load from Work Measurement'),
+            'res_model': 'load.certificate.from.wm.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_certificate_id': self.id},
+        }
+
     def action_view_invoice(self):
         self.ensure_one()
         return {

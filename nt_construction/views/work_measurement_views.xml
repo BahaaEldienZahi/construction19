@@ -1,236 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- ============ WORK MEASUREMENT ============ -->
 
-    <!-- list View -->
+    <record id="view_work_measurement_form" model="ir.ui.view">
+        <field name="name">work.measurement.form</field>
+        <field name="model">work.measurement</field>
+        <field name="arch" type="xml">
+            <form string="Work Measurement">
+                <header>
+                    <button name="action_confirm" string="Confirm Measurement" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_generate_summary" string="Generate BOQ Summary" type="object"
+                            class="btn-info" invisible="state != 'confirmed'"/>
+                    <button name="action_link_to_certificate" string="Link to Certificate" type="object"
+                            class="btn-success" invisible="state != 'confirmed' or payment_certificate_id"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                            invisible="state != 'confirmed'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,linked"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id" readonly="state != 'draft'"/>
+                            <field name="date"/>
+                            <field name="period_from"/>
+                            <field name="period_to"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="total_executed_value" readonly="1"/>
+                            <field name="payment_certificate_id" readonly="1"
+                                   invisible="not payment_certificate_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Daily Reports">
+                            <field name="daily_report_ids" readonly="state != 'draft'">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="total_manpower_count"/>
+                                    <field name="total_amount_executed_today"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Progress Summary">
+                            <field name="progress_ids" readonly="state != 'draft'">
+                                <list>
+                                    <field name="boq_line_id"/>
+                                    <field name="quantity_executed"/>
+                                    <field name="period_name"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="BOQ Summary (Aggregated)">
+                            <field name="summary_line_ids" readonly="1">
+                                <list>
+                                    <field name="boq_line_id"/>
+                                    <field name="quantity_executed"/>
+                                    <field name="unit_price" readonly="1"/>
+                                    <field name="amount" sum="Total"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
     <record id="view_work_measurement_list" model="ir.ui.view">
         <field name="name">work.measurement.list</field>
         <field name="model">work.measurement</field>
         <field name="arch" type="xml">
             <list string="Work Measurements">
-
                 <field name="name"/>
-                <field name="date"/>
                 <field name="project_id"/>
+                <field name="date"/>
                 <field name="period_from"/>
                 <field name="period_to"/>
-                <field name="total_executed_value"/>
-                <field name="state"/>
-
+                <field name="total_executed_value" sum="Total"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'linked'"
+                       decoration-info="state == 'confirmed'"/>
             </list>
         </field>
     </record>
 
-
-
-    <!-- Search View -->
-<!--    <record id="view_work_measurement_search" model="ir.ui.view">-->
-<!--        <field name="name">work.measurement.search</field>-->
-<!--        <field name="model">work.measurement</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <search string="Search Work Measurements">-->
-<!--                <field name="name"/>-->
-<!--                <field name="project_id"/>-->
-<!--                <field name="state"/>-->
-<!--                <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>-->
-<!--                <filter name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]"/>-->
-<!--                <filter name="linked" string="Linked Certificate" domain="[('state','=','linked')]"/>-->
-<!--                <separator/>-->
-<!--                <filter name="not_billed" string="Not Yet Billed" domain="[('payment_certificate_id', '=', False), ('state', '=', 'confirmed')]"/>-->
-<!--                <group expand="0" string="Group By">-->
-<!--                    <filter name="group_project" string="Project" context="{&quot;group_by&quot;:&quot;project_id&quot;}"/>-->
-<!--                    <filter name="group_state" string="Status" context="{&quot;group_by&quot;:&quot;state&quot;}"/>-->
-<!--                    <filter name="group_date" string="Date" context="{&quot;group_by&quot;:&quot;date:month&quot;}"/>-->
-<!--                </group>-->
-<!--            </search>-->
-<!--        </field>-->
-<!--    </record>-->
-
-
-
-
-    <!-- Form View -->
-    <record id="view_work_measurement_form" model="ir.ui.view">
-
-        <field name="name"> work.measurement.form</field>
-
+    <record id="view_work_measurement_search" model="ir.ui.view">
+        <field name="name">work.measurement.search</field>
         <field name="model">work.measurement</field>
-
-
         <field name="arch" type="xml">
-
-            <form string="Work Measurement">
-                <header>
-
-                    <button
-                            name="action_confirm"
-                            type="object"
-                            string="Confirm"
-                            class="oe_highlight"
-                            invisible="state != 'draft'"/>
-
-
-                    <button
-                            name="action_reset_draft"
-                            type="object"
-                            string="Reset Draft"
-                            invisible="state == 'draft'"/>
-
-
-
-                    <field name="state"
-                           widget="statusbar"
-                           statusbar_visible="draft,confirmed,linked"/>
-
-
-                </header>
-
-
-
-                <sheet>
-
-
-                    <div class="oe_title">
-
-                        <h1>
-                            <field name="name"/>
-                        </h1>
-
-                    </div>
-
-
-
-                    <group>
-
-
-                        <group>
-
-                            <field name="project_id"/>
-
-                            <field name="date"/>
-
-                            <field name="company_id"
-                                   invisible="1"/>
-
-                            <field name="currency_id"
-                                   invisible="1"/>
-
-
-                        </group>
-
-
-
-                        <group>
-
-                            <field name="period_from"/>
-
-                            <field name="period_to"/>
-
-                            <field name="payment_certificate_id"/>
-
-                            <field name="total_executed_value"
-                                   readonly="1"/>
-
-
-                        </group>
-
-
-                    </group>
-
-
-
-
-
-                    <notebook>
-
-
-
-                        <!-- Daily Reports -->
-
-                        <page string="Daily Reports">
-
-
-                            <field name="daily_report_ids">
-
-                                <list>
-
-                                    <field name="name"/>
-
-                                    <field name="date"/>
-
-                                    <field name="project_id"/>
-
-                                    <field name="state"/>
-
-                                </list>
-                            </field>
-                        </page>
-
-                        <!-- Progress -->
-
-                        <page string="Execution Progress">
-
-
-                            <field name="progress_ids">
-
-
-                                <list editable="bottom">
-
-
-                                    <field name="boq_line_id"/>
-
-                                    <field name="quantity_executed"/>
-
-<!--                                    <field name="unit_price"/>-->
-
-<!--                                    <field name="subtotal"/>-->
-
-
-                                </list>
-
-
-                            </field>
-
-
-                        </page>
-
-
-
-                    </notebook>
-
-
-
-                </sheet>
-
-
-
-                <chatter/>
-
-
-            </form>
-
-
+            <search string="Search Work Measurements">
+                <field name="name"/>
+                <field name="project_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Linked to Certificate" name="linked" domain="[('state', '=', 'linked')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
         </field>
-
     </record>
-
-
-
-
-
-
-    <!-- Action -->
 
     <record id="action_work_measurement" model="ir.actions.act_window">
         <field name="name">Work Measurements</field>
         <field name="res_model">work.measurement</field>
         <field name="view_mode">list,form</field>
     </record>
-    <menuitem
-            id="menu_work_measurement"
-            name="Work Measurement"
-            parent="nt_construction.menu_tender_root"
-            action="action_work_measurement"
-            sequence="40"/>
+
+    <menuitem id="menu_work_measurement" name="Work Measurements"
+              parent="menu_project_execution"
+              action="action_work_measurement" sequence="30"/>
 
 </odoo>

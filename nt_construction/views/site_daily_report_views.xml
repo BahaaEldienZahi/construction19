@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Form View -->
+    <!-- ============ SITE DAILY REPORT (SARKY) ============ -->
+
     <record id="view_site_daily_report_form" model="ir.ui.view">
         <field name="name">site.daily.report.form</field>
         <field name="model">site.daily.report</field>
         <field name="arch" type="xml">
-            <form string="Site Daily Report">
+            <form string="Site Daily Report (Sarky)">
                 <header>
                     <button name="action_confirm" string="Confirm Report" type="object"
                             class="btn-primary" invisible="state != 'draft'"/>
                     <button name="action_reset_draft" string="Reset to Draft" type="object"
-                            class="btn-secondary" invisible="state != 'confirmed'"/>
+                            invisible="state != 'confirmed'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
                 </header>
                 <sheet>
@@ -21,8 +22,9 @@
                     <group>
                         <group>
                             <field name="project_id" readonly="state != 'draft'"/>
-                            <field name="date" readonly="state != 'draft'"/>
-                            <field name="user_id" readonly="1"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group>
                             <field name="weather"/>
@@ -33,41 +35,40 @@
                     </group>
                     <notebook>
                         <page string="Manpower">
-                            <field name="manpower_ids" readonly="state != 'draft'">
+                            <field name="manpower_ids">
                                 <list editable="bottom">
                                     <field name="trade"/>
+                                    <field name="is_subcontractor"/>
                                     <field name="headcount"/>
                                     <field name="hours"/>
-                                    <field name="is_subcontractor"/>
-                                    <field name="subcontract_agreement_id" optional="show"/>
-                                    <field name="note" optional="show"/>
+                                    <field name="note"/>
                                 </list>
                             </field>
                         </page>
                         <page string="Equipment">
-                            <field name="equipment_ids" readonly="state != 'draft'">
+                            <field name="equipment_ids">
                                 <list editable="bottom">
                                     <field name="equipment_name"/>
                                     <field name="equipment_type"/>
                                     <field name="count"/>
                                     <field name="hours_worked"/>
-                                    <field name="hours_idle" optional="show"/>
-                                    <field name="idle_reason" optional="show"/>
+                                    <field name="hours_idle"/>
+                                    <field name="idle_reason"/>
                                 </list>
                             </field>
                         </page>
                         <page string="Quantities Executed">
-                            <field name="progress_ids" readonly="state != 'draft'">
+                            <field name="progress_ids">
                                 <list editable="bottom">
-                                    <field name="boq_line_id"/>
+                                    <field name="boq_line_id"
+                                           domain="[('project_id', '=', project_id), ('is_group', '=', False)]"/>
                                     <field name="quantity_executed"/>
-                                    <field name="period_name" optional="show"/>
-                                    <field name="note" optional="show"/>
+                                    <field name="note"/>
                                 </list>
                             </field>
                         </page>
                         <page string="Site Notes">
-                            <field name="site_notes" nolabel="1" placeholder="Site issues, weather events, delays..."/>
+                            <field name="site_notes" placeholder="ملاحظات الموقع، مشاكل، تعليمات..."/>
                         </page>
                     </notebook>
                 </sheet>
@@ -76,61 +77,51 @@
         </field>
     </record>
 
-    <!-- List View -->
     <record id="view_site_daily_report_list" model="ir.ui.view">
         <field name="name">site.daily.report.list</field>
         <field name="model">site.daily.report</field>
         <field name="arch" type="xml">
-            <list string="Site Daily Reports" decoration-success="state == 'confirmed'">
+            <list string="Site Daily Reports">
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="date"/>
-                <field name="weather" optional="show"/>
-                <field name="total_manpower_count" optional="show"/>
-                <field name="total_equipment_hours" optional="show"/>
-                <field name="total_amount_executed_today" sum="Total Executed"/>
                 <field name="user_id" optional="show"/>
-                <field name="state" widget="badge" decoration-success="state == 'confirmed'"/>
+                <field name="weather"/>
+                <field name="total_manpower_count"/>
+                <field name="total_amount_executed_today" sum="Total Executed"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'confirmed'"/>
             </list>
         </field>
     </record>
 
-    <!-- Search View -->
-<!--    <record id="view_site_daily_report_search" model="ir.ui.view">-->
-<!--        <field name="name">site.daily.report.search</field>-->
-<!--        <field name="model">site.daily.report</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <search string="Search Daily Reports">-->
-<!--                <field name="name"/>-->
-<!--                <field name="project_id"/>-->
-<!--                <field name="user_id"/>-->
-<!--                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>-->
-<!--                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>-->
-<!--                <separator/>-->
-<!--                <filter string="Today" name="today" domain="[('date', '=', context_today())]"/>-->
-<!--                <filter string="This Week" name="this_week" domain="[('date', '&gt;=', context_today() - relativedelta(days=7))]"/>-->
-<!--                <separator/>-->
-<!--                <filter string="Rain/Sandstorm" name="bad_weather" domain="[('weather', 'in', ('rain', 'sandstorm'))]"/>-->
-<!--                <group expand="0" string="Group By">-->
-<!--                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>-->
-<!--                    <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>-->
-<!--                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>-->
-<!--                    <filter string="Engineer" name="group_engineer" context="{'group_by': 'user_id'}"/>-->
-<!--                </group>-->
-<!--            </search>-->
-<!--        </field>-->
-<!--    </record>-->
+    <record id="view_site_daily_report_search" model="ir.ui.view">
+        <field name="name">site.daily.report.search</field>
+        <field name="model">site.daily.report</field>
+        <field name="arch" type="xml">
+            <search string="Search Site Daily Reports">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="user_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by': 'date'}" domain="[]"/>
+                    <filter string="Weather" name="group_weather" context="{'group_by': 'weather'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
-    <!-- Action -->
     <record id="action_site_daily_report" model="ir.actions.act_window">
-        <field name="name">Site Daily Reports (Sarky)</field>
+        <field name="name">Site Daily Reports</field>
         <field name="res_model">site.daily.report</field>
         <field name="view_mode">list,form</field>
     </record>
 
     <menuitem id="menu_site_daily_report" name="Daily Reports (Sarky)"
-              parent="nt_construction.menu_tender_root"
-              action="action_site_daily_report" sequence="70"/>
+              parent="menu_project_execution"
+              action="action_site_daily_report" sequence="20"/>
 
 </odoo>
-

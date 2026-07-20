@@ -9,4 +9,11 @@ from . import boq_payment_certificate
 from . import project_handover
 from . import site_daily_report
 from . import subcontract_agreement
+from . import subcontract_payment_certificate
 from . import work_measurement
+from . import material_requisition
+from . import work_inspection
+from . import project_correspondence
+from . import site_progress_photo
+from . import bank_guarantee
+from . import load_certificate_wizard

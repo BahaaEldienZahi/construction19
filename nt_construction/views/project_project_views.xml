@@ -21,6 +21,46 @@
                         invisible="not is_construction_project">
                     <field name="boq_line_count" widget="statinfo" string="BOQ Lines"/>
                 </button>
+                <button name="action_view_subcontract_agreements" type="object"
+                        class="oe_stat_button" icon="fa-handshake-o"
+                        invisible="not is_construction_project">
+                    <field name="subcontract_agreement_count" widget="statinfo" string="Subcontracts"/>
+                </button>
+                <button name="action_view_daily_reports" type="object"
+                        class="oe_stat_button" icon="fa-file-text-o"
+                        invisible="not is_construction_project">
+                    <field name="daily_report_count" widget="statinfo" string="Daily Reports"/>
+                </button>
+                <button name="action_view_handovers" type="object"
+                        class="oe_stat_button" icon="fa-flag-checkered"
+                        invisible="not is_construction_project">
+                    <field name="handover_count" widget="statinfo" string="Handovers"/>
+                </button>
+                <button name="action_view_material_requisitions" type="object"
+                        class="oe_stat_button" icon="fa-cubes"
+                        invisible="not is_construction_project">
+                    <field name="material_requisition_count" widget="statinfo" string="Requisitions"/>
+                </button>
+                <button name="action_view_inspections" type="object"
+                        class="oe_stat_button" icon="fa-check-square-o"
+                        invisible="not is_construction_project">
+                    <field name="inspection_count" widget="statinfo" string="Inspections"/>
+                </button>
+                <button name="action_view_correspondence" type="object"
+                        class="oe_stat_button" icon="fa-envelope-o"
+                        invisible="not is_construction_project">
+                    <field name="correspondence_count" widget="statinfo" string="Letters"/>
+                </button>
+                <button name="action_view_photos" type="object"
+                        class="oe_stat_button" icon="fa-camera"
+                        invisible="not is_construction_project">
+                    <field name="photo_count" widget="statinfo" string="Photos"/>
+                </button>
+                <button name="action_view_guarantees" type="object"
+                        class="oe_stat_button" icon="fa-shield"
+                        invisible="not is_construction_project">
+                    <field name="guarantee_count" widget="statinfo" string="Guarantees"/>
+                </button>
             </xpath>
 
             <!-- Flag + type right after project name -->
@@ -55,6 +95,11 @@
                         <group string="Progress">
                             <field name="boq_percentage_complete" widget="progressbar"/>
                             <field name="task_progress_percentage" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Subcontracting Summary">
+                            <field name="total_subcontracted_committed"/>
                         </group>
                     </group>
                     <group string="Site Address">

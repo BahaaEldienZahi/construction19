@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =========================================================
+         MENU RESTRUCTURING — Hierarchical organized menus
+         ========================================================= -->
+
+    <!-- Parent sub-menus under Tenders & Construction root -->
+    <menuitem id="menu_tender_management" name="Tenders"
+              parent="menu_tender_root" sequence="10"/>
+    <menuitem id="menu_project_execution" name="Project Execution"
+              parent="menu_tender_root" sequence="20"/>
+    <menuitem id="menu_commercial" name="Commercial"
+              parent="menu_tender_root" sequence="30"/>
+    <menuitem id="menu_handover_section" name="Handover &amp; Delivery"
+              parent="menu_tender_root" sequence="40"/>
+
+    <!-- === PROJECT EXECUTION === -->
+    <!-- Construction Projects filter action -->
+    <record id="action_construction_projects" model="ir.actions.act_window">
+        <field name="name">Construction Projects</field>
+        <field name="res_model">project.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_construction_project', '=', True)]</field>
+        <field name="context">{'default_is_construction_project': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                أنشئ أول مشروع إنشاءات
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_construction_projects" name="Construction Projects"
+              parent="menu_project_execution"
+              action="action_construction_projects" sequence="10"/>
+
+    <menuitem id="menu_material_requisition" name="Material Requisitions"
+              parent="menu_project_execution"
+              action="action_material_requisition" sequence="40"/>
+
+    <menuitem id="menu_work_inspection" name="Work Inspections (WIR/MIR)"
+              parent="menu_project_execution"
+              action="action_work_inspection" sequence="50"/>
+
+    <menuitem id="menu_site_progress_photo" name="Progress Photos"
+              parent="menu_project_execution"
+              action="action_site_progress_photo" sequence="60"/>
+
+    <menuitem id="menu_project_correspondence" name="Correspondence"
+              parent="menu_project_execution"
+              action="action_project_correspondence" sequence="70"/>
+
+    <!-- === COMMERCIAL === -->
+    <!-- Bank Guarantees parented under Commercial -->
+    <menuitem id="menu_bank_guarantee" name="Bank Guarantees"
+              parent="menu_commercial"
+              action="action_bank_guarantee" sequence="50"/>
+
+</odoo>

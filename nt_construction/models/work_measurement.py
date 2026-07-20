@@ -38,6 +38,9 @@ class WorkMeasurement(models.Model):
     progress_ids = fields.One2many(
         'boq.line.progress', 'work_measurement_id', string='Progress Entries',
     )
+    summary_line_ids = fields.One2many(
+        'work.measurement.summary', 'measurement_id', string='BOQ Summary',
+    )
     total_executed_value = fields.Monetary(
         string='Total Executed Value', currency_field='currency_id',
         compute='_compute_total_executed', store=True,
@@ -71,3 +74,60 @@ class WorkMeasurement(models.Model):
 
     def action_reset_draft(self):
         self.write({'state': 'draft'})
+
+    def action_generate_summary(self):
+        """Aggregate all progress from linked daily reports into per-BOQ-line summary."""
+        self.ensure_one()
+        self.summary_line_ids.unlink()
+        # Aggregate by BOQ line
+        agg = {}
+        currency = self.currency_id
+        for report in self.daily_report_ids:
+            for prog in report.progress_ids:
+                key = prog.boq_line_id.id
+                if key not in agg:
+                    agg[key] = {
+                        'boq_line_id': prog.boq_line_id.id,
+                        'quantity_executed': 0.0,
+                    }
+                agg[key]['quantity_executed'] += prog.quantity_executed
+        # Create summary lines
+        summary_vals = []
+        for data in agg.values():
+            summary_vals.append((0, 0, {
+                'boq_line_id': data['boq_line_id'],
+                'quantity_executed': data['quantity_executed'],
+            }))
+        if summary_vals:
+            self.write({'summary_line_ids': summary_vals})
+
+    def action_link_to_certificate(self):
+        """Link this measurement to a payment certificate (mark as linked)."""
+        self.ensure_one()
+        self.write({'state': 'linked'})
+
+
+class WorkMeasurementSummary(models.Model):
+    _name = 'work.measurement.summary'
+    _description = 'Work Measurement BOQ Summary Line'
+
+    measurement_id = fields.Many2one(
+        'work.measurement', required=True, ondelete='cascade', index=True,
+    )
+    project_id = fields.Many2one(related='measurement_id.project_id', store=True)
+    currency_id = fields.Many2one(related='measurement_id.currency_id', readonly=True)
+    boq_line_id = fields.Many2one(
+        'boq.line', string='BOQ Line', required=True,
+        domain="[('project_id', '=', project_id), ('is_group', '=', False)]",
+    )
+    quantity_executed = fields.Float(string='Qty Executed', digits='Product Unit of Measure', required=True)
+    unit_price = fields.Monetary(related='boq_line_id.unit_price', readonly=True)
+    amount = fields.Monetary(
+        string='Amount', currency_field='currency_id',
+        compute='_compute_amount', store=True,
+    )
+
+    @api.depends('quantity_executed', 'unit_price')
+    def _compute_amount(self):
+        for line in self:
+            line.amount = line.quantity_executed * line.unit_price

@@ -22,6 +22,9 @@
                 <field name="quantity_contracted" invisible="is_group"/>
                 <field name="unit_price" invisible="is_group"/>
                 <field name="total_contracted" sum="Total"/>
+                <field name="committed_amount" sum="Committed" optional="show"/>
+                <field name="actual_cost" sum="Actual" optional="show"/>
+                <field name="cost_variance" sum="Variance" optional="show"/>
                 <field name="quantity_executed_cumulative" invisible="is_group"/>
                 <field name="percentage_complete" widget="progressbar"/>
             </list>
@@ -56,6 +59,11 @@
                             <field name="amount_executed_cumulative" readonly="1"/>
                             <field name="percentage_complete" widget="progressbar" readonly="1"/>
                         </group>
+                        <group string="Cost Control">
+                            <field name="committed_amount" readonly="1"/>
+                            <field name="actual_cost" readonly="1"/>
+                            <field name="cost_variance" readonly="1"/>
+                        </group>
                         <group string="Tracking">
                             <field name="analytic_account_id"/>
                             <field name="task_id"/>
@@ -79,21 +87,21 @@
         </field>
     </record>
 
-<!--    <record id="view_boq_line_search" model="ir.ui.view">-->
-<!--        <field name="name">boq.line.search</field>-->
-<!--        <field name="model">boq.line</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <search string="Search BOQ Lines">-->
-<!--                <field name="code"/>-->
-<!--                <field name="name"/>-->
-<!--                <filter string="Groups Only" name="groups_only" domain="[('is_group', '=', True)]"/>-->
-<!--                <filter string="Leaf Items Only" name="leaf_only" domain="[('is_group', '=', False)]"/>-->
-<!--                <group expand="0" string="Group By">-->
-<!--                    <filter string="Parent Line" name="group_parent" context="{'group_by': 'parent_id'}"/>-->
-<!--                </group>-->
-<!--            </search>-->
-<!--        </field>-->
-<!--    </record>-->
+    <record id="view_boq_line_search" model="ir.ui.view">
+        <field name="name">boq.line.search</field>
+        <field name="model">boq.line</field>
+        <field name="arch" type="xml">
+            <search string="Search BOQ Lines">
+                <field name="code"/>
+                <field name="name"/>
+                <filter string="Groups Only" name="groups_only" domain="[('is_group', '=', True)]"/>
+                <filter string="Leaf Items Only" name="leaf_only" domain="[('is_group', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Parent Line" name="group_parent" context="{'group_by': 'parent_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
     <!-- ============ BOQ LINE PROGRESS (standalone, optional) ============ -->
 

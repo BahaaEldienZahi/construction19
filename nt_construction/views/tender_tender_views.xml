@@ -104,28 +104,28 @@
     </record>
 
     <!-- Search View -->
-<!--    <record id="view_tender_tender_search" model="ir.ui.view">-->
-<!--        <field name="name">tender.tender.search</field>-->
-<!--        <field name="model">tender.tender</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <search string="Search Tenders">-->
-<!--                <field name="name"/>-->
-<!--                <field name="client_id"/>-->
-<!--                <field name="client_reference"/>-->
-<!--                <filter string="My Tenders" name="my_tenders" domain="[('user_id', '=', uid)]"/>-->
-<!--                <separator/>-->
-<!--                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>-->
-<!--                <filter string="Submitted" name="submitted" domain="[('state', '=', 'submitted')]"/>-->
-<!--                <filter string="Won" name="won" domain="[('state', '=', 'won')]"/>-->
-<!--                <filter string="Lost" name="lost" domain="[('state', '=', 'lost')]"/>-->
-<!--                <group expand="0" string="Group By">-->
-<!--                    <filter string="Client" name="group_client" context="{'group_by': 'client_id'}"/>-->
-<!--                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>-->
-<!--                    <filter string="Responsible" name="group_user" context="{'group_by': 'user_id'}"/>-->
-<!--                </group>-->
-<!--            </search>-->
-<!--        </field>-->
-<!--    </record>-->
+    <record id="view_tender_tender_search" model="ir.ui.view">
+        <field name="name">tender.tender.search</field>
+        <field name="model">tender.tender</field>
+        <field name="arch" type="xml">
+            <search string="Search Tenders">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="client_reference"/>
+                <filter string="My Tenders" name="my_tenders" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Submitted" name="submitted" domain="[('state', '=', 'submitted')]"/>
+                <filter string="Won" name="won" domain="[('state', '=', 'won')]"/>
+                <filter string="Lost" name="lost" domain="[('state', '=', 'lost')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Client" name="group_client" context="{'group_by': 'client_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Responsible" name="group_user" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
     <!-- Action -->
     <record id="action_tender_tender" model="ir.actions.act_window">
@@ -142,9 +142,9 @@
 
     <!-- Menu -->
     <menuitem id="menu_tender_root" name="Tenders &amp; Construction" sequence="45"/>
-    <menuitem id="menu_tender_tender" name="Tenders" parent="menu_tender_root"
+    <menuitem id="menu_tender_tender" name="Tenders" parent="menu_tender_management"
               action="action_tender_tender" sequence="10"/>
-    <menuitem id="menu_boq_line" name="Bill of Quantities" parent="menu_tender_root"
+    <menuitem id="menu_boq_line" name="Bill of Quantities" parent="menu_tender_management"
               action="nt_construction.action_boq_line" sequence="20"/>
 
 </odoo>

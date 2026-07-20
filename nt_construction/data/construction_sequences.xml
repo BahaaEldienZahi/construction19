@@ -15,5 +15,68 @@
             <field name="padding">4</field>
             <field name="company_id" eval="False"/>
         </record>
+        <record id="seq_project_handover" model="ir.sequence">
+            <field name="name">Project Handover Reference</field>
+            <field name="code">project.handover</field>
+            <field name="prefix">HO/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_site_daily_report" model="ir.sequence">
+            <field name="name">Site Daily Report Reference</field>
+            <field name="code">site.daily.report</field>
+            <field name="prefix">SDR/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_work_measurement" model="ir.sequence">
+            <field name="name">Work Measurement Reference</field>
+            <field name="code">work.measurement</field>
+            <field name="prefix">WM/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_subcontract_agreement" model="ir.sequence">
+            <field name="name">Subcontract Agreement Reference</field>
+            <field name="code">subcontract.agreement</field>
+            <field name="prefix">SUB/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_subcontract_payment_certificate" model="ir.sequence">
+            <field name="name">Subcontractor Payment Certificate Reference</field>
+            <field name="code">subcontract.payment.certificate</field>
+            <field name="prefix">SPC/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_material_requisition" model="ir.sequence">
+            <field name="name">Material Requisition Reference</field>
+            <field name="code">material.requisition</field>
+            <field name="prefix">MR/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_work_inspection" model="ir.sequence">
+            <field name="name">Work Inspection Reference</field>
+            <field name="code">work.inspection</field>
+            <field name="prefix">WIR/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_project_correspondence" model="ir.sequence">
+            <field name="name">Correspondence Reference</field>
+            <field name="code">project.correspondence</field>
+            <field name="prefix">LTR/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_bank_guarantee" model="ir.sequence">
+            <field name="name">Bank Guarantee Reference</field>
+            <field name="code">bank.guarantee</field>
+            <field name="prefix">LG/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
     </data>
 </odoo>

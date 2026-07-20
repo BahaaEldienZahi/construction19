@@ -50,5 +50,46 @@
             <field name="domain_force">[('company_id', 'in', company_ids)]</field>
         </record>
 
+        <record id="rule_work_measurement_company" model="ir.rule">
+            <field name="name">Work Measurement: multi-company</field>
+            <field name="model_id" ref="model_work_measurement"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+    </data>
+
+    <!-- New models multi-company rules -->
+    <data noupdate="0">
+
+        <record id="rule_material_requisition_company" model="ir.rule">
+            <field name="name">Material Requisition: multi-company</field>
+            <field name="model_id" ref="model_material_requisition"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="rule_work_inspection_company" model="ir.rule">
+            <field name="name">Work Inspection: multi-company</field>
+            <field name="model_id" ref="model_work_inspection"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="rule_project_correspondence_company" model="ir.rule">
+            <field name="name">Correspondence: multi-company</field>
+            <field name="model_id" ref="model_project_correspondence"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="rule_site_progress_photo_company" model="ir.rule">
+            <field name="name">Progress Photo: multi-company</field>
+            <field name="model_id" ref="model_site_progress_photo"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="rule_bank_guarantee_company" model="ir.rule">
+            <field name="name">Bank Guarantee: multi-company</field>
+            <field name="model_id" ref="model_bank_guarantee"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
     </data>
 </odoo>

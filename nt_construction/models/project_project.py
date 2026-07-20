@@ -153,36 +153,36 @@ class ProjectProject(models.Model):
     # ---------------------------------------------------------------
     # Subcontracting
     # ---------------------------------------------------------------
-    # subcontract_agreement_ids = fields.One2many(
-    #     'subcontract.agreement', 'project_id', string='Subcontract Agreements',
-    # )
+    subcontract_agreement_ids = fields.One2many(
+        'subcontract.agreement', 'project_id', string='Subcontract Agreements',
+    )
     subcontract_agreement_count = fields.Integer(compute='_compute_subcontract_agreement_count')
     total_subcontracted_committed = fields.Monetary(
         string='Total Subcontracted (Approved)', currency_field='construction_currency_id',
         compute='_compute_total_subcontracted_committed',
     )
 
-    # def _compute_subcontract_agreement_count(self):
-    #     for project in self:
-    #         project.subcontract_agreement_count = self.env['subcontract.agreement'].search_count(
-    #             [('project_id', '=', project.id)])
+    def _compute_subcontract_agreement_count(self):
+        for project in self:
+            project.subcontract_agreement_count = self.env['subcontract.agreement'].search_count(
+                [('project_id', '=', project.id)])
 
-    # @api.depends('subcontract_agreement_ids.contract_value', 'subcontract_agreement_ids.state')
-    # def _compute_total_subcontracted_committed(self):
-    #     for project in self:
-    #         approved = project.subcontract_agreement_ids.filtered(lambda a: a.state == 'approved')
-    #         project.total_subcontracted_committed = sum(approved.mapped('contract_value'))
+    @api.depends('subcontract_agreement_ids.contract_value', 'subcontract_agreement_ids.state')
+    def _compute_total_subcontracted_committed(self):
+        for project in self:
+            approved = project.subcontract_agreement_ids.filtered(lambda a: a.state == 'approved')
+            project.total_subcontracted_committed = sum(approved.mapped('contract_value'))
 
-    # def action_view_subcontract_agreements(self):
-    #     self.ensure_one()
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': _('Subcontract Agreements'),
-    #         'res_model': 'subcontract.agreement',
-    #         'view_mode': 'list,form',
-    #         'domain': [('project_id', '=', self.id)],
-    #         'context': {'default_project_id': self.id},
-    #     }
+    def action_view_subcontract_agreements(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Subcontract Agreements'),
+            'res_model': 'subcontract.agreement',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        }
 
     # ---------------------------------------------------------------
     # Site daily reports (Sarky)
@@ -201,6 +201,111 @@ class ProjectProject(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Site Daily Reports'),
             'res_model': 'site.daily.report',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        }
+
+    # ---------------------------------------------------------------
+    # Material Requisitions
+    # ---------------------------------------------------------------
+    material_requisition_count = fields.Integer(compute='_compute_material_requisition_count')
+
+    def _compute_material_requisition_count(self):
+        for project in self:
+            project.material_requisition_count = self.env['material.requisition'].search_count(
+                [('project_id', '=', project.id)])
+
+    def action_view_material_requisitions(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Material Requisitions'),
+            'res_model': 'material.requisition',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        }
+
+    # ---------------------------------------------------------------
+    # Work Inspections
+    # ---------------------------------------------------------------
+    inspection_count = fields.Integer(compute='_compute_inspection_count')
+
+    def _compute_inspection_count(self):
+        for project in self:
+            project.inspection_count = self.env['work.inspection'].search_count(
+                [('project_id', '=', project.id)])
+
+    def action_view_inspections(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Work Inspections'),
+            'res_model': 'work.inspection',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        }
+
+    # ---------------------------------------------------------------
+    # Correspondence
+    # ---------------------------------------------------------------
+    correspondence_count = fields.Integer(compute='_compute_correspondence_count')
+
+    def _compute_correspondence_count(self):
+        for project in self:
+            project.correspondence_count = self.env['project.correspondence'].search_count(
+                [('project_id', '=', project.id)])
+
+    def action_view_correspondence(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Correspondence / Letters'),
+            'res_model': 'project.correspondence',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        }
+
+    # ---------------------------------------------------------------
+    # Progress Photos
+    # ---------------------------------------------------------------
+    photo_count = fields.Integer(compute='_compute_photo_count')
+
+    def _compute_photo_count(self):
+        for project in self:
+            project.photo_count = self.env['site.progress.photo'].search_count(
+                [('project_id', '=', project.id)])
+
+    def action_view_photos(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Progress Photos'),
+            'res_model': 'site.progress.photo',
+            'view_mode': 'kanban,list,form',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        }
+
+    # ---------------------------------------------------------------
+    # Bank Guarantees
+    # ---------------------------------------------------------------
+    guarantee_count = fields.Integer(compute='_compute_guarantee_count')
+
+    def _compute_guarantee_count(self):
+        for project in self:
+            project.guarantee_count = self.env['bank.guarantee'].search_count(
+                [('project_id', '=', project.id)])
+
+    def action_view_guarantees(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Bank Guarantees'),
+            'res_model': 'bank.guarantee',
             'view_mode': 'list,form',
             'domain': [('project_id', '=', self.id)],
             'context': {'default_project_id': self.id},

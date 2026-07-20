@@ -9,6 +9,8 @@
                 <header>
                     <button name="action_submit_for_approval" string="Submit for Approval" type="object"
                             class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_load_from_wm" string="Load from WM" type="object"
+                            class="btn-info" invisible="state != 'draft'"/>
                     <button name="action_approve_l1" string="Approve (L1)" type="object"
                             class="btn-primary" invisible="state != 'submitted'"
                     />
@@ -88,28 +90,24 @@
         </field>
     </record>
 
-<!--    <record id="view_boq_payment_certificate_search" model="ir.ui.view">-->
-<!--        <field name="name">boq.payment.certificate.search</field>-->
-<!--        <field name="model">boq.payment.certificate</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <search string="Search Payment Certificates">-->
-<!--                <field name="name"/>-->
-<!--                <field name="project_id"/>-->
-<!--                <field name="date"/>-->
-<!--                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>-->
-<!--                <filter string="Pending Approval" name="pending"-->
-<!--                        domain="[('state', 'in', ('submitted', 'approved_l1'))]"/>-->
-<!--                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>-->
-<!--                <separator/>-->
-<!--                <filter string="With Invoice" name="with_invoice" domain="[('move_id', '!=', False)]"/>-->
-<!--                <group expand="0" string="Group By">-->
-<!--                    <filter string="Project" name="group_project" context="{&quot;group_by&quot;: &quot;project_id&quot;}"/>-->
-<!--                    <filter string="Status" name="group_state" context="{&quot;group_by&quot;: &quot;state&quot;}"/>-->
-<!--                    <filter string="Date" name="group_date" context="{&quot;group_by&quot;: &quot;date&quot;}"/>-->
-<!--                </group>-->
-<!--            </search>-->
-<!--        </field>-->
-<!--    </record>-->
+    <record id="view_boq_payment_certificate_search" model="ir.ui.view">
+        <field name="name">boq.payment.certificate.search</field>
+        <field name="model">boq.payment.certificate</field>
+        <field name="arch" type="xml">
+            <search string="Search Payment Certificates">
+                <field name="name"/>
+                <field name="project_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Pending Approval" name="pending"
+                        domain="[('state', 'in', ('submitted', 'approved_l1'))]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
     <record id="action_boq_payment_certificate" model="ir.actions.act_window">
         <field name="name">Payment Certificates</field>
@@ -118,7 +116,7 @@
     </record>
 
     <menuitem id="menu_boq_payment_certificate" name="Payment Certificates"
-              parent="nt_construction.menu_tender_root"
-              action="action_boq_payment_certificate" sequence="40"/>
+              parent="menu_commercial"
+              action="action_boq_payment_certificate" sequence="20"/>
 
 </odoo>
