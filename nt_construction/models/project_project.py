@@ -1,0 +1,242 @@
+# -*- coding: utf-8 -*-
+from odoo import api, fields, models, _
+
+
+class ProjectProject(models.Model):
+    _inherit = 'project.project'
+
+    # ---------------------------------------------------------------
+    # Tender linkage
+    # ---------------------------------------------------------------
+    tender_id = fields.Many2one(
+        'tender.tender',
+        string='Source Tender',
+        readonly=True,
+        copy=False,
+    )
+    tender_reference = fields.Char(
+        related='tender_id.name', string='Tender Reference', store=True, readonly=True,
+    )
+
+    # ---------------------------------------------------------------
+    # Contract info
+    # ---------------------------------------------------------------
+    is_construction_project = fields.Boolean(
+        string='Construction Project', default=False,
+        help='فعّلها للمشاريع اللي هتتبع فيها المقاولة (BOQ، مستخلصات، إلخ)',
+    )
+    construction_type = fields.Selection([
+        ('residential', 'Residential'),
+        ('commercial', 'Commercial'),
+        ('industrial', 'Industrial'),
+        ('infrastructure', 'Infrastructure'),
+    ], string='Construction Type')
+
+    client_po_number = fields.Char(string='Client PO Number')
+    contract_number = fields.Char(string='Contract Number', copy=False)
+    contract_signing_date = fields.Date(string='Contract Signing Date')
+
+    contract_value = fields.Monetary(
+        string='Contract Value',
+        currency_field='construction_currency_id',
+        help='القيمة التعاقدية بعد الترسية (ممكن تتحدث لاحقاً بأوامر التغيير - Variation Orders)',
+    )
+    construction_currency_id = fields.Many2one(
+        'res.currency', string='Currency',
+        default=lambda self: self.env.company.currency_id,
+        help='عملة العقد. بتتاخد تلقائياً من عملة المناقصة لو المشروع اتحول من مناقصة، وإلا من عملة الشركة.',
+    )
+
+    site_start_date = fields.Date(string='Site Handover / Start Date')
+    site_completion_date = fields.Date(string='Contractual Completion Date')
+    actual_completion_date = fields.Date(string='Actual Completion Date', copy=False)
+
+    site_location = fields.Text(
+        string='Site Address',
+        help='عنوان الموقع الفعلي للتنفيذ لو مختلف عن عنوان العميل',
+    )
+    consultant_id = fields.Many2one(
+        'res.partner', string='Supervising Consultant',
+        help='الاستشاري المشرف على التنفيذ',
+    )
+
+    # ---------------------------------------------------------------
+    # Retention / advance payment terms (تستخدم لاحقاً في المستخلصات)
+    # ---------------------------------------------------------------
+    retention_percentage = fields.Float(
+        string='Retention %', default=5.0,
+        help='نسبة الضمان المحتجزة من كل مستخلص',
+    )
+    advance_payment_percentage = fields.Float(
+        string='Advance Payment %', default=0.0,
+        help='نسبة الدفعة المقدمة، بتتخصم تدريجياً من المستخلصات',
+    )
+
+    # ---------------------------------------------------------------
+    # Progress (مرحلي لحد ما BOQ يتعمل - بيتحسب من الـ tasks كمؤشر مبدئي)
+    # ---------------------------------------------------------------
+    task_progress_percentage = fields.Float(
+        string='Task-based Progress %',
+        compute='_compute_task_progress_percentage',
+        help='نسبة إنجاز تقريبية بناءً على المهام المقفولة - هتتستبدل بنسبة BOQ الفعلية لاحقاً',
+    )
+
+    boq_line_ids = fields.One2many(
+        'boq.line', 'project_id', string='BOQ Lines',
+        domain=[('parent_id', '=', False)],
+    )
+    boq_total_contracted = fields.Monetary(
+        string='BOQ Total', currency_field='construction_currency_id',
+        compute='_compute_boq_total_contracted', store=True,
+    )
+    boq_percentage_complete = fields.Float(
+        string='BOQ Progress %',
+        compute='_compute_boq_percentage_complete', store=True,
+    )
+    boq_line_count = fields.Integer(compute='_compute_boq_line_count')
+
+    @api.depends('boq_line_ids.total_contracted')
+    def _compute_boq_total_contracted(self):
+        for project in self:
+            project.boq_total_contracted = sum(project.boq_line_ids.mapped('total_contracted'))
+
+    @api.depends('boq_line_ids.amount_executed_cumulative', 'boq_total_contracted')
+    def _compute_boq_percentage_complete(self):
+        for project in self:
+            executed = sum(project.boq_line_ids.mapped('amount_executed_cumulative'))
+            project.boq_percentage_complete = (
+                round((executed / project.boq_total_contracted) * 100, 2)
+                if project.boq_total_contracted else 0.0
+            )
+
+    @api.depends('task_ids.stage_id', 'task_ids.stage_id.fold')
+    def _compute_task_progress_percentage(self):
+        # A stage being "folded" (e.g. Done/Cancelled) is the standard, locale- and
+        # customization-independent way to identify a closed task in Odoo's kanban stages.
+        for project in self:
+            total = len(project.task_ids)
+            if not total:
+                project.task_progress_percentage = 0.0
+                continue
+            closed = len(project.task_ids.filtered(lambda t: t.stage_id.fold))
+            project.task_progress_percentage = round((closed / total) * 100, 2)
+
+    # ---------------------------------------------------------------
+    # Smart buttons
+    # ---------------------------------------------------------------
+    def action_view_tender(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Tender',
+            'res_model': 'tender.tender',
+            'view_mode': 'form',
+            'res_id': self.tender_id.id,
+        }
+
+    def _compute_boq_line_count(self):
+        for project in self:
+            project.boq_line_count = self.env['boq.line'].search_count(
+                [('project_id', '=', project.id)])
+
+    def action_view_boq(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Bill of Quantities',
+            'res_model': 'boq.line',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        }
+
+    # ---------------------------------------------------------------
+    # Subcontracting
+    # ---------------------------------------------------------------
+    # subcontract_agreement_ids = fields.One2many(
+    #     'subcontract.agreement', 'project_id', string='Subcontract Agreements',
+    # )
+    subcontract_agreement_count = fields.Integer(compute='_compute_subcontract_agreement_count')
+    total_subcontracted_committed = fields.Monetary(
+        string='Total Subcontracted (Approved)', currency_field='construction_currency_id',
+        compute='_compute_total_subcontracted_committed',
+    )
+
+    # def _compute_subcontract_agreement_count(self):
+    #     for project in self:
+    #         project.subcontract_agreement_count = self.env['subcontract.agreement'].search_count(
+    #             [('project_id', '=', project.id)])
+
+    # @api.depends('subcontract_agreement_ids.contract_value', 'subcontract_agreement_ids.state')
+    # def _compute_total_subcontracted_committed(self):
+    #     for project in self:
+    #         approved = project.subcontract_agreement_ids.filtered(lambda a: a.state == 'approved')
+    #         project.total_subcontracted_committed = sum(approved.mapped('contract_value'))
+
+    # def action_view_subcontract_agreements(self):
+    #     self.ensure_one()
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'name': _('Subcontract Agreements'),
+    #         'res_model': 'subcontract.agreement',
+    #         'view_mode': 'list,form',
+    #         'domain': [('project_id', '=', self.id)],
+    #         'context': {'default_project_id': self.id},
+    #     }
+
+    # ---------------------------------------------------------------
+    # Site daily reports (Sarky)
+    # ---------------------------------------------------------------
+    daily_report_ids = fields.One2many('site.daily.report', 'project_id', string='Site Daily Reports')
+    daily_report_count = fields.Integer(compute='_compute_daily_report_count')
+
+    def _compute_daily_report_count(self):
+        for project in self:
+            project.daily_report_count = self.env['site.daily.report'].search_count(
+                [('project_id', '=', project.id)])
+
+    def action_view_daily_reports(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Site Daily Reports'),
+            'res_model': 'site.daily.report',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        }
+
+    # ---------------------------------------------------------------
+    # Handover / Delivery
+    # ---------------------------------------------------------------
+    handover_ids = fields.One2many('project.handover', 'project_id', string='Handovers')
+    handover_count = fields.Integer(compute='_compute_handover_count')
+    retention_held_amount = fields.Monetary(
+        string='Retention Held (Client Side)', currency_field='construction_currency_id',
+        compute='_compute_retention_held_amount',
+    )
+
+    def _compute_handover_count(self):
+        for project in self:
+            project.handover_count = self.env['project.handover'].search_count(
+                [('project_id', '=', project.id)])
+
+    @api.depends('boq_line_ids')
+    def _compute_retention_held_amount(self):
+        for project in self:
+            certs = self.env['boq.payment.certificate'].search([
+                ('project_id', '=', project.id),
+                ('state', '=', 'approved'),
+            ])
+            project.retention_held_amount = sum(certs.mapped('retention_amount'))
+
+    def action_view_handovers(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Handover / Delivery'),
+            'res_model': 'project.handover',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        }

@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tender_tender_user,tender.tender.user,model_tender_tender,base.group_user,1,1,1,0
+access_tender_tender_manager,tender.tender.manager,model_tender_tender,project.group_project_manager,1,1,1,1
+access_boq_line_user,boq.line.user,model_boq_line,base.group_user,1,1,1,0
+access_boq_line_manager,boq.line.manager,model_boq_line,project.group_project_manager,1,1,1,1
+access_boq_line_progress_user,boq.line.progress.user,model_boq_line_progress,base.group_user,1,1,1,0
+access_boq_line_progress_manager,boq.line.progress.manager,model_boq_line_progress,project.group_project_manager,1,1,1,1
+access_boq_variation_order_user,boq.variation.order.user,model_boq_variation_order,base.group_user,1,1,1,0
+access_boq_variation_order_manager,boq.variation.order.manager,model_boq_variation_order,project.group_project_manager,1,1,1,1
+access_boq_variation_order_line_user,boq.variation.order.line.user,model_boq_variation_order_line,base.group_user,1,1,1,0
+access_boq_variation_order_line_manager,boq.variation.order.line.manager,model_boq_variation_order_line,project.group_project_manager,1,1,1,1
+access_boq_payment_certificate_user,boq.payment.certificate.user,model_boq_payment_certificate,base.group_user,1,1,1,0
+access_boq_payment_certificate_manager,boq.payment.certificate.manager,model_boq_payment_certificate,project.group_project_manager,1,1,1,1
+access_boq_payment_certificate_line_user,boq.payment.certificate.line.user,model_boq_payment_certificate_line,base.group_user,1,1,1,0
+access_boq_payment_certificate_line_manager,boq.payment.certificate.line.manager,model_boq_payment_certificate_line,project.group_project_manager,1,1,1,1
+access_project_handover,project.handover.manager,model_project_handover,project.group_project_manager,1,1,1,1
+access_site_daily_report,site.daily.report.manager,model_site_daily_report,project.group_project_manager,1,1,1,1

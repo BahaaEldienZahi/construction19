@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Pivot: Contracted vs Committed vs Executed, per project -->
+    <record id="view_boq_line_pivot" model="ir.ui.view">
+        <field name="name">boq.line.pivot</field>
+        <field name="model">boq.line</field>
+        <field name="arch" type="xml">
+            <pivot string="BOQ Cost Analysis">
+                <field name="project_id" type="row"/>
+                <field name="total_contracted" type="measure"/>
+                <field name="committed_amount" type="measure"/>
+                <field name="amount_executed_cumulative" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_boq_line_graph" model="ir.ui.view">
+        <field name="name">boq.line.graph</field>
+        <field name="model">boq.line</field>
+        <field name="arch" type="xml">
+            <graph string="BOQ Cost Analysis" type="bar">
+                <field name="project_id"/>
+                <field name="total_contracted" type="measure"/>
+                <field name="committed_amount" type="measure"/>
+                <field name="amount_executed_cumulative" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_boq_cost_analysis" model="ir.actions.act_window">
+        <field name="name">Cost Analysis (Contracted vs Committed vs Executed)</field>
+        <field name="res_model">boq.line</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="domain">[('is_group', '=', False)]</field>
+    </record>
+
+    <!-- Pivot: Billing trend from Payment Certificates -->
+    <record id="view_boq_payment_certificate_pivot" model="ir.ui.view">
+        <field name="name">boq.payment.certificate.pivot</field>
+        <field name="model">boq.payment.certificate</field>
+        <field name="arch" type="xml">
+            <pivot string="Billing Trend">
+                <field name="project_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="gross_amount" type="measure"/>
+                <field name="retention_amount" type="measure"/>
+                <field name="net_payable" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_boq_billing_trend" model="ir.actions.act_window">
+        <field name="name">Billing Trend</field>
+        <field name="res_model">boq.payment.certificate</field>
+        <field name="view_mode">pivot,list</field>
+    </record>
+
+    <menuitem id="menu_construction_reporting" name="Reporting"
+              parent="nt_construction.menu_tender_root" sequence="50"/>
+    <menuitem id="menu_boq_cost_analysis" name="Cost Analysis"
+              parent="menu_construction_reporting"
+              action="action_boq_cost_analysis" sequence="10"/>
+    <menuitem id="menu_boq_billing_trend" name="Billing Trend"
+              parent="menu_construction_reporting"
+              action="action_boq_billing_trend" sequence="20"/>
+
+</odoo>

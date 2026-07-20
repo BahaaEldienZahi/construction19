@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_boq_variation_order" model="ir.sequence">
+            <field name="name">Variation Order Reference</field>
+            <field name="code">boq.variation.order</field>
+            <field name="prefix">VO/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_boq_payment_certificate" model="ir.sequence">
+            <field name="name">Payment Certificate Reference</field>
+            <field name="code">boq.payment.certificate</field>
+            <field name="prefix">PC/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

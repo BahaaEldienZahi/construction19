@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_boq_payment_certificate_form" model="ir.ui.view">
+        <field name="name">boq.payment.certificate.form</field>
+        <field name="model">boq.payment.certificate</field>
+        <field name="arch" type="xml">
+            <form string="Payment Certificate">
+                <header>
+                    <button name="action_submit_for_approval" string="Submit for Approval" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approve_l1" string="Approve (L1)" type="object"
+                            class="btn-primary" invisible="state != 'submitted'"
+                    />
+                    <button name="action_approve_l2" string="Final Approve (L2)" type="object"
+                            class="btn-success" invisible="state != 'approved_l1'"
+                    />
+                    <button name="action_reject" string="Reject" type="object"
+                            invisible="state not in ('submitted', 'approved_l1')"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                            invisible="state != 'rejected'"/>
+                    <button name="action_create_invoice" string="Create Invoice" type="object"
+                            class="btn-success" invisible="state != 'approved' or move_id"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,submitted,approved_l1,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice" type="object"
+                                class="oe_stat_button" icon="fa-pencil-square-o"
+                                invisible="not move_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Invoice</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id" readonly="state != 'draft'"/>
+                            <field name="date"/>
+                            <field name="period_from"/>
+                            <field name="period_to"/>
+                        </group>
+                        <group>
+                            <field name="gross_amount"/>
+                            <field name="retention_percentage" readonly="1"/>
+                            <field name="retention_amount"/>
+                            <field name="advance_recovery_amount"/>
+                            <field name="net_payable"/>
+                        </group>
+                    </group>
+                    <field name="line_ids" readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <field name="boq_line_id"/>
+                            <field name="unit_price" readonly="1"/>
+                            <field name="quantity_contracted" readonly="1"/>
+                            <field name="cumulative_qty_before" readonly="1"/>
+                            <field name="quantity_this_period"/>
+                            <field name="cumulative_qty_after" readonly="1"/>
+                            <field name="amount_this_period" sum="Total"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_boq_payment_certificate_list" model="ir.ui.view">
+        <field name="name">boq.payment.certificate.list</field>
+        <field name="model">boq.payment.certificate</field>
+        <field name="arch" type="xml">
+            <list string="Payment Certificates" decoration-success="state == 'approved'"
+                  decoration-danger="state == 'rejected'">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="date"/>
+                <field name="gross_amount" sum="Gross"/>
+                <field name="net_payable" sum="Net"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'rejected'"
+                       decoration-info="state in ('submitted', 'approved_l1')"/>
+            </list>
+        </field>
+    </record>
+
+<!--    <record id="view_boq_payment_certificate_search" model="ir.ui.view">-->
+<!--        <field name="name">boq.payment.certificate.search</field>-->
+<!--        <field name="model">boq.payment.certificate</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <search string="Search Payment Certificates">-->
+<!--                <field name="name"/>-->
+<!--                <field name="project_id"/>-->
+<!--                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>-->
+<!--                <filter string="Pending Approval" name="pending"-->
+<!--                        domain="[('state', 'in', ('submitted', 'approved_l1'))]"/>-->
+<!--                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>-->
+<!--                <group expand="0" string="Group By">-->
+<!--                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>-->
+<!--                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>-->
+<!--                </group>-->
+<!--            </search>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <record id="action_boq_payment_certificate" model="ir.actions.act_window">
+        <field name="name">Payment Certificates</field>
+        <field name="res_model">boq.payment.certificate</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_boq_payment_certificate" name="Payment Certificates"
+              parent="nt_construction.menu_tender_root"
+              action="action_boq_payment_certificate" sequence="40"/>
+
+</odoo>

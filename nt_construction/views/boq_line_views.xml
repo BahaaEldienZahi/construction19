@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ BOQ LINE ============ -->
+
+    <record id="view_boq_line_list" model="ir.ui.view">
+        <field name="name">boq.line.list</field>
+        <field name="model">boq.line</field>
+        <field name="arch" type="xml">
+            <list string="BOQ Lines" default_order="parent_path" editable="bottom">
+                <field name="parent_path" column_invisible="1"/>
+                <field name="level" column_invisible="1"/>
+                <field name="tender_id" column_invisible="1"/>
+                <field name="project_id" column_invisible="1"/>
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="parent_id"
+                       domain="[('id', '!=', id), ('tender_id', '=', tender_id), ('project_id', '=', project_id)]"/>
+                <field name="name"/>
+                <field name="is_group" column_invisible="1"/>
+                <field name="uom_id" invisible="is_group"/>
+                <field name="quantity_contracted" invisible="is_group"/>
+                <field name="unit_price" invisible="is_group"/>
+                <field name="total_contracted" sum="Total"/>
+                <field name="quantity_executed_cumulative" invisible="is_group"/>
+                <field name="percentage_complete" widget="progressbar"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_boq_line_form" model="ir.ui.view">
+        <field name="name">boq.line.form</field>
+        <field name="model">boq.line</field>
+        <field name="arch" type="xml">
+            <form string="BOQ Line">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="tender_id" readonly="id"/>
+                            <field name="project_id" readonly="id"/>
+                            <field name="parent_id"
+                                   domain="[('id', '!=', id), ('tender_id', '=', tender_id), ('project_id', '=', project_id)]"/>
+                            <field name="code"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="uom_id"/>
+                            <field name="quantity_contracted"/>
+                            <field name="unit_price"/>
+                            <field name="total_contracted"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Execution">
+                            <field name="quantity_executed_cumulative" readonly="1"/>
+                            <field name="amount_executed_cumulative" readonly="1"/>
+                            <field name="percentage_complete" widget="progressbar" readonly="1"/>
+                        </group>
+                        <group string="Tracking">
+                            <field name="analytic_account_id"/>
+                            <field name="task_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Progress Entries" invisible="is_group">
+                            <field name="progress_ids">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="period_name"/>
+                                    <field name="quantity_executed"/>
+                                    <field name="note"/>
+                                    <field name="user_id" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+<!--    <record id="view_boq_line_search" model="ir.ui.view">-->
+<!--        <field name="name">boq.line.search</field>-->
+<!--        <field name="model">boq.line</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <search string="Search BOQ Lines">-->
+<!--                <field name="code"/>-->
+<!--                <field name="name"/>-->
+<!--                <filter string="Groups Only" name="groups_only" domain="[('is_group', '=', True)]"/>-->
+<!--                <filter string="Leaf Items Only" name="leaf_only" domain="[('is_group', '=', False)]"/>-->
+<!--                <group expand="0" string="Group By">-->
+<!--                    <filter string="Parent Line" name="group_parent" context="{'group_by': 'parent_id'}"/>-->
+<!--                </group>-->
+<!--            </search>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <!-- ============ BOQ LINE PROGRESS (standalone, optional) ============ -->
+
+    <record id="view_boq_line_progress_list" model="ir.ui.view">
+        <field name="name">boq.line.progress.list</field>
+        <field name="model">boq.line.progress</field>
+        <field name="arch" type="xml">
+            <list string="BOQ Progress Entries">
+                <field name="boq_line_id"/>
+                <field name="date"/>
+                <field name="period_name"/>
+                <field name="quantity_executed"/>
+                <field name="user_id" optional="show"/>
+            </list>
+        </field>
+    </record>
+    <!-- Standalone action for browsing all BOQ lines -->
+    <record id="action_boq_line" model="ir.actions.act_window">
+        <field name="name">Bill of Quantities</field>
+        <field name="res_model">boq.line</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
