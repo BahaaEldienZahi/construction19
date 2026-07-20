@@ -206,10 +206,10 @@ class ProjectHandoverPunchItem(models.Model):
         ('subcontractor', 'Subcontractor'),
         ('client_consultant', 'Client / Consultant'),
     ], string='Responsible Party', default='main_contractor', required=True)
-    # subcontract_agreement_id = fields.Many2one(
-    #     'subcontract.agreement', string='Related Subcontract',
-    #     domain="[('project_id', '=', project_id)]",
-    # )
+    subcontract_agreement_id = fields.Many2one(
+        'subcontract.agreement', string='Related Subcontract',
+        domain="[('project_id', '=', project_id)]",
+    )
     status = fields.Selection([
         ('open', 'Open'),
         ('closed', 'Closed'),

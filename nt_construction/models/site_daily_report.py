@@ -102,10 +102,10 @@ class SiteDailyReportManpower(models.Model):
         ('other', 'Other'),
     ], string='Trade', required=True, default='general_labor')
     is_subcontractor = fields.Boolean(string='Subcontractor Crew')
-    # subcontract_agreement_id = fields.Many2one(
-    #     'subcontract.agreement', string='Subcontract',
-    #     domain="[('project_id', '=', project_id)]",
-    # )
+    subcontract_agreement_id = fields.Many2one(
+        'subcontract.agreement', string='Subcontract',
+        domain="[('project_id', '=', project_id)]",
+    )
     headcount = fields.Integer(string='Headcount', required=True, default=1)
     hours = fields.Float(string='Hours Worked', default=8.0)
     note = fields.Char(string='Note')
