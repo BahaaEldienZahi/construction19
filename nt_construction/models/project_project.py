@@ -66,7 +66,7 @@ class ProjectProject(models.Model):
     )
     consultant_id = fields.Many2one(
         'res.partner', string='Supervising Consultant',
-        help='الاستعاري المضaؘ�ف علدم التنوة',
+        help='الاستعاري المضaؘ�ف علدم التنوة',
     )
 
     # --------------------------------------------------------------
@@ -82,7 +82,7 @@ class ProjectProject(models.Model):
     )
 
     # --------------------------------------------------------------
-    # Progress (مر"�شيلل احلل إ إآ BOQ اجعمل - تححر*
+    # Progress (مر"�شيلل احلل إ إآ BOQ اجعمل - تححر*
     #     بعد لالت tasks ـفقدن مبجان)
     # --------------------------------------------------------------
     task_progress_percentage = fields.Float(
@@ -93,7 +93,7 @@ class ProjectProject(models.Model):
 
     boq_line_ids = fields.One2many(
         'boq.line', 'project_id', string='BOQ Lines',
-        domain=[(&parent_id', '=', False)],
+        domain=[('parent_id', '=', False)],
     )
     boq_total_contracted = fields.Monetary(
         string='BOQ Total', currency_field='construction_currency_id',
@@ -147,7 +147,7 @@ class ProjectProject(models.Model):
     def _compute_boq_line_count(self):
         for project in self:
             project.boq_line_count = self.env['boq.line'].search_count(
-                [(&project_id', '=', project.id)])
+                [('project_id', '=', project.id)])
 
     def action_view_boq(self):
         self.ensure_one()
@@ -156,7 +156,7 @@ class ProjectProject(models.Model):
             'name': 'Bill of Quantities',
             'res_model': 'boq.line',
             'view_mode': 'list,form',
-            'domain': [(&project_id', '=', self.id)],
+            'domain': [('project_id', '=', self.id)],
             'context': {'default_project_id': self.id},
         }
 
@@ -224,7 +224,7 @@ class ProjectProject(models.Model):
     def _compute_material_requisition_count(self):
         for project in self:
             project.material_requisition_count = self.env['material.requisition'].search_count(
-                [(&project_id', '=', project.id)])
+                [('project_id', '=', project.id)])
 
     def action_view_material_requisitions(self):
         self.ensure_one()
@@ -233,7 +233,7 @@ class ProjectProject(models.Model):
             'name': _('Material Requisitions'),
             'res_model': 'material.requisition',
             'view_mode': 'list,form',
-            'domain': [(&project_id', '=', self.id)],
+            'domain': [('project_id', '=', self.id)],
             'context': {'default_project_id': self.id},
         }
 
@@ -302,7 +302,7 @@ class ProjectProject(models.Model):
     def _compute_inspection_count(self):
         for project in self:
             project.inspection_count = self.env['work.inspection'].search_count(
-                [(&project_id', '=', project.id)])
+                [('project_id', '=', project.id)])
 
     def action_view_inspections(self):
         self.ensure_one()
@@ -323,7 +323,7 @@ class ProjectProject(models.Model):
     def _compute_correspondence_count(self):
         for project in self:
             project.correspondence_count = self.env['project.correspondence'].search_count(
-                [(&project_id', '=', project.id)])
+                [('project_id', '=', project.id)])
 
     def action_view_correspondence(self):
         self.ensure_one()
@@ -365,7 +365,7 @@ class ProjectProject(models.Model):
     def _compute_guarantee_count(self):
         for project in self:
             project.guarantee_count = self.env['bank.guarantee'].search_count(
-                [(&project_id', '=', project.id)])
+                [('project_id', '=', project.id)])
 
     def action_view_guarantees(self):
         self.ensure_one()
@@ -391,7 +391,7 @@ class ProjectProject(models.Model):
     def _compute_handover_count(self):
         for project in self:
             project.handover_count = self.env['project.handover'].search_count(
-                [(&project_id', '=', project.id)])
+                [('project_id', '=', project.id)])
 
     @api.depends('boq_line_ids')
     def _compute_retention_held_amount(self):

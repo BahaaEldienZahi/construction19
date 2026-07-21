@@ -69,10 +69,13 @@
             </xpath>
 
             <!-- Flag + type right after project name -->
-            <xpath expr="//field[@name='name']" position="after">
+            <xpath expr="//field[@name='date_start']" position="after">
                 <field name="is_construction_project"/>
-                <field name="construction_type" invisible="not is_construction_project"/>
-                <field name="execution_type" invisible="not is_construction_project"/>
+                <field name="construction_type"
+                       invisible="not is_construction_project"/>
+                <field name="execution_type"
+                       widget="selection"
+                       invisible="not is_construction_project"/>
             </xpath>
 
             <!-- New notebook page with full contract/site details -->
