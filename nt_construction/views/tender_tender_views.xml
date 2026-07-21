@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Form View -->
+    Form View
     <record id="view_tender_tender_form" model="ir.ui.view">
         <field name="name">tender.tender.form</field>
         <field name="model">tender.tender</field>
@@ -83,7 +83,7 @@
         </field>
     </record>
 
-    <!-- List View -->
+    List View
     <record id="view_tender_tender_list" model="ir.ui.view">
         <field name="name">tender.tender.list</field>
         <field name="model">tender.tender</field>
@@ -103,7 +103,7 @@
         </field>
     </record>
 
-    <!-- Search View -->
+    Search View
     <record id="view_tender_tender_search" model="ir.ui.view">
         <field name="name">tender.tender.search</field>
         <field name="model">tender.tender</field>
@@ -118,16 +118,19 @@
                 <filter string="Submitted" name="submitted" domain="[('state', '=', 'submitted')]"/>
                 <filter string="Won" name="won" domain="[('state', '=', 'won')]"/>
                 <filter string="Lost" name="lost" domain="[('state', '=', 'lost')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Client" name="group_client" context="{'group_by': 'client_id'}"/>
-                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
-                    <filter string="Responsible" name="group_user" context="{'group_by': 'user_id'}"/>
+                <group>
+                    <filter string="Client" name="group_client"
+                            context="{'group_by': 'client_id'}"/>
+                    <filter string="Status" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Responsible" name="group_user"
+                            context="{'group_by': 'user_id'}"/>
                 </group>
             </search>
         </field>
     </record>
 
-    <!-- Action -->
+    Action
     <record id="action_tender_tender" model="ir.actions.act_window">
         <field name="name">Tenders</field>
         <field name="res_model">tender.tender</field>
@@ -140,8 +143,7 @@
         </field>
     </record>
 
-    <!-- Menu -->
-    <menuitem id="menu_tender_root" name="Tenders &amp; Construction" sequence="45"/>
+    Menu (menu_tender_root is defined in menu_structure.xml, loaded earlier)
     <menuitem id="menu_tender_tender" name="Tenders" parent="menu_tender_management"
               action="action_tender_tender" sequence="10"/>
     <menuitem id="menu_boq_line" name="Bill of Quantities" parent="menu_tender_management"

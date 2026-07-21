@@ -7,23 +7,32 @@
         <field name="name">site.progress.photo.kanban</field>
         <field name="model">site.progress.photo</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" string="Progress Photos">
+            <kanban>
                 <field name="image"/>
                 <field name="name"/>
                 <field name="date"/>
-                <field name="project_id"/>
+                <field name="location"/>
+
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="card">
                         <div class="oe_kanban_card">
-                            <div class="o_kanban_image">
-                                <img t-att-src="'data:image/png;base64,' + record.image.raw_value"
-                                     style="width:100%; height:180px; object-fit:cover;"
-                                     t-if="record.image.raw_value"/>
-                            </div>
+                            <t t-if="record.image.raw_value">
+                                <img t-att-src="kanban_image('site.progress.photo', 'image', record.id.raw_value)"
+                                     style="width:100%;height:180px;object-fit:cover;"/>
+                            </t>
+
                             <div class="oe_kanban_details">
-                                <strong><field name="name"/></strong>
-                                <div><field name="date"/></div>
-                                <div><field name="location"/></div>
+                                <strong>
+                                    <field name="name"/>
+                                </strong>
+
+                                <div>
+                                    <field name="date"/>
+                                </div>
+
+                                <div>
+                                    <field name="location"/>
+                                </div>
                             </div>
                         </div>
                     </t>
@@ -89,10 +98,10 @@
                 <field name="project_id"/>
                 <field name="location"/>
                 <field name="tag_ids"/>
-                <group expand="0" string="Group By">
-                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
-                    <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
-                </group>
+<!--                <group expand="0" string="Group By">-->
+<!--                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>-->
+<!--                    <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>-->
+<!--                </group>-->
             </search>
         </field>
     </record>

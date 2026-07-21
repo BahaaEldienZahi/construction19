@@ -112,9 +112,14 @@
                 <filter string="Provisional" name="provisional" domain="[('state', '=', 'provisional')]"/>
                 <filter string="Final" name="final" domain="[('state', '=', 'final')]"/>
                 <filter string="Closed" name="closed" domain="[('state', '=', 'closed')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
-                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                <group>
+                    <filter string="Project"
+                            name="group_project"
+                            context="{'group_by': 'project_id'}"/>
+
+                    <filter string="Status"
+                            name="group_state"
+                            context="{'group_by': 'state'}"/>
                 </group>
             </search>
         </field>

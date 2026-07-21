@@ -80,14 +80,24 @@
                 <field name="project_id"/>
                 <field name="subject"/>
                 <field name="reference_number"/>
-                <filter string="Incoming" name="incoming" domain="[('direction', '=', 'incoming')]"/>
-                <filter string="Outgoing" name="outgoing" domain="[('direction', '=', 'outgoing')]"/>
-                <filter string="Open" name="open" domain="[('state', 'in', ('draft', 'sent', 'responded'))]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
-                    <filter string="Type" name="group_type" context="{'group_by': 'correspondence_type'}"/>
-                    <filter string="Direction" name="group_direction" context="{'group_by': 'direction'}"/>
-                </group>
+
+                <filter string="Incoming"
+                        name="incoming"
+                        domain="[('direction', '=', 'incoming')]"/>
+
+                <filter string="Outgoing"
+                        name="outgoing"
+                        domain="[('direction', '=', 'outgoing')]"/>
+
+                <filter string="Open"
+                        name="open"
+                        domain="[('state', 'in', ['draft', 'sent', 'responded'])]"/>
+
+<!--                <group expand="0" string="Group By">-->
+<!--                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>-->
+<!--                    <filter string="Type" name="group_type" context="{'group_by': 'correspondence_type'}"/>-->
+<!--                    <filter string="Direction" name="group_direction" context="{'group_by': 'direction'}"/>-->
+<!--                </group>-->
             </search>
         </field>
     </record>

@@ -41,6 +41,11 @@
                         invisible="not is_construction_project">
                     <field name="material_requisition_count" widget="statinfo" string="Requisitions"/>
                 </button>
+                <button name="action_view_material_transfers" type="object"
+                        class="oe_stat_button" icon="fa-truck"
+                        invisible="not is_construction_project or not stock_location_id">
+                    <field name="material_transfer_count" widget="statinfo" string="Transfers"/>
+                </button>
                 <button name="action_view_inspections" type="object"
                         class="oe_stat_button" icon="fa-check-square-o"
                         invisible="not is_construction_project">

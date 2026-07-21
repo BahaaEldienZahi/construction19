@@ -5,6 +5,10 @@
          MENU RESTRUCTURING — Hierarchical organized menus
          ========================================================= -->
 
+    <!-- Root menu - MUST be defined here since this file loads before
+         tender_tender_views.xml, and other files reference it as parent -->
+    <menuitem id="menu_tender_root" name="Tenders &amp; Construction" sequence="45"/>
+
     <!-- Parent sub-menus under Tenders & Construction root -->
     <menuitem id="menu_tender_management" name="Tenders"
               parent="menu_tender_root" sequence="10"/>
