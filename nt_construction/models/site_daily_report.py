@@ -42,6 +42,8 @@ class SiteDailyReport(models.Model):
     )
 
     total_manpower_count = fields.Integer(compute='_compute_totals', store=True)
+    total_planned_manpower = fields.Integer(compute='_compute_totals', store=True)
+    manpower_variance_total = fields.Integer(compute='_compute_totals', store=True)
     total_equipment_hours = fields.Float(compute='_compute_totals', store=True)
     total_amount_executed_today = fields.Monetary(
         string="Today's Executed Value", currency_field='currency_id',
@@ -69,6 +71,8 @@ class SiteDailyReport(models.Model):
     def _compute_totals(self):
         for rec in self:
             rec.total_manpower_count = sum(rec.manpower_ids.mapped('headcount'))
+            rec.total_planned_manpower = sum(rec.manpower_ids.mapped('planned_headcount'))
+            rec.manpower_variance_total = rec.total_manpower_count - rec.total_planned_manpower
             rec.total_equipment_hours = sum(rec.equipment_ids.mapped('hours_worked'))
             rec.total_amount_executed_today = sum(
                 p.quantity_executed * p.boq_line_id.unit_price for p in rec.progress_ids
@@ -106,12 +110,20 @@ class SiteDailyReportManpower(models.Model):
         'subcontract.agreement', string='Subcontract',
         domain="[('project_id', '=', project_id)]",
     )
-    headcount = fields.Integer(string='Headcount', required=True, default=1)
+    headcount = fields.Integer(string='Headcount (Actual)', required=True, default=1)
+    planned_headcount = fields.Integer(string='Headcount (Planned)')
+    headcount_variance = fields.Integer(
+        string='Variance', compute='_compute_headcount_variance', store=True,
+    )
+    @api.depends('headcount', 'planned_headcount')
+    def _compute_headcount_variance(self):
+        for rec in self:
+            rec.headcount_variance = rec.headcount - rec.planned_headcount
     hours = fields.Float(string='Hours Worked', default=8.0)
     note = fields.Char(string='Note')
 
 
-class SiteDailyReportEquipment(models.Model):
+class SiteDaily reportEquipment(models.Model):
     _name = 'site.daily.report.equipment'
     _description = 'Site Daily Report - Equipment Line'
 
