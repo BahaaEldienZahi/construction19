@@ -41,6 +41,25 @@ class ProjectProject(models.Model):
     ], string='Execution Type', default='internal', tracking=True,
        help='Execution method: Internal (self-perform), Subcontract, Joint Venture, Supply & Install, Management Only')
 
+    subcontract_coverage_ratio = fields.Float(
+        string='Subcontract Coverage %', compute='_compute_execution_insights', store=True,
+    )
+    jv_partner_id = fields.Many2one('res.partner', string='JV Partner')
+    jv_partner_share = fields.Float(string='JV Partner Share %', default=50.0)
+    is_fully_subcontracted = fields.Boolean(compute='_compute_execution_insights', store=True)
+
+    @api.depends('execution_type', 'subcontract_agreement_ids.state', 'subcontract_agreement_ids.contract_value', 'contract_value')
+    def _compute_execution_insights(self):
+        for proj in self:
+            if proj.execution_type == 'subcontract':
+                approved = proj.subcontract_agreement_ids.filtered(lambda a: a.state == 'approved')
+                total_sub = sum(approved.mapped('contract_value'))
+                proj.subcontract_coverage_ratio = (total_sub / proj.contract_value * 100) if proj.contract_value else 0.0
+                proj.is_fully_subcontracted = proj.subcontract_coverage_ratio >= 90.0
+            else:
+                proj.subcontract_coverage_ratio = 0.0
+                proj.is_fully_subcontracted = False)
+
     client_po_number = fields.Char(string='Client PO Number')
     contract_number = fields.Char(string='Contract Number', copy=False)
     contract_signing_date = fields.Date(string='Contract Signing Date')
