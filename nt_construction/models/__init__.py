@@ -16,4 +16,6 @@ from . import work_inspection
 from . import project_correspondence
 from . import site_progress_photo
 from . import bank_guarantee
+from . import cashflow_forecast
+from . import ncr_report
 from . import load_certificate_wizard
