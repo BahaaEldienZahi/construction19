@@ -5,9 +5,9 @@ from odoo import api, fields, models, _
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     # Tender linkage
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     tender_id = fields.Many2one(
         'tender.tender',
         string='Source Tender',
@@ -18,12 +18,12 @@ class ProjectProject(models.Model):
         related='tender_id.name', string='Tender Reference', store=True, readonly=True,
     )
 
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     # Contract info
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     is_construction_project = fields.Boolean(
         string='Construction Project', default=False,
-        help='فعّلها للمشاريع اللي هتتبع فيها المقاولة (BOQ، مستخلصات، إلخ)',
+        help='فعلهال للشمر؈عة اللق هتابع فيهال (BOQق, مستخلصة, إسع ا)ؤ',
     )
     construction_type = fields.Selection([
         ('residential', 'Residential'),
@@ -32,6 +32,15 @@ class ProjectProject(models.Model):
         ('infrastructure', 'Infrastructure'),
     ], string='Construction Type')
 
+    execution_type = fields.Selection([
+        ('internal', 'Internal'),
+        ('subcontract', 'Subcontract'),
+        ('joint_venture', 'Joint Venture'),
+        ('supply_install', 'Supply & Install'),
+        ('management', 'Management Only'),
+    ], string='Execution Type', default='internal', tracking=True,
+       help='نوع التننبع: دستي, مقاول باطن, مرظرو مشبيك, بومبة وقرياب, إاعاب قطا')
+
     client_po_number = fields.Char(string='Client PO Number')
     contract_number = fields.Char(string='Contract Number', copy=False)
     contract_signing_date = fields.Date(string='Contract Signing Date')
@@ -39,12 +48,12 @@ class ProjectProject(models.Model):
     contract_value = fields.Monetary(
         string='Contract Value',
         currency_field='construction_currency_id',
-        help='القيمة التعاقدية بعد الترسية (ممكن تتحدث لاحقاً بأوامر التغيير - Variation Orders)',
+        help='القيمة التعاقدية بعد الرٌسية (ممنن تححي اسbرع باسوام التوعييد - Variation Orders)',
     )
     construction_currency_id = fields.Many2one(
         'res.currency', string='Currency',
         default=lambda self: self.env.company.currency_id,
-        help='عملة العقد. بتتاخد تلقائياً من عملة المناقصة لو المشروع اتحول من مناقصة، وإلا من عملة الشركة.',
+        help='عملة العقد. تةاصا قطايان من عملة الماقشص٩ وو “ لرظروااحول من مناقشطة إط ع عملة ال؈رغمة',
     )
 
     site_start_date = fields.Date(string='Site Handover / Start Date')
@@ -53,37 +62,38 @@ class ProjectProject(models.Model):
 
     site_location = fields.Text(
         string='Site Address',
-        help='عنوان الموقع الفعلي للتنفيذ لو مختلف عن عنوان العميل',
+        help='ع؍وحن الموقوع الفلدي للتنوث쀹 ل؈ محبلن عن عونان العميل',
     )
     consultant_id = fields.Many2one(
         'res.partner', string='Supervising Consultant',
-        help='الاستشاري المشرف على التنفيذ',
+        help='الاستعاري المضaؘ�ف علدم التنوة',
     )
 
-    # ---------------------------------------------------------------
-    # Retention / advance payment terms (تستخدم لاحقاً في المستخلصات)
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
+    # Retention / advance payment terms (تسعمللا واشار لالمستخلصة)
+    # --------------------------------------------------------------
     retention_percentage = fields.Float(
         string='Retention %', default=5.0,
-        help='نسبة الضمان المحتجزة من كل مستخلص',
+        help='نسبة الضمان المححبية من كل مستخلص',
     )
     advance_payment_percentage = fields.Float(
         string='Advance Payment %', default=0.0,
-        help='نسبة الدفعة المقدمة، بتتخصم تدريجياً من المستخلصات',
+        help='نسبة الدفعة المقدمة إق بثعصل دق من المستخلصاة',
     )
 
-    # ---------------------------------------------------------------
-    # Progress (مرحلي لحد ما BOQ يتعمل - بيتحسب من الـ tasks كمؤشر مبدئي)
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
+    # Progress (مر"�شيلل احلل إ إآ BOQ اجعمل - تححر*
+    #     بعد لالت tasks ـفقدن مبجان)
+    # --------------------------------------------------------------
     task_progress_percentage = fields.Float(
         string='Task-based Progress %',
         compute='_compute_task_progress_percentage',
-        help='نسبة إنجاز تقريبية بناءً على المهام المقفولة - هتتستبدل بنسبة BOQ الفعلية لاحقاً',
+        help='نسبة إاناز,ة تقريبة بنناя المطامئ, المقصولة اسعؤ القمية الفلعية واسعؤ بحالية',
     )
 
     boq_line_ids = fields.One2many(
         'boq.line', 'project_id', string='BOQ Lines',
-        domain=[('parent_id', '=', False)],
+        domain=[(&parent_id', '=', False)],
     )
     boq_total_contracted = fields.Monetary(
         string='BOQ Total', currency_field='construction_currency_id',
@@ -121,9 +131,9 @@ class ProjectProject(models.Model):
             closed = len(project.task_ids.filtered(lambda t: t.stage_id.fold))
             project.task_progress_percentage = round((closed / total) * 100, 2)
 
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     # Smart buttons
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     def action_view_tender(self):
         self.ensure_one()
         return {
@@ -137,7 +147,7 @@ class ProjectProject(models.Model):
     def _compute_boq_line_count(self):
         for project in self:
             project.boq_line_count = self.env['boq.line'].search_count(
-                [('project_id', '=', project.id)])
+                [(&project_id', '=', project.id)])
 
     def action_view_boq(self):
         self.ensure_one()
@@ -146,13 +156,13 @@ class ProjectProject(models.Model):
             'name': 'Bill of Quantities',
             'res_model': 'boq.line',
             'view_mode': 'list,form',
-            'domain': [('project_id', '=', self.id)],
+            'domain': [(&project_id', '=', self.id)],
             'context': {'default_project_id': self.id},
         }
 
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     # Subcontracting
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     subcontract_agreement_ids = fields.One2many(
         'subcontract.agreement', 'project_id', string='Subcontract Agreements',
     )
@@ -184,9 +194,9 @@ class ProjectProject(models.Model):
             'context': {'default_project_id': self.id},
         }
 
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     # Site daily reports (Sarky)
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     daily_report_ids = fields.One2many('site.daily.report', 'project_id', string='Site Daily Reports')
     daily_report_count = fields.Integer(compute='_compute_daily_report_count')
 
@@ -206,15 +216,15 @@ class ProjectProject(models.Model):
             'context': {'default_project_id': self.id},
         }
 
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     # Material Requisitions
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     material_requisition_count = fields.Integer(compute='_compute_material_requisition_count')
 
     def _compute_material_requisition_count(self):
         for project in self:
             project.material_requisition_count = self.env['material.requisition'].search_count(
-                [('project_id', '=', project.id)])
+                [(&project_id', '=', project.id)])
 
     def action_view_material_requisitions(self):
         self.ensure_one()
@@ -223,22 +233,22 @@ class ProjectProject(models.Model):
             'name': _('Material Requisitions'),
             'res_model': 'material.requisition',
             'view_mode': 'list,form',
-            'domain': [('project_id', '=', self.id)],
+            'domain': [(&project_id', '=', self.id)],
             'context': {'default_project_id': self.id},
         }
 
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     # Inventory (Stock) integration
-    # -----------------------------------------------------------
+    # --------------------------------------------------------------
     # Every construction project gets its own internal stock location
     # (a child of the company warehouse's Stock location) so materials
     # issued via Material Requisitions show up as real Inventory
     # transfers/stock moves, and on-hand quantities at the project
     # site can be tracked like any other Odoo location.
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     stock_location_id = fields.Many2one(
         'stock.location', string='Site Stock Location', readonly=True, copy=False,
-        help='لوكيشن المخزون الخاص بالموقع - بيتولد تلقائي أول ما تعتمد طلب صرف مواد',
+        help='لوكيان المضصون العاصن الموقع - جحولد تقطايان أؑال مƂ توقشا طلب صـف مواد',
     )
     material_transfer_count = fields.Integer(compute='_compute_material_transfer_count')
 
@@ -261,7 +271,7 @@ class ProjectProject(models.Model):
             'res_model': 'stock.picking',
             'view_mode': 'list,form',
             'domain': ['|', ('location_id', '=', self.stock_location_id.id),
-                       ('location_dest_id', '=', self.stock_location_id.id)],
+                   ('location_dest_id', '=', self.stock_location_id.id)],
         }
 
     def _get_or_create_stock_location(self):
@@ -284,15 +294,15 @@ class ProjectProject(models.Model):
         self.stock_location_id = location.id
         return location
 
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     # Work Inspections
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     inspection_count = fields.Integer(compute='_compute_inspection_count')
 
     def _compute_inspection_count(self):
         for project in self:
             project.inspection_count = self.env['work.inspection'].search_count(
-                [('project_id', '=', project.id)])
+                [(&project_id', '=', project.id)])
 
     def action_view_inspections(self):
         self.ensure_one()
@@ -305,15 +315,15 @@ class ProjectProject(models.Model):
             'context': {'default_project_id': self.id},
         }
 
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     # Correspondence
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     correspondence_count = fields.Integer(compute='_compute_correspondence_count')
 
     def _compute_correspondence_count(self):
         for project in self:
             project.correspondence_count = self.env['project.correspondence'].search_count(
-                [('project_id', '=', project.id)])
+                [(&project_id', '=', project.id)])
 
     def action_view_correspondence(self):
         self.ensure_one()
@@ -326,9 +336,9 @@ class ProjectProject(models.Model):
             'context': {'default_project_id': self.id},
         }
 
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     # Progress Photos
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     photo_count = fields.Integer(compute='_compute_photo_count')
 
     def _compute_photo_count(self):
@@ -347,15 +357,15 @@ class ProjectProject(models.Model):
             'context': {'default_project_id': self.id},
         }
 
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     # Bank Guarantees
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     guarantee_count = fields.Integer(compute='_compute_guarantee_count')
 
     def _compute_guarantee_count(self):
         for project in self:
             project.guarantee_count = self.env['bank.guarantee'].search_count(
-                [('project_id', '=', project.id)])
+                [(&project_id', '=', project.id)])
 
     def action_view_guarantees(self):
         self.ensure_one()
@@ -368,9 +378,9 @@ class ProjectProject(models.Model):
             'context': {'default_project_id': self.id},
         }
 
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     # Handover / Delivery
-    # ---------------------------------------------------------------
+    # --------------------------------------------------------------
     handover_ids = fields.One2many('project.handover', 'project_id', string='Handovers')
     handover_count = fields.Integer(compute='_compute_handover_count')
     retention_held_amount = fields.Monetary(
@@ -381,7 +391,7 @@ class ProjectProject(models.Model):
     def _compute_handover_count(self):
         for project in self:
             project.handover_count = self.env['project.handover'].search_count(
-                [('project_id', '=', project.id)])
+                [(&project_id', '=', project.id)])
 
     @api.depends('boq_line_ids')
     def _compute_retention_held_amount(self):
