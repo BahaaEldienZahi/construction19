@@ -69,13 +69,10 @@
             </xpath>
 
             <!-- Flag + type right after project name -->
-            <xpath expr="//field[@name='date_start']" position="after">
+            <xpath expr="//field[@name='name']" position="after">
                 <field name="is_construction_project"/>
-                <field name="construction_type"
-                       invisible="not is_construction_project"/>
-                <field name="execution_type"
-                       widget="selection"
-                       invisible="not is_construction_project"/>
+                <field name="construction_type" invisible="not is_construction_project"/>
+                <field name="execution_type" invisible="not is_construction_project"/>
             </xpath>
 
             <!-- New notebook page with full contract/site details -->
@@ -89,6 +86,9 @@
                             <field name="contract_signing_date"/>
                             <field name="contract_value"/>
                             <field name="execution_type" invisible="not is_construction_project"/>
+                            <field name="jv_partner_id" invisible="execution_type != 'joint_venture' or not is_construction_project"/>
+                            <field name="jv_partner_share" invisible="execution_type != 'joint_venture' or not is_construction_project"/>
+                            <field name="subcontract_coverage_ratio" widget="progressbar" invisible="execution_type != 'subcontract' or not is_construction_project"/>
                         </group>
                         <group string="Site &amp; Consultant">
                             <field name="site_start_date"/>
