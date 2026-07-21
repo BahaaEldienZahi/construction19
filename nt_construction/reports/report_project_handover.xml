@@ -1,45 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="action_report_project_handover" model="ir.actions.report">
-        <field name="name">سهادة تسيم / Handover Certificate</field>
+        <field name="name">Handover / Delivery Certificate</field>
         <field name="model">project.handover</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">nt_construction.report_project_handover_document</field>
         <field name="report_file">nt_construction.report_project_handover_document</field>
-        <field name="print_report_name">'سهادة تسيم - %s' % (object.name)</field>
+        <field name="print_report_name">'Handover Certificate - %s' % (object.name)</field>
         <field name="binding_model_id" ref="model_project_handover"/>
         <field name="binding_type">report</field>
     </record>
+
     <template id="report_project_handover_document">
-        <t t-call="web.html_container"><t t-foreach="docs" t-as="o"><t t-call="web.external_layout">
-            <div class="page">
-                <div class="text-center mb-3"><h2 style="color:#1e8449; margin-bottom:0;">سهادة تسيم مشروع / Project Handover Certificate</h2><h4 style="color:#7f8c8d;" t-field="o.name"/></div>
-                <hr style="border-top:3px solid #1e8449;"/>
-                <table class="table table-sm mt-2" style="width:100%">
-                    <tr><td style="width:35%"><strong>المشروع / Project</strong></td><td><span t-field="o.project_id.name"/></td><td style="width:35%"><strong>التاريخ / Date</strong></td><td><span t-field="o.date"/></td></tr>
-                    <tr><td><strong>الحالة / Status</strong></td><td><span t-field="o.state"/></td><td><strong>العميل / Client</strong></td><td><span t-field="o.project_id.partner_id.name"/></td></tr>
-                </table>
-                <h5 class="mt-3" style="color:#1e8449;">التسيم الاةثاةي / Provisional Handover</h5>
-                <table class="table table-sm" style="width:100%">
-                    <tr><td style="width:35%"><strong>تاريخ التسيم الاةثاةي / Provisional Handover Date</strong></td><td><span t-field="o.provisional_handover_date"/></td><td style="width:35%"><strong>فبرة الصد٧نة / DLP</strong></td><td><span t-field="o.defects_liability_months"/> ً6ار / months</td></tr>
-                    <tr><td><strong>تاريخ نهاية الصد٧نة / DLP End Date</strong></td><td><span t-field="o.defects_liability_end_date"/></td><td t-if="o.final_handover_date"><strong>تاريخ التسيم النهاية / Final Handover Date</strong></td><td t-if="o.final_handover_date"><span t-field="o.final_handover_date"/></td></tr>
-                </table>
-                <h5 class="mt-3" style="color:#1e8449;">قايما الم̵لȴاؽات / Punch List (Snag List)</h5>
-                <table class="table table-sm table-bordered">
-                    <thead><tr style="background-color:#1e8449; color:white;"><th>الظو�م / Description</th><th>الموقع / Location</th><th>الم̵واول / Responsible</th><th>الحالة / Status</th><th>تاريخ التبليص / Reported</th><th>تاريخ ال؅صلاق / Closed</th></tr></thead>
-                    <tbody><tr t-foreach="o.punch_list_ids" t-as="p"><td><span t-field="p.description"/></td><td><span t-field="p.location"/></td><td><span t-field="p.responsible_party"/></td><td><span t-att-style="'color:#27ae60; font-weight:bold;' if p.status == 'closed' else 'color:#c0392b; font-weight:bold;'" t-field="p.status"/></td><td><span t-field="p.date_reported"/></td><td><span t-field="p.date_closed"/></td></tr></tbody>
-                </table>
-                <p style="font-size:13px;"><strong>المراشطات المقتوحة / Open items: </strong><span style="color:#c0392b;" t-field="o.punch_list_open_count"/> / <span t-field="o.punch_list_total_count"/></p>
-                <h5 class="mt-3" style="color:#1e8449;">الŅفذار عن الضمان / Retention Release</h5>
-                <table class="table table-sm" style="width:100%">
-                    <tr style="background-color:#eafaf1;"><td style="width:35%"><strong>إسمالي الضمان المححبي / Total Retention Held</strong></td><td class="text-end"><span t-field="o.retention_held_total"/></td></tr>
-                    <tr><td>المراطلة الأولي / Stage 1 (<span t-field="o.retention_release_stage1_percentage"/>%) عنة التسيم الاثثاة</td><td class="text-end"><span t-field="o.retention_release_stage1_amount"/><span t-if="o.retention_release_stage1_done" style="color:#27ae60;"> ✓ تم</span><span t-else="" style="color:#c0392b;"> ✗ لم يت؅</span></td></tr>
-                    <tr><td>اللرحلة الاخانة / Stage 2 (<span t-field="o.retention_release_stage2_percentage"/>%) مي التسيم النهاية</td><td class="text-end"><span t-field="o.retention_release_stage2_amount"/><span t-if="o.retention_release_stage2_done" style="color:#27ae60;"> ✓ تم</span><span t-else="" style="color:#c0392b;"> ✗ لم يت؅</span></td></tr>
-                </table>
-                <h5 class="mt-3" t-if="o.final_acceptance_notes" style="color:#1e8449;">ماجمحات القق؈ل النهاية / Final Acceptance Notes</h5>
-                <p t-field="o.final_acceptance_notes" style="background-color:#eafaf1; padding:8px; border:1px solid #a9dfbf; border-radius:4px;"/>
-                <div class="row mt-5 pt-5"><div class="col-6 text-center"><hr style="width:60%;"/><p>المقاول / For the Contractor</p></div><div class="col-6 text-center"><hr style="width:60%;"/><p>العميل / For the Client</p></div></div>
-            </div>
-        </t></t></t>
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h2>Handover / Delivery Certificate</h2>
+                                <h4 t-field="o.name"/>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge rounded-pill text-bg-light border" t-field="o.state"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm mt-3" style="width:65%">
+                            <tr><td><strong>Project</strong></td><td><span t-field="o.project_id.name"/></td></tr>
+                            <tr><td><strong>Date</strong></td><td><span t-field="o.date"/></td></tr>
+                            <tr><td><strong>Provisional Handover Date</strong></td><td><span t-field="o.provisional_handover_date"/></td></tr>
+                            <tr><td><strong>Defects Liability Period</strong></td><td><span t-field="o.defects_liability_months"/> months</td></tr>
+                            <tr><td><strong>DLP End Date</strong></td><td><span t-field="o.defects_liability_end_date"/></td></tr>
+                            <tr t-if="o.final_handover_date"><td><strong>Final Handover Date</strong></td><td><span t-field="o.final_handover_date"/></td></tr>
+                        </table>
+
+                        <h5 class="mt-3">Punch List / Snag Items</h5>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr class="table-active">
+                                    <th>Description</th>
+                                    <th>Location</th>
+                                    <th>Responsible</th>
+                                    <th>Status</th>
+                                    <th>Reported</th>
+                                    <th>Closed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.punch_list_ids" t-as="p">
+                                    <td><span t-field="p.description"/></td>
+                                    <td><span t-field="p.location"/></td>
+                                    <td><span t-field="p.responsible_party"/></td>
+                                    <td><span t-field="p.status"/></td>
+                                    <td><span t-field="p.date_reported"/></td>
+                                    <td><span t-field="p.date_closed"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            <strong>Open items: </strong><span t-field="o.punch_list_open_count"/> /
+                            <span t-field="o.punch_list_total_count"/>
+                        </p>
+
+                        <h5 class="mt-3">Retention Release</h5>
+                        <table class="table table-sm" style="width:65%">
+                            <tr><td><strong>Total Retention Held</strong></td><td class="text-end"><span t-field="o.retention_held_total"/></td></tr>
+                            <tr>
+                                <td>Stage 1 (<span t-field="o.retention_release_stage1_percentage"/>%)</td>
+                                <td class="text-end"><span t-field="o.retention_release_stage1_amount"/></td>
+                            </tr>
+                            <tr>
+                                <td>Stage 2 (<span t-field="o.retention_release_stage2_percentage"/>%)</td>
+                                <td class="text-end"><span t-field="o.retention_release_stage2_amount"/></td>
+                            </tr>
+                        </table>
+
+                        <h5 class="mt-3" t-if="o.final_acceptance_notes">Final Acceptance Notes</h5>
+                        <p t-field="o.final_acceptance_notes"/>
+
+                        <div class="row mt-5 pt-5">
+                            <div class="col-6 text-center"><p>For the Contractor</p></div>
+                            <div class="col-6 text-center"><p>For the Client</p></div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
     </template>
+
 </odoo>
