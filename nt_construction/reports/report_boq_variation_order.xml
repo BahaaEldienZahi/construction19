@@ -2,12 +2,12 @@
 <odoo>
 
     <record id="action_report_boq_variation_order" model="ir.actions.report">
-        <field name="name">Variation Order</field>
+        <field name="name">أمر تغيير / Variation Order</field>
         <field name="model">boq.variation.order</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">nt_construction.report_boq_variation_order_document</field>
         <field name="report_file">nt_construction.report_boq_variation_order_document</field>
-        <field name="print_report_name">'Variation Order - %s' % (object.name)</field>
+        <field name="print_report_name">'أمر تغيير - %s' % (object.name)</field>
         <field name="binding_model_id" ref="model_boq_variation_order"/>
         <field name="binding_type">report</field>
     </record>
@@ -17,33 +17,34 @@
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
                     <div class="page">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h2>Variation Order</h2>
-                                <h4 t-field="o.name"/>
-                            </div>
-                            <div class="text-end">
-                                <span class="badge rounded-pill text-bg-light border" t-field="o.state"/>
-                            </div>
+                        <div class="text-center mb-3">
+                            <h2 style="color:#d35400; margin-bottom:0;">أمر تغيير / Variation Order</h2>
+                            <h4 style="color:#7f8c8d;" t-field="o.name"/>
                         </div>
+                        <hr style="border-top:3px solid #d35400;"/>
 
-                        <table class="table table-sm mt-3" style="width:60%">
-                            <tr><td><strong>Project</strong></td><td><span t-field="o.project_id.name"/></td></tr>
-                            <tr><td><strong>Date</strong></td><td><span t-field="o.date"/></td></tr>
+                        <table class="table table-sm mt-2" style="width:100%">
+                            <tr>
+                                <td style="width:30%"><strong>المشروع / Project</strong></td><td><span t-field="o.project_id.name"/></td>
+                                <td style="width:30%"><strong>التاريخ / Date</strong></td><td><span t-field="o.date"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>الحالة / Status</strong></td><td><span t-field="o.state"/></td>
+                                <td><strong>قيمة العقد / Contract Value</strong></td><td><span t-field="o.project_id.contract_value"/></td>
+                            </tr>
                         </table>
 
-                        <h5 class="mt-3" t-if="o.reason">Reason / Justification</h5>
-                        <p t-field="o.reason"/>
+                        <h5 class="mt-3" t-if="o.reason" style="color:#d35400;">سبب التغيير / Reason / Justification</h5>
+                        <p t-field="o.reason" style="background-color:#fef9e7; padding:8px; border:1px solid #f9e79f; border-radius:4px;"/>
 
-                        <table class="table table-sm table-bordered mt-3">
+                        <h5 class="mt-3" style="color:#d35400;">بنود التغيير / Variation Items</h5>
+                        <table class="table table-sm table-bordered mt-2">
                             <thead>
-                                <tr class="table-active">
-                                    <th>Code</th>
-                                    <th>Description</th>
-                                    <th>UoM</th>
-                                    <th class="text-end">Qty Change</th>
-                                    <th class="text-end">Unit Price</th>
-                                    <th class="text-end">Amount Change</th>
+                                <tr style="background-color:#d35400; color:white;">
+                                    <th>الكود / Code</th><th>البيان / Description</th><th>الوحدة / UoM</th>
+                                    <th class="text-end">تغيير الكمية / Qty Change (+/-)</th>
+                                    <th class="text-end">سعر الوحدة / Unit Price</th>
+                                    <th class="text-end">التغيير بالمبلغ / Amount Change</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,28 +52,30 @@
                                     <td><span t-field="line.code"/></td>
                                     <td><span t-field="line.name"/></td>
                                     <td><span t-field="line.uom_id.name"/></td>
-                                    <td class="text-end"><span t-field="line.delta_qty"/></td>
+                                    <td class="text-end"><span t-att-style="'color:#27ae60;' if line.delta_qty >= 0 else 'color:#c0392b;'" t-field="line.delta_qty"/></td>
                                     <td class="text-end"><span t-field="line.unit_price"/></td>
-                                    <td class="text-end"><span t-field="line.delta_amount"/></td>
+                                    <td class="text-end"><span t-att-style="'color:#27ae60;' if line.delta_amount >= 0 else 'color:#c0392b;'" t-field="line.delta_amount"/></td>
                                 </tr>
                             </tbody>
                         </table>
 
-                        <div class="row mt-3">
-                            <div class="col-6 offset-6">
-                                <table class="table table-sm">
-                                    <tr class="border-top">
-                                        <td><strong>Total Change</strong></td>
-                                        <td class="text-end"><strong><span t-field="o.total_delta_amount"/></strong></td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
+                        <div class="row mt-3"><div class="col-6 offset-6">
+                        <table class="table table-sm" style="font-size:13px;">
+                            <tr style="background-color:#f8f9fa; font-weight:bold; border-top:2px solid #d35400;">
+                                <td>صافي التغيير / Net Change</td>
+                                <td class="text-end" style="font-size:15px;"><span t-att-style="'color:#27ae60;' if o.total_delta_amount >= 0 else 'color:#c0392b;'" t-field="o.total_delta_amount"/></td>
+                            </tr>
+                            <tr style="font-size:11px; color:#7f8c8d;">
+                                <td>قيمة العقد بعد التغيير / Contract Value After VO</td>
+                                <td class="text-end"><span t-esc="o.project_id.contract_value + o.total_delta_amount"/></td>
+                            </tr>
+                        </table>
+                        </div></div>
 
                         <div class="row mt-5 pt-5">
-                            <div class="col-4 text-center"><p>Prepared By</p></div>
-                            <div class="col-4 text-center"><p>Reviewed By (L1)</p></div>
-                            <div class="col-4 text-center"><p>Approved By (L2)</p></div>
+                            <div class="col-4 text-center"><hr style="width:60%;"/><p>الم/؏عِد / Prepared By</p></div>
+                            <div class="col-4 text-center"><hr style="width:60%;"/><p>الم/؏راجع (L1) / Reviewed By</p></div>
+                            <div class="col-4 text-center"><hr style="width:60%;"/><p>المُعتمد (L2) / Approved By</p></div>
                         </div>
                     </div>
                 </t>
