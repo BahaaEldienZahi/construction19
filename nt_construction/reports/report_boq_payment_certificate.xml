@@ -2,12 +2,12 @@
 <odoo>
 
     <record id="action_report_boq_payment_certificate" model="ir.actions.report">
-        <field name="name">Payment Certificate</field>
+        <field name="name">شهادة مستخلص / Payment Certificate</field>
         <field name="model">boq.payment.certificate</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">nt_construction.report_boq_payment_certificate_document</field>
         <field name="report_file">nt_construction.report_boq_payment_certificate_document</field>
-        <field name="print_report_name">'Payment Certificate - %s' % (object.name)</field>
+        <field name="print_report_name">'مستخلص - %s' % (object.name)</field>
         <field name="binding_model_id" ref="model_boq_payment_certificate"/>
         <field name="binding_type">report</field>
     </record>
@@ -17,53 +17,55 @@
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
                     <div class="page">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h2>Payment Certificate</h2>
-                                <h4 t-field="o.name"/>
-                            </div>
-                            <div class="text-end">
-                                <span class="badge rounded-pill text-bg-light border" t-field="o.state"/>
-                            </div>
+                        <div class="text-center mb-3">
+                            <h2 style="color:#1a5276; margin-bottom:0;">
+                                شهادة مستخلص / Payment Certificate
+                            </h2>
+                            <h4 style="color:#7f8c8d;" t-field="o.name"/>
                         </div>
+                        <hr style="border-top:3px solid #1a5276;"/>
 
-                        <table class="table table-sm mt-3" style="width:60%">
+                        <table class="table table-sm mt-2" style="width:100%">
                             <tr>
-                                <td><strong>Project</strong></td>
-                                <td><span t-field="o.project_id.name"/></td>
+                                <td style="width:30%"><strong>المشروع / Project</strong></td>
+                                <td style="width:70%" colspan="3"><span t-field="o.project_id.name"/></td>
                             </tr>
                             <tr>
-                                <td><strong>Client</strong></td>
+                                <td><strong>العمبل / Client</strong></td>
                                 <td><span t-field="o.project_id.partner_id.name"/></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Date</strong></td>
+                                <td style="width:30%"><strong>التاريخ / Date</strong></td>
                                 <td><span t-field="o.date"/></td>
                             </tr>
                             <tr t-if="o.period_from or o.period_to">
-                                <td><strong>Period</strong></td>
-                                <td>
+                                <td><strong>الفتسة / Period</strong></td>
+                                <td colspan="3">
                                     <span t-field="o.period_from"/> — <span t-field="o.period_to"/>
                                 </td>
+                            </tr>
+                            <tr>
+                                <td><strong>الحالة / Status</strong></td>
+                                <td><span t-field="o.state"/></td>
+                                <td><strong>رقم العقد / Contract No.</strong></td>
+                                <td><span t-field="o.project_id.contract_number"/></td>
                             </tr>
                         </table>
 
                         <table class="table table-sm table-bordered mt-3">
                             <thead>
-                                <tr class="table-active">
-                                    <th>BOQ Item</th>
-                                    <th class="text-end">Contracted Qty</th>
-                                    <th class="text-end">Unit Price</th>
-                                    <th class="text-end">Cumulative Before</th>
-                                    <th class="text-end">Qty This Period</th>
-                                    <th class="text-end">Cumulative After</th>
-                                    <th class="text-end">Amount</th>
+                                <tr style="background-color:#1a5276; color:white;">
+                                    <th>البند / BOQ Item</th>
+                                    <th class="text-end">الكمية التعاقدية / Contracted Qty</th>
+                                    <th class="text-end">سعر الوحدة / Unit Price</th>
+                                    <th class="text-end">التراكمي السابق / Cumulative Before</th>
+                                    <th class="text-end">كمية المستخلص / Qty This Period</th>
+                                    <th class="text-end">التراكمي اللاحق / Cumulative After</th>
+                                    <th class="text-end">المרلغ / Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr t-foreach="o.line_ids" t-as="line">
                                     <td>
-                                        <span t-field="line.boq_line_id.code"/> —
+                                        <small t-field="line.boq_line_id.code"/> —
                                         <span t-field="line.boq_line_id.name"/>
                                     </td>
                                     <td class="text-end"><span t-field="line.quantity_contracted"/></td>
@@ -78,25 +80,23 @@
 
                         <div class="row mt-3">
                             <div class="col-6 offset-6">
-                                <table class="table table-sm">
+                                <table class="table table-sm" style="font-size:13px;">
                                     <tr>
-                                        <td><strong>Gross Amount</strong></td>
+                                        <td>إجمالي المستخلص / Gross Amount</td>
                                         <td class="text-end"><span t-field="o.gross_amount"/></td>
                                     </tr>
                                     <tr>
-                                        <td>
-                                            <strong>Retention (<span t-field="o.retention_percentage"/>%)</strong>
-                                        </td>
-                                        <td class="text-end">-<span t-field="o.retention_amount"/></td>
+                                        <td>خصم الضمان / Retention (<span t-field="o.retention_percentage"/>%)</td>
+                                        <td class="text-end" style="color:#c0392b;">- <span t-field="o.retention_amount"/></td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Advance Recovery</strong></td>
-                                        <td class="text-end">-<span t-field="o.advance_recovery_amount"/></td>
+                                        <td>استرداد الدفعة المقدم٩ / Advance Recovery</td>
+                                        <td class="text-end" style="color:#c0392b;">- <span t-field="o.advance_recovery_amount"/></td>
                                     </tr>
-                                    <tr class="border-top">
-                                        <td><strong>Net Payable</strong></td>
-                                        <td class="text-end">
-                                            <strong><span t-field="o.net_payable"/></strong>
+                                    <tr style="background-color:#f8f9fa; font-weight:bold; border-top:2px solid #1a5276;">
+                                        <td>صافي المصافي السيحق / Net Payable</td>
+                                        <td class="text-end" style="font-size:15px; color:#1a5276;">
+                                            <span t-field="o.net_payable"/>
                                         </td>
                                     </tr>
                                 </table>
@@ -104,17 +104,9 @@
                         </div>
 
                         <div class="row mt-5 pt-5">
-                            <div class="col-4 text-center">
-                                <p>Prepared By</p>
-                            </div>
-                            <div class="col-4 text-center">
-                                <p>Reviewed By (L1)</p>
-                                <p t-if="o.approver_l1_id" t-field="o.approver_l1_id.name"/>
-                            </div>
-                            <div class="col-4 text-center">
-                                <p>Approved By (L2)</p>
-                                <p t-if="o.approver_l2_id" t-field="o.approver_l2_id.name"/>
-                            </div>
+                            <div class="col-4 text-center"><hr style="width:60%;"/><p>الم/؏عِد / Prepared By</p></div>
+                            <div class="col-4 text-center"><hr style="width:60%;"/><p>الم/؏راجع (L1) / Reviewed By</p><p t-if="o.approver_l1_id" style="font-size:12px;" t-field="o.approver_l1_id.name"/></div>
+                            <div class="col-4 text-center"><hr style="width:60%;"/><p>المُعتمد (L2) / Approved By</p><p t-if="o.approver_l2_id" style="font-size:12px;" t-field="o.approver_l2_id.name"/></div>
                         </div>
                     </div>
                 </t>
