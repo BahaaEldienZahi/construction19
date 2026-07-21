@@ -1,34 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="action_report_work_inspection" model="ir.actions.report">
-        <field name="name">طلب فحص / Work Inspection Request (WIR/MIR)</field>
+        <field name="name">Work Inspection Request (WIR/MIR)</field>
         <field name="model">work.inspection</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">nt_construction.report_work_inspection_document</field>
         <field name="report_file">nt_construction.report_work_inspection_document</field>
-        <field name="print_report_name">'طلب فحص - %s' % (object.name)</field>
+        <field name="print_report_name">'Inspection - %s' % (object.name)</field>
         <field name="binding_model_id" ref="model_work_inspection"/>
         <field name="binding_type">report</field>
     </record>
+
     <template id="report_work_inspection_document">
-        <t t-call="web.html_container"><t t-foreach="docs" t-as="o"><t t-call="web.external_layout">
-            <div class="page">
-                <div class="text-center mb-3"><h2 style="color:#34495e; margin-bottom:0;">طلب فحص أعمال / Work Inspection Request (WIR/MIR)</h2><h4 style="color:#7f8c8d;" t-field="o.name"/></div>
-                <hr style="border-top:3px solid #34495e;"/>
-                <table class="table table-sm mt-2" style="width:100%">
-                    <tr><td style="width:30%"><strong>المشروع / Project</strong></td><td><span t-field="o.project_id.name"/></td><td style="width:30%"><strong>نوع الفحص / Type</strong></td><td><span t-field="o.inspection_type"/></td></tr>
-                    <tr><td><strong>تاريخ الطلب / Request Date</strong></td><td><span t-field="o.date"/></td><td><strong>تاريخ الفسصح / Inspection Date</strong></td><td><span t-field="o.inspection_date"/></td></tr>
-                    <tr><td><strong>الموقع / Location</strong></td><td><span t-field="o.location"/></td><td><strong>المصهاس المؖقص د / Inspector</strong></td><td><span t-field="o.inspector_id.name"/></td></tr>
-                    <tr><td><strong>الحالة / Status</strong></td><td colspan="3"><span t-field="o.state"/></td></tr>
-                </table>
-                <table class="table table-sm table-bordered mt-2" t-if="o.boq_line_ids"><thead><tr style="background-color:#34495e; color:white;"><th>بنود اللإل  BOQ المقتبطب / Related BOQ Items</th></tr></thead><tbody><tr t-foreach="o.boq_line_ids" t-as="b"><td><small t-field="b.code"/> — <span t-field="b.name"/></td></tr></tbody></table>
-                <h5 class="mt-3" style="color:#34495e;">نطاق الي-ص / Scope of Inspection</h5>
-                <p t-field="o.description" style="background-color:#f2f3f4; padding:8px; border:1px solid #d5dbdb; border-radius:4px;"/>
-                <div t-if="o.inspection_result"><h5 class="mt-3" style="color:#34495e;">نتيات القصح / Inspection Result</h5><p t-field="o.inspection_result" style="background-color:#f2f3f4; padding:8px; border:1px solid #d5dbdb; border-radius:4px;"/>
-                <p><strong>محازق / Conforming: </strong><span t-if="o.is_conforming" style="color:#27ae60; font-weight:bold;">دعم / Yes</span><span t-else="" style="color:#c0392b; font-weight:bold;">ال / No</span></p>
-                <div t-if="not o.is_conforming and o.rejection_reason"><strong style="color:#c0392b;">سبب الرلض / Rejection Reason</strong><p t-field="o.rejection_reason" style="color:#c0392b; background-color:#fdedec; padding:8px; border:1px solid #f5b7b1; border-radius:4px;"/></div></div>
-                <div class="row mt-5 pt-5"><div class="col-4 text-center"><hr style="width:60%;"/><p>مقدم ال۴الب / Requested By</p></div><div class="col-4 text-center"><hr style="width:60%;"/><p>المصهاس الم�ɂص د / Inspector</p></div><div class="col-4 text-center"><hr style="width:60%;"/><p>المُعتمد / Approved By</p></div></div>
-            </div>
-        </t></t></t>
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h2>Work Inspection Request</h2>
+                                <h4 t-field="o.name"/>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge rounded-pill text-bg-light border" t-field="o.state"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm mt-3" style="width:65%">
+                            <tr><td><strong>Project</strong></td><td><span t-field="o.project_id.name"/></td></tr>
+                            <tr><td><strong>Type</strong></td><td><span t-field="o.inspection_type"/></td></tr>
+                            <tr><td><strong>Request Date</strong></td><td><span t-field="o.date"/></td></tr>
+                            <tr><td><strong>Inspection Date</strong></td><td><span t-field="o.inspection_date"/></td></tr>
+                            <tr><td><strong>Location / Area</strong></td><td><span t-field="o.location"/></td></tr>
+                            <tr><td><strong>Inspector</strong></td><td><span t-field="o.inspector_id.name"/></td></tr>
+                        </table>
+
+                        <table class="table table-sm table-bordered mt-2" t-if="o.boq_line_ids">
+                            <thead>
+                                <tr class="table-active"><th>Related BOQ Items</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.boq_line_ids" t-as="b">
+                                    <td><span t-field="b.name"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h5 class="mt-3">Scope of Inspection</h5>
+                        <p t-field="o.description"/>
+
+                        <div t-if="o.inspection_result">
+                            <h5 class="mt-3">Inspection Result</h5>
+                            <p t-field="o.inspection_result"/>
+                            <p>
+                                <strong>Conforming: </strong>
+                                <span t-esc="'Yes' if o.is_conforming else 'No'"/>
+                            </p>
+                            <div t-if="not o.is_conforming and o.rejection_reason">
+                                <strong>Rejection Reason</strong>
+                                <p t-field="o.rejection_reason"/>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5 pt-5">
+                            <div class="col-4 text-center"><p>Requested By</p></div>
+                            <div class="col-4 text-center"><p>Inspector</p></div>
+                            <div class="col-4 text-center"><p>Approved By</p></div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
     </template>
+
 </odoo>
