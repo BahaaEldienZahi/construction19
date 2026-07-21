@@ -228,6 +228,63 @@ class ProjectProject(models.Model):
         }
 
     # ---------------------------------------------------------------
+    # Inventory (Stock) integration
+    # -----------------------------------------------------------
+    # Every construction project gets its own internal stock location
+    # (a child of the company warehouse's Stock location) so materials
+    # issued via Material Requisitions show up as real Inventory
+    # transfers/stock moves, and on-hand quantities at the project
+    # site can be tracked like any other Odoo location.
+    # ---------------------------------------------------------------
+    stock_location_id = fields.Many2one(
+        'stock.location', string='Site Stock Location', readonly=True, copy=False,
+        help='لوكيشن المخزون الخاص بالموقع - بيتولد تلقائي أول ما تعتمد طلب صرف مواد',
+    )
+    material_transfer_count = fields.Integer(compute='_compute_material_transfer_count')
+
+    def _compute_material_transfer_count(self):
+        for project in self:
+            if project.stock_location_id:
+                project.material_transfer_count = self.env['stock.picking'].search_count([
+                    '|',
+                    ('location_id', '=', project.stock_location_id.id),
+                    ('location_dest_id', '=', project.stock_location_id.id),
+                ])
+            else:
+                project.material_transfer_count = 0
+
+    def action_view_material_transfers(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Material Transfers'),
+            'res_model': 'stock.picking',
+            'view_mode': 'list,form',
+            'domain': ['|', ('location_id', '=', self.stock_location_id.id),
+                       ('location_dest_id', '=', self.stock_location_id.id)],
+        }
+
+    def _get_or_create_stock_location(self):
+        """Return this project's site stock location, creating it (and
+        registering it under the company's default warehouse) the first
+        time it is needed."""
+        self.ensure_one()
+        if self.stock_location_id:
+            return self.stock_location_id
+        warehouse = self.env['stock.warehouse'].search(
+            [('company_id', '=', self.company_id.id or self.env.company.id)], limit=1)
+        parent_location = warehouse.lot_stock_id if warehouse else self.env.ref(
+            'stock.stock_location_locations', raise_if_not_found=False)
+        location = self.env['stock.location'].create({
+            'name': self.name or _('Project'),
+            'usage': 'internal',
+            'location_id': parent_location.id if parent_location else False,
+            'company_id': self.company_id.id or self.env.company.id,
+        })
+        self.stock_location_id = location.id
+        return location
+
+    # ---------------------------------------------------------------
     # Work Inspections
     # ---------------------------------------------------------------
     inspection_count = fields.Integer(compute='_compute_inspection_count')

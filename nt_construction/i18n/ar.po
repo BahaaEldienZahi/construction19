@@ -1,0 +1,2815 @@
+# Translation of nt_construction
+# Arabic translation for National Technology Construction & Tender Management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nt_construction\n"
+"Report-Msgid-Bugs-To: \n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "A won tender cannot be cancelled directly. Please handle the linked project first."
+msgstr "لا يمكن إلغاء مناقصة تم ترسيتها مباشرة. من فضلك تعامل مع المشروع المرتبط أولاً."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "About to Expire"
+msgstr "قرب الانتهاء"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Active"
+msgstr "نشط"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Actual Completion Date"
+msgstr "تاريخ الإنجاز الفعلي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Actual Cost"
+msgstr "التكلفة الفعلية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Advance Payment %"
+msgstr "نسبة الدفعة المقدمة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Advance Payment Guarantee"
+msgstr "خطاب ضمان دفعة مقدمة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Advance Recovery"
+msgstr "استرداد الدفعة المقدمة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Agreement Lines"
+msgstr "بنود العقد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Amount"
+msgstr "المبلغ"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Amount Change"
+msgstr "التغيير في المبلغ"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "An approved record cannot be cancelled directly. Reverse its effects manually first."
+msgstr "لا يمكن إلغاء سجل معتمد مباشرة. من فضلك ألغِ أثره يدويًا أولاً."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Analytic Account"
+msgstr "الحساب التحليلي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Approve"
+msgstr "اعتماد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Approve (L1)"
+msgstr "اعتماد (المستوى الأول)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Approved"
+msgstr "معتمد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Approved (Level 1)"
+msgstr "معتمد (المستوى الأول)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Approved By (L1)"
+msgstr "اعتمد بواسطة (مستوى 1)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Approved By (L2)"
+msgstr "اعتمد بواسطة (مستوى 2)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Approver - Level 1 (Site/PM)"
+msgstr "المعتمد - المستوى الأول (الموقع/مدير المشروع)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Approver - Level 2 (Finance/Management)"
+msgstr "المعتمد - المستوى الثاني (المالية/الإدارة)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Attachments"
+msgstr "المرفقات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Award Date"
+msgstr "تاريخ الترسية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Awarded Value"
+msgstr "قيمة الترسية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "BOQ Cost Analysis"
+msgstr "تحليل تكلفة جدول الكميات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "BOQ Line"
+msgstr "بند جدول الكميات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "BOQ Lines"
+msgstr "بنود جدول الكميات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "BOQ Progress %"
+msgstr "نسبة إنجاز البند"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "BOQ Progress Entries"
+msgstr "قيود تقدم جدول الكميات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "BOQ Summary"
+msgstr "ملخص جدول الكميات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "BOQ Summary (Aggregated)"
+msgstr "ملخص جدول الكميات (مجمّع)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "BOQ Total"
+msgstr "إجمالي جدول الكميات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Bank"
+msgstr "البنك"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Bank Guarantee"
+msgstr "خطاب ضمان"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Bank Guarantees"
+msgstr "خطابات الضمان"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Bank Reference No."
+msgstr "رقم مرجع البنك"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Beneficiary"
+msgstr "المستفيد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Bid Bond / Initial Guarantee"
+msgstr "ضمان ابتدائي / دخول المناقصة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Bill Status"
+msgstr "حالة فاتورة الشراء"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Bill of Quantities"
+msgstr "جدول الكميات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Billing Terms"
+msgstr "شروط السداد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Billing Trend"
+msgstr "اتجاه التحصيل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Branch"
+msgstr "الفرع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Can only load from Work Measurement when the certificate is in draft state."
+msgstr "لا يمكن التحميل من كشف القياس إلا والمستخلص في حالة مسودة."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Cancellation Reason"
+msgstr "سبب الإلغاء"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Cancelled"
+msgstr "ملغي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Carpenter"
+msgstr "نجار"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Claim"
+msgstr "مطالبة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Claim / EOT"
+msgstr "مطالبة / تمديد مدة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Claim Date"
+msgstr "تاريخ المطالبة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Claimed"
+msgstr "تمت المطالبة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Clear"
+msgstr "صافي / مصحو"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Client"
+msgstr "العميل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Client / Consultant"
+msgstr "العميل / الاستشاري"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Client PO Number"
+msgstr "رقم أمر الشراء الخاص بالعميل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Client Tender No."
+msgstr "رقم مناقصة العميل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Close"
+msgstr "إغلاق"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Close Project"
+msgstr "إغلاق المشروع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Closed"
+msgstr "مغلق"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Cloudy"
+msgstr "غائم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Color Index"
+msgstr "لون التمييز"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Commercial"
+msgstr "الشؤون المالية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Committed Cost"
+msgstr "التكلفة الملتزم بها"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Company"
+msgstr "الشركة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Company Owned"
+msgstr "ملك الشركة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Complete"
+msgstr "مكتمل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Completion Date"
+msgstr "تاريخ الإنجاز"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Confirm Final Handover"
+msgstr "تأكيد التسليم النهائي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Confirm Measurement"
+msgstr "تأكيد كشف القياس"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Confirm Provisional Handover"
+msgstr "تأكيد التسليم الابتدائي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Confirm Report"
+msgstr "تأكيد التقرير"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Confirmed"
+msgstr "مؤكد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Conforming"
+msgstr "مطابق"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Construction Details"
+msgstr "تفاصيل الإنشاءات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Construction Project"
+msgstr "مشروع إنشائي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Construction Projects"
+msgstr "المشروعات الإنشائية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Construction Type"
+msgstr "نوع الإنشاء"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Content"
+msgstr "المحتوى"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Contract"
+msgstr "العقد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Contract Number"
+msgstr "رقم العقد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Contract Signing Date"
+msgstr "تاريخ توقيع العقد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Contract Value"
+msgstr "قيمة العقد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Contracted Qty"
+msgstr "الكمية التعاقدية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Contractual Completion Date"
+msgstr "تاريخ الإنجاز التعاقدي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Correspondence"
+msgstr "المراسلات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Correspondence / Letters"
+msgstr "المراسلات / الخطابات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Cost Analysis"
+msgstr "تحليل التكلفة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Cost Analysis (Contracted vs Committed vs Executed)"
+msgstr "تحليل التكلفة (تعاقدي مقابل ملتزم به مقابل منفذ)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Cost Control"
+msgstr "ضبط التكلفة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Cost Variance"
+msgstr "انحراف التكلفة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Count"
+msgstr "العدد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Create Execution Project"
+msgstr "إنشاء مشروع تنفيذي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Create Invoice"
+msgstr "إنشاء فاتورة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Create Vendor Bill"
+msgstr "إنشاء فاتورة مورد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Cumulative After"
+msgstr "التراكمي بعد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Cumulative Before"
+msgstr "التراكمي قبل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Currency"
+msgstr "العملة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Customer Invoice"
+msgstr "فاتورة العميل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "DLP End Date"
+msgstr "تاريخ نهاية فترة الضمان"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Daily Report"
+msgstr "التقرير اليومي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Daily Reports"
+msgstr "التقارير اليومية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Daily Reports (Sarky)"
+msgstr "التقارير اليومية (السركي)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Date"
+msgstr "التاريخ"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Defects Liability Period (months)"
+msgstr "فترة ضمان الصيانة (بالشهور)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Delivered"
+msgstr "تم التسليم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Delivery"
+msgstr "التسليم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Description"
+msgstr "الوصف"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Direction"
+msgstr "الاتجاه"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Draft"
+msgstr "مسودة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Electrician"
+msgstr "كهربائي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Equipment"
+msgstr "المعدات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Estimated Value"
+msgstr "القيمة التقديرية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Executed Qty (Cumulative)"
+msgstr "الكمية المنفذة (تراكمي)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Executed Qty (This Period)"
+msgstr "الكمية المنفذة (هذه الفترة)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Executed Value (Cumulative)"
+msgstr "القيمة المنفذة (تراكمي)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Execution"
+msgstr "التنفيذ"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Execution Project"
+msgstr "المشروع التنفيذي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Existing BOQ Line"
+msgstr "بند موجود في جدول الكميات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Expired"
+msgstr "منتهي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Expiry Date"
+msgstr "تاريخ الانتهاء"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Extend"
+msgstr "تمديد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Extended"
+msgstr "تم التمديد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Final"
+msgstr "نهائي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Final Acceptance"
+msgstr "الاستلام النهائي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Final Acceptance Notes"
+msgstr "ملاحظات الاستلام النهائي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Final Approve (L2)"
+msgstr "اعتماد نهائي (مستوى 2)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Final Handover"
+msgstr "التسليم النهائي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Final Handover Date"
+msgstr "تاريخ التسليم النهائي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Final handover requires a confirmed provisional handover first."
+msgstr "التسليم النهائي يتطلب تأكيد التسليم الابتدائي أولاً."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Foreman"
+msgstr "ريس عمال"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "From"
+msgstr "من"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Fully Delivered"
+msgstr "تم التسليم بالكامل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "General Labor"
+msgstr "عمالة عامة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Generate BOQ Summary"
+msgstr "توليد ملخص جدول الكميات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Gross Amount"
+msgstr "المبلغ الإجمالي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Group By"
+msgstr "تجميع حسب"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Groups Only"
+msgstr "المجموعات فقط"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Guarantees"
+msgstr "خطابات الضمان"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Handover &amp; Delivery"
+msgstr "التسليم والاستلام"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Handover / Delivery"
+msgstr "التسليم والاستلام"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Handovers"
+msgstr "التسليمات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Handovers / Delivery"
+msgstr "التسليمات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Headcount"
+msgstr "عدد الأفراد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Hours Idle"
+msgstr "ساعات التعطل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Hours Worked"
+msgstr "ساعات العمل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Idle Reason"
+msgstr "سبب التعطل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Incoming"
+msgstr "وارد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Industrial"
+msgstr "صناعي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Infrastructure"
+msgstr "بنية تحتية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Inspected"
+msgstr "تم الفحص"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Inspection Date"
+msgstr "تاريخ الفحص"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Inspection Result"
+msgstr "نتيجة الفحص"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Inspections"
+msgstr "الفحوصات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Inspector"
+msgstr "المفتش"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Invoice Status"
+msgstr "حالة الفاتورة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Issue"
+msgstr "إصدار"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Issue Date"
+msgstr "تاريخ الإصدار"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Issued"
+msgstr "تم الإصدار"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Issuing Bank"
+msgstr "البنك المصدر"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Item Code"
+msgstr "رقم البند"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "L1 Approval Date"
+msgstr "تاريخ اعتماد المستوى الأول"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "L2 Approval Date"
+msgstr "تاريخ اعتماد المستوى الثاني"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Leaf Items Only"
+msgstr "البنود التفصيلية فقط"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Letter"
+msgstr "خطاب"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Letters"
+msgstr "الخطابات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Level 1 Approved"
+msgstr "معتمد المستوى الأول"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Lines"
+msgstr "البنود"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Link to Certificate"
+msgstr "ربط بمستخلص"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Linked to Certificate"
+msgstr "مرتبط بمستخلص"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Load Lines"
+msgstr "تحميل البنود"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Load from WM"
+msgstr "تحميل من كشف القياس"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Load from Work Measurement"
+msgstr "تحميل من كشف القياس"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Location"
+msgstr "الموقع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Location / Area"
+msgstr "الموقع / المنطقة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Lost"
+msgstr "خسرت"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Lost / Cancel Reason"
+msgstr "سبب الخسارة / الإلغاء"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Lost Reason"
+msgstr "سبب الخسارة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Main Contractor"
+msgstr "المقاول الرئيسي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Manpower"
+msgstr "العمالة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Mark Expired"
+msgstr "تعليم كمنتهي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Mark as Lost"
+msgstr "تعليم كخاسرة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Mark as Sent / Received"
+msgstr "تعليم كمُرسل / مستلم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Mark as Won"
+msgstr "تعليم كمرساة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Mason"
+msgstr "بنّاء"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Material Inspection Request (MIR)"
+msgstr "طلب فحص مواد (MIR)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Material Lines"
+msgstr "بنود المواد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Material Requisition"
+msgstr "طلب صرف مواد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Material Requisitions"
+msgstr "طلبات صرف المواد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Material/Product"
+msgstr "المادة/المنتج"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Minutes of Meeting"
+msgstr "محضر اجتماع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Move to Evaluation"
+msgstr "نقل إلى التقييم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "My Tenders"
+msgstr "مناقصاتي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Net Change"
+msgstr "صافي التغيير"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Net Payable"
+msgstr "صافي المستحق"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Net payable amount must be positive to create a vendor bill."
+msgstr "يجب أن يكون صافي المستحق موجبًا لإنشاء فاتورة مورد."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Net payable amount must be positive to create an invoice."
+msgstr "يجب أن يكون صافي المستحق موجبًا لإنشاء فاتورة."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "New"
+msgstr "جديد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Note"
+msgstr "ملاحظة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Notes"
+msgstr "ملاحظات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Notice / Warning"
+msgstr "إشعار / إنذار"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only a project at final handover stage can be closed."
+msgstr "لا يمكن إغلاق المشروع إلا بعد الوصول لمرحلة التسليم النهائي."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only approved certificates can be converted to a vendor bill."
+msgstr "فقط المستخلصات المعتمدة يمكن تحويلها لفاتورة مورد."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only approved certificates can be invoiced."
+msgstr "فقط المستخلصات المعتمدة يمكن إصدار فاتورة لها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only draft guarantees can be issued."
+msgstr "فقط خطابات الضمان في حالة مسودة يمكن إصدارها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only draft handovers can be moved to provisional handover."
+msgstr "فقط التسليمات في حالة مسودة يمكن نقلها للتسليم الابتدائي."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only draft inspections can be submitted."
+msgstr "فقط طلبات الفحص في حالة مسودة يمكن تقديمها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only draft measurements can be confirmed."
+msgstr "فقط كشوف القياس في حالة مسودة يمكن تأكيدها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only draft records can be submitted for approval."
+msgstr "فقط السجلات في حالة مسودة يمكن تقديمها للاعتماد."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only draft reports can be confirmed."
+msgstr "فقط التقارير في حالة مسودة يمكن تأكيدها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only draft requisitions can be submitted."
+msgstr "فقط طلبات الصرف في حالة مسودة يمكن تقديمها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only draft tenders can be submitted."
+msgstr "فقط المناقصات في حالة مسودة يمكن تقديمها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only inspected items can be approved."
+msgstr "فقط البنود التي تم فحصها يمكن اعتمادها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only issued guarantees can be claimed."
+msgstr "فقط خطابات الضمان الصادرة يمكن المطالبة بها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only issued guarantees can be extended."
+msgstr "فقط خطابات الضمان الصادرة يمكن تمديدها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only issued guarantees can be returned."
+msgstr "فقط خطابات الضمان الصادرة يمكن إرجاعها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only submitted inspections can be inspected."
+msgstr "فقط طلبات الفحص المقدمة يمكن فحصها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only submitted or L1-approved records can be rejected."
+msgstr "فقط السجلات المقدمة أو المعتمدة بالمستوى الأول يمكن رفضها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only submitted requisitions can be approved."
+msgstr "فقط طلبات الصرف المقدمة يمكن اعتمادها."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only submitted tenders can move to evaluation."
+msgstr "فقط المناقصات المقدمة يمكن نقلها لمرحلة التقييم."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Only won tenders can be converted into an execution project."
+msgstr "فقط المناقصات المرساة يمكن تحويلها لمشروع تنفيذي."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Open"
+msgstr "مفتوح"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Opening Date"
+msgstr "تاريخ الفتح"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Other"
+msgstr "أخرى"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Outgoing"
+msgstr "صادر"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "PO Line"
+msgstr "بند أمر الشراء"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Painter"
+msgstr "نقاش"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Parent (for new items)"
+msgstr "البند الأب (للبنود الجديدة)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Parent Line"
+msgstr "البند الأب"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Partial"
+msgstr "جزئي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Partially Delivered"
+msgstr "تم التسليم جزئيًا"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Payment Certificate"
+msgstr "مستخلص العميل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Payment Certificates"
+msgstr "مستخلصات العميل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Pending"
+msgstr "معلق"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Pending Approval"
+msgstr "بانتظار الاعتماد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Performance Bond"
+msgstr "خطاب ضمان حسن التنفيذ"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Period / Certificate Ref"
+msgstr "الفترة / مرجع المستخلص"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Period From"
+msgstr "الفترة من"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Period To"
+msgstr "الفترة إلى"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Photo"
+msgstr "صورة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Photo Title"
+msgstr "عنوان الصورة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Photos"
+msgstr "الصور"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Please add at least one material line before submitting."
+msgstr "من فضلك أضف بندًا واحدًا على الأقل قبل التقديم."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Please enter the awarded value before marking the tender as won."
+msgstr "من فضلك أدخل قيمة الترسية قبل تعليم المناقصة كمرساة."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Please link the guarantee to either a Tender or a Project."
+msgstr "من فضلك اربط خطاب الضمان بمناقصة أو مشروع."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Please release Stage 2 retention before closing the handover."
+msgstr "من فضلك أفرج عن دفعة الضمان (المرحلة الثانية) قبل إغلاق التسليم."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Please set a submission deadline before submitting."
+msgstr "من فضلك حدد آخر موعد للتقديم قبل التقديم."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Please set the provisional handover date first."
+msgstr "من فضلك حدد تاريخ التسليم الابتدائي أولاً."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Plumber"
+msgstr "سباك"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Progress"
+msgstr "التقدم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Progress Entries"
+msgstr "قيود التقدم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Progress Photo"
+msgstr "صورة تقدم العمل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Progress Photos"
+msgstr "صور تقدم العمل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Progress Summary"
+msgstr "ملخص التقدم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Project"
+msgstr "المشروع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Project Execution"
+msgstr "تنفيذ المشروع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Project Handover"
+msgstr "تسليم المشروع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Provisional"
+msgstr "ابتدائي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Provisional Handover (DLP Started)"
+msgstr "تسليم ابتدائي (بدأت فترة الضمان)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Provisional Handover Date"
+msgstr "تاريخ التسليم الابتدائي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Punch / Snag List"
+msgstr "قائمة الملاحظات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Punch List"
+msgstr "قائمة الملاحظات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Purchase Order Lines"
+msgstr "بنود أمر الشراء"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Qty Change (+/-)"
+msgstr "التغيير في الكمية (+/-)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Qty Delivered"
+msgstr "الكمية المسلَّمة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Qty Executed"
+msgstr "الكمية المنفذة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Qty Remaining"
+msgstr "الكمية المتبقية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Qty Requested"
+msgstr "الكمية المطلوبة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Qty This Period"
+msgstr "الكمية هذه الفترة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Quantities Executed"
+msgstr "الكميات المنفذة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Quantities Executed Today"
+msgstr "الكميات المنفذة اليوم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Quantity"
+msgstr "الكمية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Rain"
+msgstr "مطر"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Reason"
+msgstr "السبب"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Reason / Justification"
+msgstr "السبب / المبرر"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Record Inspection"
+msgstr "تسجيل نتيجة الفحص"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Record must be submitted before Level 1 approval."
+msgstr "يجب تقديم السجل قبل اعتماد المستوى الأول."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Record must have Level 1 approval before final approval."
+msgstr "يجب اعتماد المستوى الأول قبل الاعتماد النهائي."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Recorded By"
+msgstr "سجّله"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Reference Number"
+msgstr "الرقم المرجعي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Reject"
+msgstr "رفض"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Rejected"
+msgstr "مرفوض"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Rejection Reason"
+msgstr "سبب الرفض"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Related BOQ Lines"
+msgstr "بنود جدول الكميات المرتبطة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Related Subcontract"
+msgstr "عقد الباطن المرتبط"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Related Task"
+msgstr "المهمة المرتبطة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Release % at Final Handover"
+msgstr "نسبة الإفراج عند التسليم النهائي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Release % at Provisional Handover"
+msgstr "نسبة الإفراج عند التسليم الابتدائي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Release Retention (Stage 1)"
+msgstr "الإفراج عن الضمان (المرحلة الأولى)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Release Retention (Stage 2)"
+msgstr "الإفراج عن الضمان (المرحلة الثانية)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Rented"
+msgstr "مستأجر"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Reopen"
+msgstr "إعادة فتح"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Reporting"
+msgstr "التقارير"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Requested By"
+msgstr "طلبها"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Requisitions"
+msgstr "طلبات الصرف"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Reset to Draft"
+msgstr "إعادة إلى مسودة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Residential"
+msgstr "سكني"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Responded"
+msgstr "تم الرد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Response Deadline"
+msgstr "آخر موعد للرد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Response Required"
+msgstr "يتطلب ردًا"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Response To"
+msgstr "ردًا على"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Responsible"
+msgstr "المسؤول"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Responsible Party"
+msgstr "الجهة المسؤولة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Retention %"
+msgstr "نسبة الضمان"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Retention Bond"
+msgstr "خطاب ضمان الصيانة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Retention Held"
+msgstr "الضمان المحتجز"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Retention Held (Client Side)"
+msgstr "الضمان المحتجز (لدى العميل)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Return"
+msgstr "إرجاع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Returned"
+msgstr "تم الإرجاع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Sandstorm / Khamaseen"
+msgstr "عاصفة رملية / خماسين"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Scope of Inspection"
+msgstr "نطاق الفحص"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Scope of Work"
+msgstr "نطاق العمل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Scope of Work to Inspect"
+msgstr "نطاق العمل المطلوب فحصه"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search BOQ Lines"
+msgstr "بحث في بنود جدول الكميات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search Bank Guarantees"
+msgstr "بحث في خطابات الضمان"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search Correspondence"
+msgstr "بحث في المراسلات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search Handovers"
+msgstr "بحث في التسليمات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search Inspections"
+msgstr "بحث في الفحوصات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search Payment Certificates"
+msgstr "بحث في مستخلصات العميل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search Photos"
+msgstr "بحث في الصور"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search Requisitions"
+msgstr "بحث في طلبات الصرف"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search Site Daily Reports"
+msgstr "بحث في التقارير اليومية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search Subcontract Agreements"
+msgstr "بحث في عقود الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search Subcontractor Payment Certificates"
+msgstr "بحث في مستخلصات مقاولي الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search Tenders"
+msgstr "بحث في المناقصات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search Variation Orders"
+msgstr "بحث في أوامر التغيير"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Search Work Measurements"
+msgstr "بحث في كشوف القياس"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Sent / Received"
+msgstr "مُرسل / مستلم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Site &amp; Consultant"
+msgstr "الموقع والاستشاري"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Site Address"
+msgstr "عنوان الموقع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Site Daily Report"
+msgstr "التقرير اليومي للموقع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Site Daily Report (Sarky)"
+msgstr "التقرير اليومي للموقع (السركي)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Site Daily Reports"
+msgstr "التقارير اليومية للموقع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Site Engineer"
+msgstr "مهندس الموقع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Site Handover / Start Date"
+msgstr "تاريخ استلام الموقع / بدء العمل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Site Notes"
+msgstr "ملاحظات الموقع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Site Notes / Issues"
+msgstr "ملاحظات الموقع / المشاكل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Source Tender"
+msgstr "المناقصة المصدر"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Stage 1 Release Amount"
+msgstr "مبلغ الإفراج (المرحلة الأولى)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Stage 1 retention has already been released."
+msgstr "تم الإفراج عن ضمان المرحلة الأولى بالفعل."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Stage 1 retention release requires the handover to be at provisional stage."
+msgstr "الإفراج عن ضمان المرحلة الأولى يتطلب أن يكون التسليم في المرحلة الابتدائية."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Stage 2 Release Amount"
+msgstr "مبلغ الإفراج (المرحلة الثانية)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Stage 2 retention has already been released."
+msgstr "تم الإفراج عن ضمان المرحلة الثانية بالفعل."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Stage 2 retention release requires final handover to be confirmed."
+msgstr "الإفراج عن ضمان المرحلة الثانية يتطلب تأكيد التسليم النهائي."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Start Date"
+msgstr "تاريخ البدء"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Status"
+msgstr "الحالة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Steel Fixer"
+msgstr "حداد مسلح"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Sub Lines"
+msgstr "البنود الفرعية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subcontract"
+msgstr "عقد الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subcontract Agreement"
+msgstr "عقد مقاول الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subcontract Agreement Lines"
+msgstr "بنود عقد مقاول الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subcontract Agreements"
+msgstr "عقود مقاولي الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subcontracting Summary"
+msgstr "ملخص أعمال الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subcontractor"
+msgstr "مقاول الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subcontractor Certificates"
+msgstr "مستخلصات مقاول الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subcontractor Crew"
+msgstr "طاقم مقاول الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subcontractor Payment Certificate"
+msgstr "مستخلص مقاول الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subcontractor Payment Certificates"
+msgstr "مستخلصات مقاولي الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subcontracts"
+msgstr "عقود الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subject"
+msgstr "الموضوع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Submission Deadline"
+msgstr "آخر موعد للتقديم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Submit"
+msgstr "تقديم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Submit for Approval"
+msgstr "تقديم للاعتماد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Submitted"
+msgstr "مقدم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subtotal"
+msgstr "الإجمالي الفرعي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Supervising Consultant"
+msgstr "الاستشاري المشرف"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Tag"
+msgstr "الوسم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Tags"
+msgstr "الوسوم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Taken By"
+msgstr "التقطها"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Task-based Progress %"
+msgstr "نسبة الإنجاز حسب المهام"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Tender"
+msgstr "المناقصة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Tender Reference"
+msgstr "الرقم المرجعي للمناقصة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Tender must be submitted or under evaluation before it can be marked as lost."
+msgstr "يجب أن تكون المناقصة مقدمة أو تحت التقييم قبل تعليمها كخاسرة."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Tender must be submitted or under evaluation before it can be won."
+msgstr "يجب أن تكون المناقصة مقدمة أو تحت التقييم قبل تعليمها كمرساة."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Tenders"
+msgstr "المناقصات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Tenders &amp; Construction"
+msgstr "المناقصات والإنشاءات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "The BOQ line does not belong to the same project as the agreement."
+msgstr "بند جدول الكميات لا يتبع نفس مشروع العقد."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "This certificate already has a linked invoice."
+msgstr "هذا المستخلص مرتبط بفاتورة بالفعل."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "This certificate already has a linked vendor bill."
+msgstr "هذا المستخلص مرتبط بفاتورة مورد بالفعل."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "This tender already has a linked project."
+msgstr "هذه المناقصة مرتبطة بمشروع بالفعل."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "To"
+msgstr "إلى"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Today's Executed Value"
+msgstr "القيمة المنفذة اليوم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Total Contracted"
+msgstr "الإجمالي التعاقدي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Total Executed"
+msgstr "الإجمالي المنفذ"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Total Executed Value"
+msgstr "إجمالي القيمة المنفذة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Total Retention Held (Client Side)"
+msgstr "إجمالي الضمان المحتجز (لدى العميل)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Total Subcontracted (Approved)"
+msgstr "إجمالي أعمال الباطن (المعتمدة)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Total Value"
+msgstr "القيمة الإجمالية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Tracking"
+msgstr "المتابعة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Trade"
+msgstr "المهنة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Transmittal"
+msgstr "خطاب تحويل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Type"
+msgstr "النوع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Under Evaluation"
+msgstr "تحت التقييم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Unit Price"
+msgstr "سعر الوحدة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "UoM"
+msgstr "وحدة القياس"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Variation Order"
+msgstr "أمر تغيير"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Variation Orders"
+msgstr "أوامر التغيير"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Vendor Bill"
+msgstr "فاتورة المورد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Weather"
+msgstr "الطقس"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Won"
+msgstr "تم الترسية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Work Inspection (WIR/MIR)"
+msgstr "فحص الأعمال (WIR/MIR)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Work Inspection Request (WIR)"
+msgstr "طلب فحص أعمال (WIR)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Work Inspections"
+msgstr "فحوصات الأعمال"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Work Inspections (WIR/MIR)"
+msgstr "فحوصات الأعمال (WIR/MIR)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Work Measurement"
+msgstr "كشف القياس"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Work Measurements"
+msgstr "كشوف القياس"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "You are not authorized to give Level 1 approval."
+msgstr "غير مصرح لك بمنح اعتماد المستوى الأول."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "You are not authorized to give Level 2 (final) approval."
+msgstr "غير مصرح لك بمنح الاعتماد النهائي (المستوى الثاني)."
+
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Agreement"
+msgstr "العقد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Approved By"
+msgstr "اعتمدها"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "BOQ Item"
+msgstr "بند جدول الكميات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Bank Guarantee Summary"
+msgstr "ملخص خطاب الضمان"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Based on Daily Reports"
+msgstr "استنادًا إلى التقارير اليومية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Client Reference"
+msgstr "مرجع العميل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Code"
+msgstr "الكود"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Defects Liability Period"
+msgstr "فترة ضمان الصيانة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "For the Client"
+msgstr "عن العميل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "For the Contractor"
+msgstr "عن المقاول"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "For the Subcontractor"
+msgstr "عن مقاول الباطن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Handover / Delivery Certificate"
+msgstr "محضر تسليم واستلام"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Hours"
+msgstr "ساعات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Hrs Idle"
+msgstr "ساعات التعطل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Hrs Worked"
+msgstr "ساعات العمل"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Period"
+msgstr "الفترة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Prepared By"
+msgstr "أعدها"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Punch List / Snag Items"
+msgstr "قائمة الملاحظات"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Qty"
+msgstr "الكمية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Qty Change"
+msgstr "التغيير في الكمية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Reference No."
+msgstr "الرقم المرجعي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Related BOQ Items"
+msgstr "بنود جدول الكميات المرتبطة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Reported"
+msgstr "تاريخ الإبلاغ"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Request Date"
+msgstr "تاريخ الطلب"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Retention Release"
+msgstr "الإفراج عن الضمان"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Reviewed By (L1)"
+msgstr "راجعها (مستوى 1)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Store Keeper"
+msgstr "أمين المخزن"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Tender Summary Sheet"
+msgstr "كشف ملخص المناقصة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Total"
+msgstr "الإجمالي"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Total Amount Executed Today"
+msgstr "إجمالي القيمة المنفذة اليوم"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Total Change"
+msgstr "إجمالي التغيير"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Total Contract Value"
+msgstr "إجمالي قيمة العقد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Total Estimated Value"
+msgstr "إجمالي القيمة التقديرية"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Total Manpower"
+msgstr "إجمالي العمالة"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Total Retention Held"
+msgstr "إجمالي الضمان المحتجز"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Work Inspection Request"
+msgstr "طلب فحص أعمال"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Work Inspection Request (WIR/MIR)"
+msgstr "طلب فحص أعمال (WIR/MIR)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Work Measurement Sheet"
+msgstr "كشف قياس الأعمال"
+
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "% Complete"
+msgstr "نسبة الإنجاز %"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "% of Contract"
+msgstr "نسبة % من العقد"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "%s - %s (Net after %.1f%% retention & advance recovery)"
+msgstr "%s - %s (الصافي بعد خصم %.1f%% ضمان واسترداد الدفعة المقدمة)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "%s - %s (Net after %.1f%% retention)"
+msgstr "%s - %s (الصافي بعد خصم %.1f%% ضمان)"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Agreement reference must be unique per company!"
+msgstr "الرقم المرجعي للعقد لازم يكون فريد لكل شركة!"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Auto-created from Payment Certificate %s"
+msgstr "تم الإنشاء تلقائيًا من مستخلص العميل %s"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Cannot proceed to final handover: %d punch list item(s) are still open. Close them first or remove items that no longer apply."
+msgstr "لا يمكن الانتقال للتسليم النهائي: لسه فيه %d بند/بنود مفتوحة في قائمة الملاحظات. اقفلها الأول أو احذف البنود اللي بقت مش مهمة."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Certificate reference must be unique per company!"
+msgstr "الرقم المرجعي للمستخلص لازم يكون فريد لكل شركة!"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Correspondence reference must be unique per company!"
+msgstr "الرقم المرجعي للمراسلة لازم يكون فريد لكل شركة!"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Daily report reference must be unique per company!"
+msgstr "الرقم المرجعي للتقرير اليومي لازم يكون فريد لكل شركة!"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Falls back to company on project"
+msgstr "يرجع افتراضيًا لعملة الشركة الخاصة بالمشروع"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Guarantee reference must be unique per company!"
+msgstr "الرقم المرجعي لخطاب الضمان لازم يكون فريد لكل شركة!"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Handover reference must be unique per company!"
+msgstr "الرقم المرجعي للتسليم لازم يكون فريد لكل شركة!"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Inspection reference must be unique per company!"
+msgstr "الرقم المرجعي للفحص لازم يكون فريد لكل شركة!"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Requisition reference must be unique per company!"
+msgstr "الرقم المرجعي لطلب الصرف لازم يكون فريد لكل شركة!"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Stage 1 retention release recorded: %.2f %s. Please coordinate the actual payment/credit note with Finance."
+msgstr "تم تسجيل الإفراج عن ضمان المرحلة الأولى: %.2f %s. من فضلك نسّق مع الإدارة المالية لإتمام السداد/إشعار الدائن الفعلي."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Stage 2 (final) retention release recorded: %.2f %s. Please coordinate the actual payment/credit note with Finance."
+msgstr "تم تسجيل الإفراج عن ضمان المرحلة الثانية (النهائي): %.2f %s. من فضلك نسّق مع الإدارة المالية لإتمام السداد/إشعار الدائن الفعلي."
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Subcontract Certificate: %s"
+msgstr "مستخلص مقاول الباطن: %s"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "Tender reference must be unique per company!"
+msgstr "الرقم المرجعي للمناقصة لازم يكون فريد لكل شركة!"
+
+#. module: nt_construction
+#: code:addons/nt_construction/models/nt_construction.py:0
+#, python-format
+msgid "WM reference must be unique per company!"
+msgstr "الرقم المرجعي لكشف القياس لازم يكون فريد لكل شركة!"
+

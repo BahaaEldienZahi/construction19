@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_subcontract_payment_certificate" model="ir.actions.report">
+        <field name="name">Subcontractor Payment Certificate</field>
+        <field name="model">subcontract.payment.certificate</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">nt_construction.report_subcontract_payment_certificate_document</field>
+        <field name="report_file">nt_construction.report_subcontract_payment_certificate_document</field>
+        <field name="print_report_name">'Subcontractor Certificate - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_subcontract_payment_certificate"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_subcontract_payment_certificate_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h2>Subcontractor Payment Certificate</h2>
+                                <h4 t-field="o.name"/>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge rounded-pill text-bg-light border" t-field="o.state"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm mt-3" style="width:60%">
+                            <tr>
+                                <td><strong>Project</strong></td>
+                                <td><span t-field="o.project_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Subcontractor</strong></td>
+                                <td><span t-field="o.partner_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Agreement</strong></td>
+                                <td><span t-field="o.subcontract_agreement_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Date</strong></td>
+                                <td><span t-field="o.date"/></td>
+                            </tr>
+                            <tr t-if="o.period_from or o.period_to">
+                                <td><strong>Period</strong></td>
+                                <td><span t-field="o.period_from"/> — <span t-field="o.period_to"/></td>
+                            </tr>
+                        </table>
+
+                        <table class="table table-sm table-bordered mt-3">
+                            <thead>
+                                <tr class="table-active">
+                                    <th>BOQ Item</th>
+                                    <th class="text-end">Unit Price</th>
+                                    <th class="text-end">Qty This Period</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.line_ids" t-as="line">
+                                    <td><span t-field="line.boq_line_id.name"/></td>
+                                    <td class="text-end"><span t-field="line.unit_price"/></td>
+                                    <td class="text-end"><span t-field="line.quantity_this_period"/></td>
+                                    <td class="text-end"><span t-field="line.amount_this_period"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row mt-3">
+                            <div class="col-6 offset-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Gross Amount</strong></td>
+                                        <td class="text-end"><span t-field="o.gross_amount"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Retention (<span t-field="o.retention_percentage"/>%)</strong></td>
+                                        <td class="text-end">-<span t-field="o.retention_amount"/></td>
+                                    </tr>
+                                    <tr class="border-top">
+                                        <td><strong>Net Payable</strong></td>
+                                        <td class="text-end"><strong><span t-field="o.net_payable"/></strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5 pt-5">
+                            <div class="col-4 text-center"><p>Prepared By</p></div>
+                            <div class="col-4 text-center">
+                                <p>Reviewed By (L1)</p>
+                                <p t-if="o.approver_l1_id" t-field="o.approver_l1_id.name"/>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p>Approved By (L2)</p>
+                                <p t-if="o.approver_l2_id" t-field="o.approver_l2_id.name"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

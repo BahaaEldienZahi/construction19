@@ -43,6 +43,7 @@
         'purchase',
         'account',
         'analytic',
+        'stock',
     ],
     'data': [
         'security/construction_security.xml',
@@ -50,25 +51,51 @@
         'security/ir.model.access.csv',
         'data/tender_sequence.xml',
         'data/construction_sequences.xml',
-        'views/menu_structure.xml',
+        'data/material_requisition_cron.xml',
         'views/boq_line_views.xml',
-        'views/tender_tender_views.xml',
         'views/project_project_views.xml',
         'views/purchase_order_views.xml',
+        'views/material_requisition_views.xml',
+        'views/work_inspection_views.xml',
+        'views/project_correspondence_views.xml',
+        'views/site_progress_photo_views.xml',
+        'views/bank_guarantee_views.xml',
+        # menu_structure.xml must load here (before the files below): it
+        # defines the root menu (menu_tender_root) and the 4 submenus
+        # (menu_tender_management, menu_project_execution, menu_commercial,
+        # menu_handover_section) that every file below attaches its own
+        # menuitem to via parent="menu_commercial" / etc. It is now
+        # self-contained (defines menu_tender_root internally) so it no
+        # longer needs to wait for tender_tender_views.xml.
+        'views/menu_structure.xml',
+        'views/project_handover_views.xml',
+        'views/load_certificate_wizard_views.xml',
+        'views/tender_tender_views.xml',
         'views/boq_payment_certificate_views.xml',
         'views/boq_variation_order_views.xml',
         'views/site_daily_report_views.xml',
         'views/work_measurement_views.xml',
         'views/subcontract_agreement_views.xml',
         'views/subcontract_payment_certificate_views.xml',
-        'views/project_handover_views.xml',
         'views/dashboard_views.xml',
-        'views/material_requisition_views.xml',
-        'views/work_inspection_views.xml',
-        'views/project_correspondence_views.xml',
-        'views/site_progress_photo_views.xml',
-        'views/bank_guarantee_views.xml',
-        'views/load_certificate_wizard_views.xml',
+
+        'reports/report_tender_tender.xml',
+        'reports/report_boq_payment_certificate.xml',
+        'reports/report_subcontract_agreement.xml',
+        'reports/report_subcontract_payment_certificate.xml',
+        'reports/report_boq_variation_order.xml',
+        'reports/report_site_daily_report.xml',
+        'reports/report_work_measurement.xml',
+        'reports/report_material_requisition.xml',
+        'reports/report_work_inspection.xml',
+        'reports/report_project_handover.xml',
+        'reports/report_bank_guarantee.xml',
+
+
+
+
+
+
     ],
     'installable': True,
     'application': True,

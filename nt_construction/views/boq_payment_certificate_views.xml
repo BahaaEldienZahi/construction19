@@ -98,12 +98,16 @@
                 <field name="name"/>
                 <field name="project_id"/>
                 <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
-                <filter string="Pending Approval" name="pending"
-                        domain="[('state', 'in', ('submitted', 'approved_l1'))]"/>
+                <filter string="Pending Approval" name="pending" domain="[('state', 'in', ('submitted', 'approved_l1'))]"/>
                 <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
-                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                <group>
+                    <filter string="Project"
+                            name="group_project"
+                            context="{'group_by': 'project_id'}"/>
+
+                    <filter string="Status"
+                            name="group_state"
+                            context="{'group_by': 'state'}"/>
                 </group>
             </search>
         </field>

@@ -122,9 +122,9 @@ class BoqLine(models.Model):
                 confirmed_sub.mapped('subtotal'))
 
     @api.depends(
-        'po_line_ids.order_id.invoice_line_ids.price_subtotal',
-        'po_line_ids.order_id.invoice_ids.move_type',
-        'po_line_ids.order_id.invoice_ids.state',
+        'po_line_ids.invoice_lines.price_subtotal',
+        'po_line_ids.invoice_lines.move_id.move_type',
+        'po_line_ids.invoice_lines.move_id.state',
     )
     def _compute_actual_cost(self):
         for line in self:

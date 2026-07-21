@@ -96,16 +96,15 @@
                 <field name="bank_id"/>
                 <field name="beneficiary_id"/>
                 <filter string="Active" name="active" domain="[('state', 'in', ('issued', 'extended'))]"/>
-                <filter string="About to Expire" name="about_to_expire"
-                        domain="[('expiry_date', '&lt;=', (context_today() + relativedelta(days=30)).strftime('%Y-%m-%d')), ('state', 'in', ('issued', 'extended'))]"/>
+                <filter string="About to Expire" name="about_to_expire" domain="[('expiry_date', '&lt;=', (context_today() + relativedelta(days=30)).strftime('%Y-%m-%d')), ('state', 'in', ('issued', 'extended'))]"/>
                 <filter string="Returned" name="returned" domain="[('state', '=', 'returned')]"/>
                 <filter string="Claimed" name="claimed" domain="[('state', '=', 'claimed')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
-                    <filter string="Type" name="group_type" context="{'group_by': 'guarantee_type'}"/>
-                    <filter string="Bank" name="group_bank" context="{'group_by': 'bank_id'}"/>
-                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
-                </group>
+<!--                <group expand="0" string="Group By">-->
+<!--                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>-->
+<!--                    <filter string="Type" name="group_type" context="{'group_by': 'guarantee_type'}"/>-->
+<!--                    <filter string="Bank" name="group_bank" context="{'group_by': 'bank_id'}"/>-->
+<!--                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>-->
+<!--                </group>-->
             </search>
         </field>
     </record>

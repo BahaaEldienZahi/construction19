@@ -105,11 +105,11 @@
                 <field name="user_id"/>
                 <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
                 <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
-                    <filter string="Date" name="group_date" context="{'group_by': 'date'}" domain="[]"/>
-                    <filter string="Weather" name="group_weather" context="{'group_by': 'weather'}"/>
-                </group>
+<!--                <group expand="0" string="Group By">-->
+<!--                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>-->
+<!--                    <filter string="Date" name="group_date" context="{'group_by': 'date'}" domain="[]"/>-->
+<!--                    <filter string="Weather" name="group_weather" context="{'group_by': 'weather'}"/>-->
+<!--                </group>-->
             </search>
         </field>
     </record>

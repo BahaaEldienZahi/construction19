@@ -85,10 +85,14 @@
                 <filter string="Pending" name="pending" domain="[('state', 'in', ('draft', 'submitted'))]"/>
                 <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
                 <filter string="Rejected" name="rejected" domain="[('state', '=', 'rejected')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
-                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
-                    <filter string="Type" name="group_type" context="{'group_by': 'inspection_type'}"/>
+                <group>
+                    <filter string="Project"
+                            name="group_project"
+                            context="{'group_by': 'project_id'}"/>
+
+                    <filter string="Status"
+                            name="group_state"
+                            context="{'group_by': 'state'}"/>
                 </group>
             </search>
         </field>
