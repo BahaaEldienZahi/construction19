@@ -1,42 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="action_report_site_daily_report" model="ir.actions.report">
-        <field name="name">تقرير يومي / Site Daily Report (Sarky)</field>
+        <field name="name">Site Daily Report (Sarky)</field>
         <field name="model">site.daily.report</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">nt_construction.report_site_daily_report_document</field>
         <field name="report_file">nt_construction.report_site_daily_report_document</field>
-        <field name="print_report_name">'تقٱйير يومي - %s' % (object.name)</field>
+        <field name="print_report_name">'Daily Report - %s' % (object.name)</field>
         <field name="binding_model_id" ref="model_site_daily_report"/>
         <field name="binding_type">report</field>
     </record>
+
     <template id="report_site_daily_report_document">
-        <t t-call="web.html_container"><t t-foreach="docs" t-as="o"><t t-call="web.external_layout">
-            <div class="page">
-                <div class="text-center mb-3"><h2 style="color:#2471a3; margin-bottom:0;">تقرير يومي للحوقع / Site Daily Report (رركية</h2><h4 style="color:#7f8c8d;" t-field="o.name"/></div>
-                <hr style="border-top:3px solid #2471a3;"/>
-                <table class="table table-sm mt-2" style="width:100%">
-                    <tr><td style="width:30%"><strong>المشروع / Project</strong></td><td><span t-field="o.project_id.name"/></td><td style="width:30%"><strong>التاريخ / Date</strong></td><td><span t-field="o.date"/></td></tr>
-                    <tr><td><strong>مهنجس الموقع / Site Engineer</strong></td><td><span t-field="o.user_id.name"/></td><td><strong>الطلرك / Weather</strong></td><td><span t-field="o.weather"/></td></tr>
-                    <tr><td><strong>الحالة / Status</strong></td><td><span t-field="o.state"/></td><td><strong>إجمالي قيمة ال━اناز6� / Today's Value</strong></td><td><strong><span t-field="o.total_amount_executed_today"/></strong></td></tr>
-                </table>
-                <h5 class="mt-3" style="color:#2471a3;">العمالة / Manpower</h5>
-                <table class="table table-sm table-bordered">
-                    <thead><tr style="background-color:#2471a3; color:white;"><th>المهنوة / Trade</th><th>مقاول باطن / Subcontractor</th><th class="text-end">العدد / Headcount</th><th class="text-end">ساعات العمل / Hours</th><th>ماجͅياة / Note</th></tr></thead>
-                    <tbody><tr t-foreach="o.manpower_ids" t-as="m"><td><span t-field="m.trade"/></td><td><span t-field="m.subcontract_agreement_id.partner_id.name"/></td><td class="text-end"><span t-field="m.headcount"/></td><td class="text-end"><span t-field="m.hours"/></td><td><span t-field="m.note"/></td></tr></tbody>
-                    <tfoot><tr style="background-color:#ebf5fb; font-weight:bold; border-top:2px solid #2471a3;"><td colspan="2">إجمالي العمالة / Total Manpower</td><td class="text-end"><span t-field="o.total_manpower_count"/></td><td colspan="2"/></tr></tfoot>
-                </table>
-                <h5 class="mt-3" style="color:#2471a3;">المعدد / Equipment</h5>
-                <table class="table table-sm table-bordered">
-                    <thead><tr style="background-color:#2471a3; color:white;"><th>المعود / Equipment</th><th>النوع / Type</th><th class="text-end">العدد / Count</th><th class="text-end">ساعات التسعيل / Hrs Worked</th><th class="text-end">ساعات التوفنق / Hrs Idle</th><th>سبب التوفنق / Idle Reason</th></tr></thead>
-                    <tbody><tr t-foreach="o.equipment_ids" t-as="e"><td><span t-field="e.equipment_name"/></td><td><span t-field="e.equipment_type"/></td><td class="text-end"><span t-field="e.count"/></td><td class="text-end"><span t-field="e.hours_worked"/></td><td class="text-end"><span t-field="e.hours_idle"/></td><td><span t-field="e.idle_reason"/></td></tr></tbody>
-                </table>
-                <div t-if="o.progress_ids"><h5 class="mt-3" style="color:#2471a3;">الكميات المنلدة اليوم / Quantities Executed Today</h5>
-                <table class="table table-sm table-bordered"><thead><tr style="background-color:#2471a3; color:white;"><th>البند / BOQ Item</th><th class="text-end">الكمية المنلدة / Qty Executed</th><th>ماجمحات / Notes</th></tr></thead><tbody><tr t-foreach="o.progress_ids" t-as="p"><td><span t-field="p.boq_line_id.name"/></td><td class="text-end"><span t-field="p.quantity_executed"/></td><td><span t-field="p.note"/></td></tr></tbody></table></div>
-                <h5 class="mt-3" t-if="o.site_notes" style="color:#2471a3;">ماجمصات الموقع / Site Notes</h5>
-                <p t-field="o.site_notes" style="background-color:#ebf5fb; padding:8px; border:1px solid #aed6f1; border-radius:4px;"/>
-                <div class="row mt-5 pt-5"><div class="col-4 text-center"><hr style="width:60%;"/><p>مهنجس الموق� / Site Engineer</p></div><div class="col-4 text-center"><hr style="width:60%;"/><p>ميير المشروع / Project Manager</p></div><div class="col-4 text-center"><hr style="width:60%;"/><p>الاستعاري / Consultant</p></div></div>
-            </div>
-        </t></t></t>
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h2>Site Daily Report</h2>
+                                <h4 t-field="o.name"/>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge rounded-pill text-bg-light border" t-field="o.state"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm mt-3" style="width:65%">
+                            <tr><td><strong>Project</strong></td><td><span t-field="o.project_id.name"/></td></tr>
+                            <tr><td><strong>Date</strong></td><td><span t-field="o.date"/></td></tr>
+                            <tr><td><strong>Site Engineer</strong></td><td><span t-field="o.user_id.name"/></td></tr>
+                            <tr><td><strong>Weather</strong></td><td><span t-field="o.weather"/></td></tr>
+                        </table>
+
+                        <h5 class="mt-3">Manpower</h5>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr class="table-active">
+                                    <th>Trade</th>
+                                    <th>Subcontractor</th>
+                                    <th class="text-end">Headcount</th>
+                                    <th class="text-end">Hours</th>
+                                    <th>Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.manpower_ids" t-as="m">
+                                    <td><span t-field="m.trade"/></td>
+                                    <td><span t-field="m.subcontract_agreement_id.partner_id.name"/></td>
+                                    <td class="text-end"><span t-field="m.headcount"/></td>
+                                    <td class="text-end"><span t-field="m.hours"/></td>
+                                    <td><span t-field="m.note"/></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="border-top">
+                                    <td colspan="2"><strong>Total Manpower</strong></td>
+                                    <td class="text-end"><strong><span t-field="o.total_manpower_count"/></strong></td>
+                                    <td colspan="2"/>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <h5 class="mt-3">Equipment</h5>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr class="table-active">
+                                    <th>Equipment</th>
+                                    <th>Type</th>
+                                    <th class="text-end">Count</th>
+                                    <th class="text-end">Hrs Worked</th>
+                                    <th class="text-end">Hrs Idle</th>
+                                    <th>Idle Reason</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.equipment_ids" t-as="e">
+                                    <td><span t-field="e.equipment_name"/></td>
+                                    <td><span t-field="e.equipment_type"/></td>
+                                    <td class="text-end"><span t-field="e.count"/></td>
+                                    <td class="text-end"><span t-field="e.hours_worked"/></td>
+                                    <td class="text-end"><span t-field="e.hours_idle"/></td>
+                                    <td><span t-field="e.idle_reason"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h5 class="mt-3" t-if="o.site_notes">Site Notes / Issues</h5>
+                        <p t-field="o.site_notes"/>
+
+                        <table class="table table-sm mt-2" style="width:50%">
+                            <tr class="border-top">
+                                <td><strong>Total Amount Executed Today</strong></td>
+                                <td class="text-end"><strong><span t-field="o.total_amount_executed_today"/></strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
     </template>
+
 </odoo>
