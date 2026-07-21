@@ -39,7 +39,7 @@ class ProjectProject(models.Model):
         ('supply_install', 'Supply & Install'),
         ('management', 'Management Only'),
     ], string='Execution Type', default='internal', tracking=True,
-       help='نوع التننبع: دستي, مقاول باطن, مرظرو مشبيك, بومبة وقرياب, إاعاب قطا')
+       help='Execution method: Internal (self-perform), Subcontract, Joint Venture, Supply & Install, Management Only')
 
     client_po_number = fields.Char(string='Client PO Number')
     contract_number = fields.Char(string='Contract Number', copy=False)
