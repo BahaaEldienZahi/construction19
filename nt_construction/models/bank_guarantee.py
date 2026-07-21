@@ -19,8 +19,20 @@ class BankGuarantee(models.Model):
         'tender.tender', string='Tender',
         tracking=True,
     )
-    company_id = fields.Many2one(related='project_id.company_id', store=True, readonly=True,
-                                 help='Falls back to company on project')
+    company_id = fields.Many2one(
+        'res.company', string='Company',
+        compute='_compute_company_id', store=True, readonly=False,
+        help='مأخوذ من المشروع أو المناقصة أو الشركة الافتراضية',
+    )
+
+    @api.depends('project_id.company_id', 'tender_id.company_id')
+    def _compute_company_id(self):
+        for rec in self:
+            rec.company_id = (
+                rec.project_id.company_id
+                or rec.tender_id.company_id
+                or self.env.company
+            )
     currency_id = fields.Many2one(
         'res.currency', string='Currency',
         default=lambda self: self.env.company.currency_id,
