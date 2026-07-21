@@ -65,6 +65,38 @@ class SubcontractAgreementLine(models.Model):
     code = fields.Char(related='boq_line_id.code', readonly=True)
     uom_id = fields.Many2one(related='boq_line_id.uom_id', readonly=True)
 
+    executed_qty = fields.Float(
+        string='Executed Qty', digits='Product Unit of Measure',
+        compute='_compute_execution_stats', store=True,
+        help='Sum of quantities from approved subcontractor payment certificates',
+    )
+    remaining_qty = fields.Float(
+        string='Remaining Qty', digits='Product Unit of Measure',
+        compute='_compute_execution_stats', store=True,
+    )
+    execution_percentage = fields.Float(
+        string='Execution %', compute='_compute_execution_stats', store=True,
+    )
+    executed_amount = fields.Monetary(
+        string='Executed Amount', currency_field='currency_id',
+        compute='_compute_execution_stats', store=True,
+    )
+
+    @api.depends('agreement_id.state', 'agreement_id.line_ids.executed_qty')
+    def _compute_execution_stats(self):
+        for line in self:
+            cert_lines = self.env['subcontract.payment.certificate.line'].search([
+                ('boq_line_id', '=', line.boq_line_id.id),
+                ('certificate_id.subcontract_agreement_id', '=', line.agreement_id.id),
+                ('certificate_id.state', '=', 'approved'),
+            ])
+            line.executed_qty = sum(cert_lines.mapped('quantity_this_period'))
+            line.executed_amount = sum(cert_lines.mapped('amount_this_period'))
+            line.remaining_qty = line.quantity - line.executed_qty
+            line.execution_percentage = (
+                (line.executed_qty / line.quantity * 100) if line.quantity else 0.0
+            )
+
     quantity = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True, default=1.0)
     unit_price = fields.Monetary(string='Unit Price', currency_field='currency_id')
     subtotal = fields.Monetary(
