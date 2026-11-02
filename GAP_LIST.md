@@ -14,6 +14,10 @@ Estimates are working days for one developer. Updated: 2026-11-02 (after step 3)
 | A3 | Labor cost source for daily reports | Flat hourly rate per trade (alt: payroll actual cost, +3 d, needs `hr`) | Client | Configurable rate table |
 | A4 | Site storage | One warehouse per project (alt: sub-location under central warehouse, −1 d) | Client | Option on project |
 | A6 | Retention on escalation | Retention applies to escalation too (project option `retention_on_escalation`, default on) | Client contracts | Configurable per project |
+| A7 | VAT on retention (P6) | Upfront on gross; release without VAT | Client accountant / tax advisor | Setting to add if "at release" is chosen |
+| A8 | Withholding rate and booking (P7) | Configurable tax, booked on the invoice | Client accountant / tax advisor | Already a setting |
+| A9 | ETA e-invoice: negative recovery line with negative VAT (P8) | Negative line | Client tax advisor | Verify with l10n_eg_edi before go-live |
+| A10 | Escalation indices per period; advance-covered part (P9) | One index set per certificate; not excluded | Client legal | Configurable once confirmed |
 | A5 | Executed vs certified quantities | Measurement (حصر) = executed; certificate = certified/billed; tracked separately | — (NT design, step 3) | — |
 
 ## B. Known defects still open (from BASELINE.md)
@@ -29,6 +33,17 @@ Estimates are working days for one developer. Updated: 2026-11-02 (after step 3)
 | VO overwrites BOQ line in place (no history of previous qty/price) | Step 4 | in step 4 |
 | Project analytic account not auto-created | Step 4 | in step 4 |
 | No `i18n/ar.po`; strings that used to be hardcoded Arabic now show English until it exists | Step 6 (partial earlier for the demo PDF) | in step 6 |
+
+### Step 3b (after the golden-cycle demo, DECISIONS S16) — each with an ACCOUNTING_EXAMPLES section + test
+
+| # | Item | Est. |
+|---|---|---|
+| 3b.1 | Subcontractor advance + recovery, subcontractor retention release, subcontractor final certificate | 1.5 d |
+| 3b.2 | VO and the advance: setting "advance / recovery base = original or revised contract value" (default original) | 0.5 d |
+| 3b.3 | Customer payment registration; how "Collected" is computed (example + test) | 0.25 d |
+| 3b.4 | Negative current quantity (total to date below previous) → credit note instead of a validation error | 1 d |
+| 3b.5 | USD contract in an EGP company: certificate, payment at another rate, exchange difference entry | 0.5 d |
+| 3b.6 | Demo data on the Egyptian chart (`l10n_eg`), accounts mapped in Construction Settings | 0.5 d |
 
 ## C. Not started (scope)
 

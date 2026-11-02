@@ -26,6 +26,7 @@ Re-read at the start of every step. "Client" decisions come from the project own
 | S3 | Scope additions accepted for planning: unit rate analysis, stock integration, labor/equipment cost from daily reports, price escalation (فروق أسعار). | 2026-11-02 |
 | S4 | **UX & dashboards: design now, build later.** `UX_SPEC.md` must be reviewed by the owner before any UX code. Native Odoo 19 views/widgets first; OWL only for the Overview page; minimal SCSS with Odoo/Bootstrap variables, no core style overrides; must work in Arabic RTL and at tablet width. Schedule: menu + form standard after step 3, **before** the golden-cycle demo; project dashboard, Overview and My Approvals in step 4. | 2026-11-02 |
 
+| S16 | **Step 3b backlog** (after the golden-cycle demo), each with a worked example in ACCOUNTING_EXAMPLES.md and a test: subcontractor advance + recovery, retention release, final certificate; VO effect on advance (setting: original vs revised contract value, default original); customer payment registration and the Collected figure; negative current quantity → credit note instead of an error; USD contract in an EGP company with exchange difference on payment; demo data on the Egyptian chart (l10n_eg) mapped in Construction Settings. ACCOUNTING_EXAMPLES reviewed by the owner: all entries verified and balanced. | 2026-11-02 |
 | S8 | **Reorder: UX Phase A before step 3** — menu restructure, base SCSS, form standard on Tender (form + kanban), Daily Report, Subcontract, Handover; screenshots EN + AR of every changed screen in the report. Certificate, Variation Order, Project, Measurement forms and all dashboards stay after step 3. | 2026-11-02 |
 | S9 | **Western digits (0-9) for all amounts and dates in Arabic, on screens and PDFs; Arabic text stays Arabic.** Odoo-native, no core patching. PROVISIONAL until the client confirms. Implemented as the language record *Arabic (Egypt)* `ar_EG` (module data, inactive by default): the web client forces Arabic-Indic digits only for `ar_001`/`ar_SA`/`ar_SY`, and translations fall back to `ar.po` | 2026-11-02 |
 | S10 | `rtlcss` is a required server dependency → `INSTALL_AND_DEPLOY.md` with the install command | 2026-11-02 |
@@ -55,6 +56,10 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | P3 | Labor cost source | Flat hourly rate per trade | Client |
 | P4 | Site storage | One warehouse per project | Client |
 | P5 | Retention base on escalation | Retention also applies to the escalation amount (project option, default on) | Client contracts |
+| P6 | VAT on retention | VAT charged **upfront** on the gross work, retention included (S12); release invoices carry no VAT. Alternative: VAT at release | Client accountant / tax advisor |
+| P7 | Withholding tax (client side) | Rate per project/company setting (examples use 1 %), **booked on the certificate invoice** as a negative tax (S13) | Client accountant / tax advisor |
+| P8 | ETA e-invoice | Advance recovery is a **negative invoice line with negative VAT**; compatibility with the Egyptian Tax Authority e-invoice format (l10n_eg_edi) unverified. Alternative: discount line or separate credit note | Client tax advisor (+ ETA test environment) |
+| P9 | Escalation periods and advance | One set of indices per certificate (its execution period); the advance-covered part is **not** excluded from escalation. Alternative: indices per month of execution, and/or exclude the portion paid by the advance | Client legal / contracts |
 
 ## 5. Agent decisions (step 1) — open to review
 
