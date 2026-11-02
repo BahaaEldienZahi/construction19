@@ -96,6 +96,21 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | L14 | Approvers have write ACL on certificates / VOs / subcontracts (needed for the state change); they can therefore edit **draft** documents. Submitted+ documents are frozen (L6) | Alternative (approval via sudo) hides who changed what |
 | L15 | Upgrade removes the old `base.group_user` ACLs: after upgrading a DB, internal users without a construction role lose access until a role is assigned | Expected with D1 (no real data); to note in INSTALL_AND_DEPLOY |
 
+## 6c. Agent decisions (UX Phase A) — open to review
+
+| # | Decision | Why |
+|---|---|---|
+| UX-A1 | Menu: Overview, My Approvals, Configuration and Subcontractor Certificates are **not** created yet (no content until step 3/4); Reporting visible only to roles that see amounts | No empty menus |
+| UX-A2 | Menu xml-ids of existing entries kept (`menu_tender_root`, …) and re-parented; app renamed "Construction"; all menus in `views/construction_menus.xml` | No orphaned menus on upgrade |
+| UX-A3 | Tender kanban progress bar = activities + column total (Odoo pipeline standard) instead of the deadline progress bar of UX_SPEC §2.3: Odoo progress bars need a stored, groupable field and "days to deadline" changes daily. Deadline shown as badge + accent on each card | Native widget, no stored daily-changing field |
+| UX-A4 | Deadline status only for **draft** tenders (the submission deadline no longer matters once submitted) | Avoid red "deadline passed" on every submitted tender |
+| UX-A5 | Lost / Cancelled kanban columns hidden by the default "Open" filter (shown when the filter is removed) | UX_SPEC "folded" columns; Odoo 19 cannot fold selection groups natively |
+| UX-A6 | Kanban card accent via CSS `:has()` from an inner marker class | Odoo 19 kanban cards accept only a static class |
+| UX-A7 | Handover state label "Provisional Handover (DLP Started)" → "Provisional (DLP)" | Long label collapsed the statusbar in Arabic |
+| UX-A8 | Construction projects action uses the core project views until the dashboard (after step 3) | Scope S8 |
+| UX-A9 | Screenshots via headless Chrome over `--remote-debugging-pipe` with the Python stdlib; `rtlcss@4.3.0` installed with npm **in the scratchpad only** for the capture (not system, not `.venv`) | R8 only covers lint tools in `.venv` |
+| UX-A10 | Screenshots committed under `docs/screenshots/ux_phase_a/` (34 PNG, 2.5 MB) | Reviewable with the report |
+
 ## 7. Questions raised during steps (R9) — agent default applied unless marked STOP
 
 | # | Step | Question | Default applied | Status |
@@ -110,3 +125,4 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | Q8 | 2 | Read-only Client Viewer (portal) now or with the certificate PDF (golden cycle)? | With the golden cycle | resolved: owner "defaults OK" 2026-11-02 |
 
 | Q9 | 2 | ~~`pharmacy_retail/` disappeared from disk ~12:25 on 2026-11-02 and its 116 files are **staged as deleted** in this repo's index — not done by the agent. Intended? | Not restored, not unstaged, not committed (agent commits use `git commit --only <paths>`). Recoverable from HEAD~~ | resolved: owner deleted it on purpose (S1) |
+| Q10 | A | Deployment: production servers need `rtlcss` (npm) for Arabic RTL; also confirm Arabic number format (core `ar_001` shows Arabic-Indic digits in dates) | Listed in GAP_LIST §D; INSTALL_AND_DEPLOY | open |

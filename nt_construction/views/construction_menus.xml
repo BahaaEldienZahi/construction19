@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu in business order (UX_SPEC §1). Loaded after every view file. Visibility: the root
+         is limited to construction roles; sub-menus disappear automatically when the role has no
+         read access to the action's model (step 2 ACL). Overview / My Approvals / Settings /
+         Subcontractor Certificates come with step 3-4 (DECISIONS UX-A1). -->
+
+    <!-- extra actions needed by the new menu -->
+    <record id="action_construction_project" model="ir.actions.act_window">
+        <field name="name">Construction Projects</field>
+        <field name="res_model">project.project</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_construction_project', '=', True)]</field>
+        <field name="context">{'default_is_construction_project': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No construction project yet</p>
+            <p>Projects are created from won tenders (Tenders › Create Execution Project).</p>
+        </field>
+    </record>
+
+    <record id="action_boq_line_tender" model="ir.actions.act_window">
+        <field name="name">Tender BOQ</field>
+        <field name="res_model">boq.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('project_id', '=', False)]</field>
+        <field name="search_view_id" ref="view_boq_line_search"/>
+        <field name="context">{'search_default_group_tender': 1}</field>
+    </record>
+
+    <record id="action_boq_line_project" model="ir.actions.act_window">
+        <field name="name">Project BOQ</field>
+        <field name="res_model">boq.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="search_view_id" ref="view_boq_line_search"/>
+        <field name="context">{'search_default_group_project': 1}</field>
+    </record>
+
+    <record id="action_construction_purchase_order" model="ir.actions.act_window">
+        <field name="name">Purchase Orders</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('project_id.is_construction_project', '=', True)]</field>
+    </record>
+
+    <!-- root (id kept from earlier versions) -->
+    <menuitem id="menu_tender_root" name="Construction" sequence="45"
+              web_icon="nt_construction,static/description/icon.png"
+              groups="nt_construction.group_construction_tender_engineer,nt_construction.group_construction_site_engineer,nt_construction.group_construction_quantity_surveyor,nt_construction.group_construction_project_manager,nt_construction.group_construction_accountant,nt_construction.group_construction_approver_l1,project.group_project_manager"/>
+
+    <menuitem id="menu_construction_tenders" name="Tenders" parent="menu_tender_root" sequence="20"/>
+    <menuitem id="menu_tender_tender" name="Tenders" parent="menu_construction_tenders"
+              action="action_tender_tender" sequence="10"/>
+    <menuitem id="menu_boq_line" name="Tender BOQ" parent="menu_construction_tenders"
+              action="action_boq_line_tender" sequence="20"/>
+
+    <menuitem id="menu_construction_projects" name="Projects" parent="menu_tender_root" sequence="30"/>
+    <menuitem id="menu_construction_project" name="Construction Projects" parent="menu_construction_projects"
+              action="action_construction_project" sequence="10"/>
+    <menuitem id="menu_boq_line_project" name="Project BOQ" parent="menu_construction_projects"
+              action="action_boq_line_project" sequence="20"/>
+
+    <menuitem id="menu_construction_execution" name="Execution" parent="menu_tender_root" sequence="40"/>
+    <menuitem id="menu_site_daily_report" name="Daily Reports" parent="menu_construction_execution"
+              action="action_site_daily_report" sequence="10"/>
+    <menuitem id="menu_work_measurement" name="Measurements" parent="menu_construction_execution"
+              action="action_work_measurement" sequence="20"/>
+
+    <menuitem id="menu_construction_contracts" name="Contracts" parent="menu_tender_root" sequence="50"/>
+    <menuitem id="menu_subcontract_agreement" name="Subcontracts" parent="menu_construction_contracts"
+              action="action_subcontract_agreement" sequence="10"/>
+    <menuitem id="menu_boq_variation_order" name="Variation Orders" parent="menu_construction_contracts"
+              action="action_boq_variation_order" sequence="20"/>
+    <menuitem id="menu_construction_purchase_order" name="Purchase Orders" parent="menu_construction_contracts"
+              action="action_construction_purchase_order" sequence="30"/>
+
+    <menuitem id="menu_construction_billing" name="Billing" parent="menu_tender_root" sequence="60"/>
+    <menuitem id="menu_boq_payment_certificate" name="Client Certificates" parent="menu_construction_billing"
+              action="action_boq_payment_certificate" sequence="10"/>
+
+    <menuitem id="menu_construction_handover" name="Handover" parent="menu_tender_root" sequence="70"/>
+    <menuitem id="menu_project_handover" name="Handovers" parent="menu_construction_handover"
+              action="action_project_handover" sequence="10"/>
+    <menuitem id="menu_project_handover_punch_item" name="Open Punch Items" parent="menu_construction_handover"
+              action="action_project_handover_punch_item" sequence="20"/>
+
+    <menuitem id="menu_construction_reporting" name="Reporting" parent="menu_tender_root" sequence="80"
+              groups="nt_construction.group_construction_see_amounts,project.group_project_manager"/>
+    <menuitem id="menu_boq_cost_analysis" name="Cost Analysis" parent="menu_construction_reporting"
+              action="action_boq_cost_analysis" sequence="10"/>
+    <menuitem id="menu_boq_billing_trend" name="Billing Trend" parent="menu_construction_reporting"
+              action="action_boq_billing_trend" sequence="20"/>
+</odoo>

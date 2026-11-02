@@ -32,7 +32,7 @@ class ProjectHandover(models.Model):
 
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('provisional', 'Provisional Handover (DLP Started)'),
+        ('provisional', 'Provisional (DLP)'),
         ('final', 'Final Handover'),
         ('closed', 'Closed'),
     ], default='draft', required=True, copy=False, tracking=True)
@@ -127,6 +127,26 @@ class ProjectHandover(models.Model):
     # ---------------------------------------------------------------
     # Workflow
     # ---------------------------------------------------------------
+    def action_view_project(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'view_mode': 'form',
+            'res_id': self.project_id.id,
+        }
+
+    def action_view_open_punch_items(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._('Open Punch Items'),
+            'res_model': 'project.handover.punch.item',
+            'view_mode': 'list',
+            'domain': [('handover_id', '=', self.id), ('status', '=', 'open')],
+            'context': {'default_handover_id': self.id},
+        }
+
     def action_confirm_provisional_handover(self):
         self._check_construction_role('nt_construction.group_construction_project_manager')
         for rec in self:

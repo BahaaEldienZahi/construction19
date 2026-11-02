@@ -32,6 +32,8 @@ class SubcontractAgreement(models.Model):
         compute='_compute_total_value', store=True,
     )
 
+    daily_report_count = fields.Integer(compute='_compute_daily_report_count')
+
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
         'Agreement reference must be unique per company!',
@@ -48,6 +50,32 @@ class SubcontractAgreement(models.Model):
     def _compute_total_value(self):
         for ag in self:
             ag.total_value = sum(ag.line_ids.mapped('subtotal'))
+
+    def _compute_daily_report_count(self):
+        counts = dict(self.env['site.daily.report.manpower']._read_group(
+            [('subcontract_agreement_id', 'in', self.ids)], ['subcontract_agreement_id'],
+            ['report_id:count_distinct']))
+        for agreement in self:
+            agreement.daily_report_count = counts.get(agreement, 0)
+
+    def action_view_daily_reports(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._('Daily Reports'),
+            'res_model': 'site.daily.report',
+            'view_mode': 'list,form',
+            'domain': [('manpower_ids.subcontract_agreement_id', '=', self.id)],
+        }
+
+    def action_view_project(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'view_mode': 'form',
+            'res_id': self.project_id.id,
+        }
 
 
 class SubcontractAgreementLine(models.Model):

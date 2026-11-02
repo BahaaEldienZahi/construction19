@@ -224,11 +224,5 @@
         <field name="res_model">work.measurement</field>
         <field name="view_mode">list,form</field>
     </record>
-    <menuitem
-            id="menu_work_measurement"
-            name="Work Measurement"
-            parent="nt_construction.menu_tender_root"
-            action="action_work_measurement"
-            sequence="40"/>
 
 </odoo>

@@ -53,6 +53,33 @@ class SiteDailyReport(models.Model):
     currency_id = fields.Many2one(related='project_id.construction_currency_id', readonly=True)
 
     site_notes = fields.Text(string='Site Notes / Issues')
+    measurement_count = fields.Integer(compute='_compute_measurement_count')
+
+    def _compute_measurement_count(self):
+        counts = dict(self.env['work.measurement']._read_group(
+            [('daily_report_ids', 'in', self.ids)], ['daily_report_ids'], ['__count']))
+        for report in self:
+            report.measurement_count = counts.get(report, 0)
+
+    def action_view_measurements(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._('Measurements'),
+            'res_model': 'work.measurement',
+            'view_mode': 'list,form',
+            'domain': [('daily_report_ids', 'in', self.ids)],
+            'context': {'default_project_id': self.project_id.id},
+        }
+
+    def action_view_project(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'view_mode': 'form',
+            'res_id': self.project_id.id,
+        }
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',

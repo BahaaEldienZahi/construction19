@@ -1,6 +1,6 @@
 {
     'name': 'NT Construction & Tender Management',
-    'version': '19.0.1.2.0',
+    'version': '19.0.1.3.0',
     'category': 'Operations/Construction',
     'summary': 'إدارة المناقصات والمقاولات - Tender to Project workflow with BOQ',
     'author': 'National Technology',
@@ -28,7 +28,13 @@
         'views/site_daily_report_views.xml',
         'views/work_measurement_views.xml',
         'views/dashboard_views.xml',
+        'views/construction_menus.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'nt_construction/static/src/scss/construction.scss',
+        ],
+    },
     'application': True,
     'license': 'LGPL-3',
 }

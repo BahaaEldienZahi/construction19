@@ -79,21 +79,25 @@
         </field>
     </record>
 
-<!--    <record id="view_boq_line_search" model="ir.ui.view">-->
-<!--        <field name="name">boq.line.search</field>-->
-<!--        <field name="model">boq.line</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <search string="Search BOQ Lines">-->
-<!--                <field name="code"/>-->
-<!--                <field name="name"/>-->
-<!--                <filter string="Groups Only" name="groups_only" domain="[('is_group', '=', True)]"/>-->
-<!--                <filter string="Leaf Items Only" name="leaf_only" domain="[('is_group', '=', False)]"/>-->
-<!--                <group expand="0" string="Group By">-->
-<!--                    <filter string="Parent Line" name="group_parent" context="{'group_by': 'parent_id'}"/>-->
-<!--                </group>-->
-<!--            </search>-->
-<!--        </field>-->
-<!--    </record>-->
+<record id="view_boq_line_search" model="ir.ui.view">
+        <field name="name">boq.line.search</field>
+        <field name="model">boq.line</field>
+        <field name="arch" type="xml">
+            <search string="Search BOQ Lines">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="tender_id"/>
+                <field name="project_id"/>
+                <filter string="Chapters" name="groups_only" domain="[('is_group', '=', True)]"/>
+                <filter string="Items" name="leaf_only" domain="[('is_group', '=', False)]"/>
+                <group>
+                    <filter string="Tender" name="group_tender" context="{'group_by': 'tender_id'}"/>
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Chapter" name="group_parent" context="{'group_by': 'parent_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
     <!-- ============ BOQ LINE PROGRESS (standalone, optional) ============ -->
 

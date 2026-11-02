@@ -36,6 +36,7 @@ custom_addons/            ← its own git repo (separate from the Odoo core repo
 ├── CHANGELOG.md          per-step changes with evidence
 ├── DECISIONS.md          working rules + client/agent decisions (re-read every step)
 ├── GAP_LIST.md           open items, provisional decisions, blockers
-├── UX_SPEC.md            menus, form standard, dashboards (draft for review)
+├── UX_SPEC.md            menus, form standard, dashboards (reviewed)
+├── docs/                 UX_PHASE_A.md + screenshots
 └── nt_construction/      module (README.md in Arabic, AGENTS.md for developers)
 ```

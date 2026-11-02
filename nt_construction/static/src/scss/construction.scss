@@ -1,0 +1,40 @@
+// nt_construction — base styling (UX_SPEC §8). Only Bootstrap/Odoo variables; every selector is
+// scoped under an nt_construction class, so core screens are never affected. Logical properties
+// (inline-start/end) keep it correct in Arabic RTL.
+
+// Tender pipeline: deadline accent on the card's leading edge (right edge in Arabic). Odoo 19
+// kanban cards only take a static class, so the card is styled from an inner marker via :has().
+.o_nt_tender_kanban .o_kanban_record {
+    &:has(.o_nt_deadline_soon) {
+        border-inline-start: 3px solid $warning;
+    }
+    &:has(.o_nt_deadline_overdue) {
+        border-inline-start: 3px solid $danger;
+    }
+    .badge {
+        font-weight: $font-weight-normal;
+    }
+}
+
+// Direction-aware arrow (e.g. contract period "start → end").
+.o_rtl .o_nt_period_arrow {
+    transform: scaleX(-1);
+}
+
+// KPI / summary cards (used by the project dashboard and Overview after step 3).
+.o_nt_kpi_card {
+    padding: map-get($spacers, 3);
+    border: $border-width solid $border-color;
+    border-radius: $border-radius-lg;
+    background-color: $o-view-background-color;
+
+    .o_nt_kpi_label {
+        color: $text-muted;
+        font-size: $font-size-sm;
+    }
+    .o_nt_kpi_value {
+        font-size: $h3-font-size;
+        font-weight: $font-weight-bold;
+        font-variant-numeric: tabular-nums;
+    }
+}

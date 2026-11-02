@@ -81,7 +81,17 @@ class TenderTender(models.Model):
         ('won', 'Won'),
         ('lost', 'Lost'),
         ('cancelled', 'Cancelled'),
-    ], string='Status', default='draft', required=True, copy=False, tracking=True)
+    ], string='Status', default='draft', required=True, copy=False, tracking=True,
+        group_expand='_group_expand_states')
+
+    # deadline badge on the pipeline cards (UX_SPEC 2.3); depends on today -> not stored
+    days_to_deadline = fields.Integer(compute='_compute_deadline_status')
+    deadline_status = fields.Selection([
+        ('none', 'No Deadline'),
+        ('ok', 'On Time'),
+        ('soon', 'Due Within 7 Days'),
+        ('overdue', 'Deadline Passed'),
+    ], compute='_compute_deadline_status')
 
     lost_reason = fields.Text(copy=False)
     cancel_reason = fields.Text(string='Cancellation Reason', copy=False)
@@ -110,6 +120,33 @@ class TenderTender(models.Model):
     boq_line_count = fields.Integer(compute='_compute_boq_line_count')
 
     active = fields.Boolean(default=True)
+
+    _DEADLINE_SOON_DAYS = 7
+
+    @api.model
+    def _group_expand_states(self, states, domain):
+        # pipeline columns: the open path is always shown; lost/cancelled only when present
+        return ['draft', 'submitted', 'under_evaluation', 'won'] + [
+            state for state in ('lost', 'cancelled') if state in states]
+
+    @api.depends('submission_deadline', 'state')
+    def _compute_deadline_status(self):
+        today = fields.Date.context_today(self)
+        for tender in self:
+            # the submission deadline only matters until the tender is submitted
+            if tender.state != 'draft' or not tender.submission_deadline:
+                tender.days_to_deadline = 0
+                tender.deadline_status = 'none'
+                continue
+            deadline = fields.Datetime.context_timestamp(tender, tender.submission_deadline).date()
+            days = (deadline - today).days
+            tender.days_to_deadline = days
+            if days < 0:
+                tender.deadline_status = 'overdue'
+            elif days <= self._DEADLINE_SOON_DAYS:
+                tender.deadline_status = 'soon'
+            else:
+                tender.deadline_status = 'ok'
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',

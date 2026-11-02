@@ -1,86 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <!-- Form View -->
+    <!-- One btn-primary per state (UX_SPEC §2.2): draft → Confirm Provisional; provisional →
+         Release Retention 1 (accountant) until done, then Final Handover; final → Release
+         Retention 2 until done, then Close. -->
     <record id="view_project_handover_form" model="ir.ui.view">
         <field name="name">project.handover.form</field>
         <field name="model">project.handover</field>
         <field name="arch" type="xml">
             <form string="Project Handover">
                 <header>
-                    <button name="action_confirm_provisional_handover" groups="nt_construction.group_construction_project_manager,project.group_project_manager" string="Confirm Provisional" type="object"
-                            class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="action_release_retention_stage1" groups="nt_construction.group_construction_accountant,project.group_project_manager" string="Release Stage 1 (50%)" type="object"
-                            class="btn-info" invisible="state != 'provisional' or retention_release_stage1_done"/>
-                    <button name="action_final_handover" groups="nt_construction.group_construction_project_manager,project.group_project_manager" string="Finalize Handover" type="object"
-                            class="btn-success" invisible="state != 'provisional'"/>
-                    <button name="action_release_retention_stage2" groups="nt_construction.group_construction_accountant,project.group_project_manager" string="Release Stage 2 (50%)" type="object"
-                            class="btn-info" invisible="state != 'final' or retention_release_stage2_done"/>
-                    <button name="action_close" groups="nt_construction.group_construction_project_manager,project.group_project_manager" string="Close Project" type="object"
-                            class="btn-success" invisible="state != 'final'"/>
-                    <button name="action_reset_draft" groups="nt_construction.group_construction_project_manager,project.group_project_manager" string="Reset to Draft" type="object"
-                            class="btn-secondary" invisible="state == 'draft'"/>
-                    <field name="state" widget="statusbar"
-                           statusbar_visible="draft,provisional,final,closed"/>
+                    <button name="action_confirm_provisional_handover" string="Confirm Provisional Handover" type="object"
+                            class="btn-primary" invisible="state != 'draft'"
+                            groups="nt_construction.group_construction_project_manager,project.group_project_manager"/>
+                    <button name="action_release_retention_stage1" string="Release Retention (Stage 1)" type="object"
+                            class="btn-primary" invisible="state != 'provisional' or retention_release_stage1_done"
+                            confirm="Record the stage 1 retention release?"
+                            groups="nt_construction.group_construction_accountant,project.group_project_manager"/>
+                    <button name="action_final_handover" string="Final Handover" type="object"
+                            class="btn-primary" invisible="state != 'provisional' or not retention_release_stage1_done"
+                            groups="nt_construction.group_construction_project_manager,project.group_project_manager"/>
+                    <button name="action_final_handover" string="Final Handover" type="object"
+                            class="btn-secondary" invisible="state != 'provisional' or retention_release_stage1_done"
+                            groups="nt_construction.group_construction_project_manager,project.group_project_manager"/>
+                    <button name="action_release_retention_stage2" string="Release Retention (Stage 2)" type="object"
+                            class="btn-primary" invisible="state != 'final' or retention_release_stage2_done"
+                            confirm="Record the stage 2 (final) retention release?"
+                            groups="nt_construction.group_construction_accountant,project.group_project_manager"/>
+                    <button name="action_close" string="Close Project" type="object"
+                            class="btn-primary" invisible="state != 'final' or not retention_release_stage2_done"
+                            groups="nt_construction.group_construction_project_manager,project.group_project_manager"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object" class="btn-secondary"
+                            invisible="state == 'draft' or retention_release_stage1_done or retention_release_stage2_done"
+                            confirm="Reset this handover to draft?"
+                            groups="nt_construction.group_construction_project_manager,project.group_project_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,provisional,final,closed"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_project" type="object" class="oe_stat_button" icon="fa-building">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Project</span>
+                            </div>
+                        </button>
+                        <button name="action_view_open_punch_items" type="object" class="oe_stat_button" icon="fa-exclamation-triangle"
+                                invisible="not punch_list_open_count">
+                            <field name="punch_list_open_count" widget="statinfo" string="Open Punch Items"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
                     </div>
                     <group>
-                        <group>
-                            <field name="project_id" readonly="state != 'draft'"/>
-                            <field name="date" readonly="state != 'draft'"/>
+                        <group name="who">
+                            <field name="project_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="punch_list_total_count" string="Punch Items"/>
                         </group>
-                        <group>
-                            <field name="punch_list_open_count" readonly="1"/>
-                            <field name="punch_list_total_count" readonly="1"/>
-                            <field name="retention_held_total" readonly="1"/>
+                        <group name="when_value">
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="retention_held_total"/>
+                            <field name="currency_id" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Provisional Handover">
-                            <group>
-                                <group>
-                                    <field name="provisional_handover_date"/>
-                                    <field name="defects_liability_months"/>
-                                    <field name="defects_liability_end_date" readonly="1"/>
-                                </group>
-                                <group>
-                                    <field name="retention_release_stage1_percentage"/>
-                                    <field name="retention_release_stage1_amount" readonly="1"/>
-                                    <field name="retention_release_stage1_date" readonly="1"/>
-                                    <field name="retention_release_stage1_done" readonly="1"/>
-                                </group>
-                            </group>
-                        </page>
-                        <page string="Punch List">
-                            <field name="punch_list_ids">
-                                <list editable="bottom" decoration-danger="status == 'open'">
+                        <page string="Punch List" name="punch_list">
+                            <field name="punch_list_ids" readonly="state == 'closed'">
+                                <list editable="bottom" decoration-muted="status == 'closed'">
                                     <field name="description"/>
                                     <field name="location"/>
                                     <field name="responsible_party"/>
-                                    <field name="date_reported" readonly="1"/>
+                                    <field name="subcontract_agreement_id" optional="hide" options="{'no_create': True}"/>
+                                    <field name="date_reported" string="Reported" readonly="1" optional="show"/>
                                     <field name="status" widget="badge" decoration-danger="status == 'open'" decoration-success="status == 'closed'"/>
+                                    <button name="action_close_item" type="object" icon="fa-check" title="Close item"
+                                            groups="nt_construction.group_construction_project_manager,project.group_project_manager"
+                                            invisible="status != 'open'"/>
+                                    <button name="action_reopen_item" type="object" icon="fa-undo" title="Reopen item"
+                                            groups="nt_construction.group_construction_project_manager,project.group_project_manager"
+                                            invisible="status != 'closed'"/>
                                 </list>
                             </field>
                         </page>
-                        <page string="Final Handover">
+                        <page string="Provisional Handover" name="provisional">
+                            <group>
+                                <group string="Defects Liability Period">
+                                    <field name="provisional_handover_date" readonly="state != 'draft'"/>
+                                    <field name="defects_liability_months" readonly="state != 'draft'"/>
+                                    <field name="defects_liability_end_date"/>
+                                </group>
+                                <group string="Retention Release (Stage 1)">
+                                    <field name="retention_release_stage1_percentage" readonly="retention_release_stage1_done"/>
+                                    <field name="retention_release_stage1_amount"/>
+                                    <field name="retention_release_stage1_date"/>
+                                    <field name="retention_release_stage1_done"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Final Handover" name="final">
                             <group>
                                 <group>
-                                    <field name="final_handover_date"/>
+                                    <field name="final_handover_date" readonly="state in ('final', 'closed')"/>
                                 </group>
-                                <group>
-                                    <field name="retention_release_stage2_percentage"/>
-                                    <field name="retention_release_stage2_amount" readonly="1"/>
-                                    <field name="retention_release_stage2_date" readonly="1"/>
-                                    <field name="retention_release_stage2_done" readonly="1"/>
+                                <group string="Retention Release (Stage 2)">
+                                    <field name="retention_release_stage2_percentage" readonly="retention_release_stage2_done"/>
+                                    <field name="retention_release_stage2_amount"/>
+                                    <field name="retention_release_stage2_date"/>
+                                    <field name="retention_release_stage2_done"/>
                                 </group>
                             </group>
                             <field name="final_acceptance_notes" nolabel="1" placeholder="Final acceptance notes..."/>
                         </page>
-                        <page string="Notes">
+                        <page string="Notes" name="notes">
                             <field name="notes" nolabel="1" placeholder="Additional notes..."/>
+                        </page>
+                        <page string="Other Info" name="other_info" groups="base.group_multi_company">
+                            <group>
+                                <group>
+                                    <field name="company_id"/>
+                                </group>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -89,57 +126,101 @@
         </field>
     </record>
 
-    <!-- List View -->
     <record id="view_project_handover_list" model="ir.ui.view">
         <field name="name">project.handover.list</field>
         <field name="model">project.handover</field>
         <field name="arch" type="xml">
-            <list string="Project Handovers" decoration-success="state == 'closed'"
-                  decoration-info="state in ('provisional', 'final')">
+            <list string="Project Handovers" multi_edit="0">
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="provisional_handover_date"/>
-                <field name="final_handover_date"/>
-                <field name="punch_list_open_count" optional="show"/>
+                <field name="defects_liability_end_date" optional="show"/>
+                <field name="final_handover_date" optional="show"/>
+                <field name="punch_list_open_count" string="Open Items" optional="show"/>
                 <field name="retention_held_total" sum="Total Retained" optional="show"/>
-                <field name="state" widget="badge"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-info="state in ('provisional', 'final')"
+                       decoration-success="state == 'closed'"/>
             </list>
         </field>
     </record>
 
-    <!-- Search View -->
-<!--    <record id="view_project_handover_search" model="ir.ui.view">-->
-<!--        <field name="name">project.handover.search</field>-->
-<!--        <field name="model">project.handover</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <search string="Search Project Handovers">-->
-<!--                <field name="name"/>-->
-<!--                <field name="project_id"/>-->
-<!--                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>-->
-<!--                <filter string="Provisional" name="provisional" domain="[('state', '=', 'provisional')]"/>-->
-<!--                <filter string="Final" name="final" domain="[('state', '=', 'final')]"/>-->
-<!--                <filter string="Closed" name="closed" domain="[('state', '=', 'closed')]"/>-->
-<!--                <separator/>-->
-<!--                <filter string="Punch List Open" name="punch_open" domain="[('punch_list_open_count', '&gt;', 0)]"/>-->
-<!--                <filter string="Stage 1 Released" name="stage1_released" domain="[('retention_release_stage1_done', '=', True)]"/>-->
-<!--                <group expand="0" string="Group By">-->
-<!--                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>-->
-<!--                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>-->
-<!--                </group>-->
-<!--            </search>-->
-<!--        </field>-->
-<!--    </record>-->
-
-    <!-- Action -->
-    <record id="action_project_handover" model="ir.actions.act_window">
-        <field name="name">Project Handovers</field>
-        <field name="res_model">project.handover</field>
-        <field name="view_mode">list,form</field>
+    <record id="view_project_handover_search" model="ir.ui.view">
+        <field name="name">project.handover.search</field>
+        <field name="model">project.handover</field>
+        <field name="arch" type="xml">
+            <search string="Search Handovers">
+                <field name="name"/>
+                <field name="project_id"/>
+                <filter string="Not Closed" name="not_closed" domain="[('state', '!=', 'closed')]"/>
+                <filter string="In Defects Liability" name="dlp" domain="[('state', '=', 'provisional')]"/>
+                <filter string="DLP Ending in 30 Days" name="dlp_ending"
+                        domain="[('state', '=', 'provisional'),
+                                 ('defects_liability_end_date', '&lt;=', (context_today() + relativedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <group>
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
     </record>
 
-    <menuitem id="menu_project_handover" name="Project Handovers"
-              parent="nt_construction.menu_tender_root"
-              action="action_project_handover" sequence="60"/>
+    <record id="action_project_handover" model="ir.actions.act_window">
+        <field name="name">Handovers</field>
+        <field name="res_model">project.handover</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_project_handover_search"/>
+        <field name="context">{'search_default_not_closed': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Start a project handover</p>
+            <p>Provisional handover, punch list, defects liability period, final handover and retention release.</p>
+        </field>
+    </record>
 
+    <!-- Open punch items across handovers (site engineers / PMs) -->
+    <record id="view_project_handover_punch_item_list" model="ir.ui.view">
+        <field name="name">project.handover.punch.item.list</field>
+        <field name="model">project.handover.punch.item</field>
+        <field name="arch" type="xml">
+            <list string="Punch Items" decoration-muted="status == 'closed'" create="0">
+                <field name="project_id"/>
+                <field name="handover_id"/>
+                <field name="description"/>
+                <field name="location"/>
+                <field name="responsible_party" optional="show"/>
+                <field name="date_reported" optional="show"/>
+                <field name="status" widget="badge" decoration-danger="status == 'open'" decoration-success="status == 'closed'"/>
+                <button name="action_close_item" type="object" icon="fa-check" title="Close item"
+                                            groups="nt_construction.group_construction_project_manager,project.group_project_manager"
+                        invisible="status != 'open'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_project_handover_punch_item_search" model="ir.ui.view">
+        <field name="name">project.handover.punch.item.search</field>
+        <field name="model">project.handover.punch.item</field>
+        <field name="arch" type="xml">
+            <search string="Search Punch Items">
+                <field name="description"/>
+                <field name="project_id"/>
+                <field name="location"/>
+                <filter string="Open" name="open" domain="[('status', '=', 'open')]"/>
+                <group>
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Responsible" name="group_responsible" context="{'group_by': 'responsible_party'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_project_handover_punch_item" model="ir.actions.act_window">
+        <field name="name">Open Punch Items</field>
+        <field name="res_model">project.handover.punch.item</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_project_handover_punch_item_search"/>
+        <field name="context">{'search_default_open': 1, 'search_default_group_project': 1}</field>
+    </record>
 </odoo>
-

@@ -5,6 +5,24 @@ Each entry lists what changed and the evidence (commands + results). Older statu
 "complete / 100% pass" for a module that had no tests and several crashing paths
 (see `BASELINE.md`).
 
+## nt_construction 19.0.1.3.0 — UX Phase A (2026-11-02)
+
+Report with screenshots (EN/AR, desktop/tablet): `docs/UX_PHASE_A.md`.
+- Menu in business order (Tenders, Projects, Execution, Contracts, Billing, Handover, Reporting), role-based;
+  app "Construction" with icon; new actions for construction projects, tender/project BOQ, POs, open punch items.
+- Form standard on Tender, Daily Report, Subcontract Agreement, Handover; tender kanban pipeline; search views
+  restored; daily report calendar; `static/src/scss/construction.scss`.
+- `tests/test_ux_form_standard.py` (3 tests): ≤ 1 btn-primary per state, every role loads menus and views,
+  menu order.
+```
+ruff / pylint-odoo                                      → All checks passed! / 10.00/10
+-i nt_construction, new DB agent_uxa_fresh              → 0 failed, 0 error(s) of 37 tests; 0 WARNING/ERROR lines
+-i nt_construction --with-demo, agent_uxa_demo          → 0 failed, 0 error(s) of 37 tests; 0 WARNING/ERROR lines
+baseline 858b91e → -u nt_construction, agent_uxa_upgrade → 0 failed, 0 error(s) of 37 tests; 0 WARNING/ERROR lines (19.0.1.3.0)
+screenshot server (agent_uxa_shots, 34 captures)        → 1 ERROR line: core mail_presence "could not serialize access
+                                                          due to concurrent update" (bus poll vs scripted logout; retried by Odoo)
+```
+
 ## nt_construction 19.0.1.2.0 — Step 2: security & roles (2026-11-02)
 
 ### Lint cleanup (first commit of step 2)
