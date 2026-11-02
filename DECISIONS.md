@@ -25,6 +25,9 @@ Re-read at the start of every step. "Client" decisions come from the project own
 | S3 | Scope additions accepted for planning: unit rate analysis, stock integration, labor/equipment cost from daily reports, price escalation (فروق أسعار). | 2026-11-02 |
 | S4 | **UX & dashboards: design now, build later.** `UX_SPEC.md` must be reviewed by the owner before any UX code. Native Odoo 19 views/widgets first; OWL only for the Overview page; minimal SCSS with Odoo/Bootstrap variables, no core style overrides; must work in Arabic RTL and at tablet width. Schedule: menu + form standard after step 3, **before** the golden-cycle demo; project dashboard, Overview and My Approvals in step 4. | 2026-11-02 |
 
+| S5 | **UX_SPEC answers** (2026-11-02): Q1 divergence threshold = 10 percentage points as a **company setting**, not hardcoded. Q2 show three labelled figures everywhere — **Certified** (approved certificates), **Invoiced** (posted invoices), **Collected** (payments) — with the same definitions on every screen (UX_SPEC §3.0). Q3 no bulk approval. Q4 cash-flow forecast excludes uncertified work; "Executed not yet certified" shown as a separate line. Q5 Overview for Mgmt/Finance/PMs approved. Q6 online only for now, client confirmation pending (OPEN). Q7 no drag-and-drop on tenders. | 2026-11-02 |
+| S6 | **Step 2 requirement:** record rules restrict project managers to **their own projects** (and the documents of those projects). | 2026-11-02 |
+
 ## 3. Data & migration (from project owner)
 
 | # | Decision | Date |
@@ -62,8 +65,10 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | # | Decision | Why |
 |---|---|---|
 | U1 | "My Approvals" is placed under the Overview menu (Overview › My Approvals), not as its own top-level entry | Keeps the owner's 9-menu business order |
-| U2 | My Approvals = read-only SQL view (`UNION ALL`) over the approval documents + `mail.activity` on submit; no approve-from-list in v1 (Q3) | One source for the list, the project card count and the Overview KPI; approver sees the lines first |
+| U2 | My Approvals = read-only SQL view (`UNION ALL`) over the approval documents + `mail.activity` on submit; no approve-from-list (confirmed by owner, S5 Q3) | One source for the list, the project card count and the Overview KPI; approver sees the lines first |
 | U3 | Rejected / cancelled shown as a ribbon, not as statusbar steps | Statusbar shows the happy path only |
-| U4 | Tender kanban: drag-and-drop disabled (Q7) | State changes must run the button logic and chatter |
+| U4 | Tender kanban: drag-and-drop disabled (confirmed by owner, S5 Q7) | State changes must run the button logic and chatter |
 | U5 | Project card uses core `o_kanban_dashboard`, `progress_bar` and `dashboard_graph` widgets (all in Community `web`) | Native first, no custom JS for the card |
-| U6 | Divergence threshold provisional default 10 points, configurable (Q1) | Needs a number to design; not a business rule yet |
+| U6 | ~~Divergence threshold provisional~~ → superseded by S5 Q1 (10 points, company setting) | — |
+| U7 | Invoiced is compared like-for-like with Certified because step 3 books revenue at gross work value (retention → Retention Receivable, advance recovery → Customer Advances); Collected is shown as % of the invoices' receivable total, not of contract | Different bases would make the three figures look inconsistent |
+| U8 | One shared Python helper computes Executed / Certified / Invoiced / Collected for card, Overview and pivots (+0.5 d on UX-6) | Guarantees "same definitions on every screen" (S5 Q2) |

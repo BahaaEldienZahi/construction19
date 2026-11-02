@@ -39,8 +39,8 @@ Estimate: ~10–13 weeks total (see plan); step 1 consumed ~1 day of the 2–3 d
 
 **UX & dashboards** (`UX_SPEC.md`, draft awaiting owner review, no code): menu restructure, form
 standard, search views (all currently commented out), tender kanban — 5.5 d after step 3, before the
-golden-cycle demo; project dashboard, My Approvals, Overview (OWL), RTL/tablet pass — 11.5 d in step 4.
-Open questions Q1–Q7 in `UX_SPEC.md` §10.
+golden-cycle demo; project dashboard, My Approvals, Overview (OWL), RTL/tablet pass — 12 d in step 4.
+Q1–Q7 answered by the owner (DECISIONS S5); **Q6 (offline on tablet) still open** pending client confirmation.
 
 ## D. Blockers / environment
 
