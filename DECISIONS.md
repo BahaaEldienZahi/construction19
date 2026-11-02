@@ -13,7 +13,7 @@ Re-read at the start of every step. "Client" decisions come from the project own
 | R4 | Never claim "done / production ready" without having run it; cite commands + output. | 2026-11-02 |
 | R5 | Ask before any destructive migration. | 2026-11-02 |
 | R6 | Test databases: only names prefixed `agent_`, only `--http-port 8079`. Drop own `agent_` DBs at the end of each step. | 2026-11-02 |
-| R7 | Never touch the owner's Odoo server (PID 2575728, `odoo-bin -c odoo.conf --dev xml`; restarted 2026-11-02 12:51 as **PID 3412413**) or its DBs. Old agent-created `nt_*` / `ph_*` DBs are dropped only when no server holds a connection to them. 2026-11-02: 6 dropped; `nt_step1`, `nt_step1_up`, `nt_s1_upgrade2`, `ph_baseline_ce` kept (held by PID 3412413). `nt_intrnal_17`, `nt_intrnal17_new` are not agent DBs — never touched. | 2026-11-02 |
+| R7 | Never touch the owner's Odoo server (PID 2575728, `odoo-bin -c odoo.conf --dev xml`; restarted 2026-11-02 12:51 as **PID 3412413**) or its DBs. Old agent-created `nt_*` / `ph_*` DBs are dropped only when no server holds a connection to them. 2026-11-02: 6 dropped; `nt_step1`, `nt_step1_up`, `nt_s1_upgrade2`, `ph_baseline_ce` kept (held by PID 3412413). Those 4 dropped later the same day once that server had stopped; no agent-created DB remains. `nt_intrnal_17`, `nt_intrnal17_new` are not agent DBs — never touched. | 2026-11-02 |
 | R8 | Lint tools (`ruff`, `pylint-odoo`) may be installed into `odoo_19/.venv`. | 2026-11-02 |
 | R9 | During a step, new questions are written to DECISIONS.md (§7) and work continues with the agent's default. Stop and wait **only** if the question is destructive or changes money or permissions logic. | 2026-11-02 |
 
