@@ -101,3 +101,4 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | Q7 | 2 | Site Engineer sees prices and amounts? | Hidden (quantities only) | **STOP** |
 | Q8 | 2 | Read-only Client Viewer (portal) now or with the certificate PDF (golden cycle)? | With the golden cycle | open |
 
+| Q9 | 2 | `pharmacy_retail/` disappeared from disk ~12:25 on 2026-11-02 and its 116 files are **staged as deleted** in this repo's index — not done by the agent. Intended? | Not restored, not unstaged, not committed (agent commits use `git commit --only <paths>`). Recoverable from HEAD | open |
