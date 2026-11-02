@@ -45,5 +45,4 @@ Q1–Q7 answered by the owner (DECISIONS S5); **Q6 (offline on tablet) still ope
 
 | Item | Impact |
 |---|---|
-| **Enterprise 19 source not available** (only Enterprise 18 on this machine); Enterprise vs Community for the client **still unknown** (2026-11-02) | `pharmacy_retail` cannot be installed or tested. Step 5 on hold (DECISIONS S1). |
 | `odoo.conf` addons_path points to missing `construction19/` and omits `custom_addons/` | Tests use `--addons-path` explicitly. `odoo.conf` belongs to the core repo; not changed. |

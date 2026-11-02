@@ -3,7 +3,6 @@
 | Module | Purpose | Edition | Status |
 |---|---|---|---|
 | `nt_construction` | Tenders → BOQ → execution project → variation orders → payment certificates (مستخلصات) → handover | Community 19 (works on Enterprise) | Step 1 (stabilization) done; full cycle in progress, see `GAP_LIST.md` |
-| `pharmacy_retail` | Odoo S.A. "Pharmacy" industry module (19.0+e, OEEL-1), kept **unmodified** | Enterprise 19 only (`knowledge`, `web_studio`) | Not installable without Enterprise 19, see `BASELINE.md` §5 |
 
 Status is only claimed with evidence: see `CHANGELOG.md` for what changed per step and the
 commands/test results behind it, and `GAP_LIST.md` for what is not done.
@@ -38,6 +37,5 @@ custom_addons/            ← its own git repo (separate from the Odoo core repo
 ├── DECISIONS.md          working rules + client/agent decisions (re-read every step)
 ├── GAP_LIST.md           open items, provisional decisions, blockers
 ├── UX_SPEC.md            menus, form standard, dashboards (draft for review)
-├── nt_construction/      module (README.md in Arabic, AGENTS.md for developers)
-└── pharmacy_retail/      Odoo S.A. module, unmodified
+└── nt_construction/      module (README.md in Arabic, AGENTS.md for developers)
 ```

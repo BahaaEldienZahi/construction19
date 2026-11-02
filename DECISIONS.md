@@ -13,7 +13,7 @@ Re-read at the start of every step. "Client" decisions come from the project own
 | R4 | Never claim "done / production ready" without having run it; cite commands + output. | 2026-11-02 |
 | R5 | Ask before any destructive migration. | 2026-11-02 |
 | R6 | Test databases: only names prefixed `agent_`, only `--http-port 8079`. Drop own `agent_` DBs at the end of each step. | 2026-11-02 |
-| R7 | Never touch the owner's Odoo server (PID 2575728, `odoo-bin -c odoo.conf --dev xml`) or its DBs. Old `nt_*` / `ph_*` DBs are dropped later, once the owner stops that server. | 2026-11-02 |
+| R7 | Never touch the owner's Odoo server (PID 2575728, `odoo-bin -c odoo.conf --dev xml`; restarted 2026-11-02 12:51 as **PID 3412413**) or its DBs. Old agent-created `nt_*` / `ph_*` DBs are dropped only when no server holds a connection to them. 2026-11-02: 6 dropped; `nt_step1`, `nt_step1_up`, `nt_s1_upgrade2`, `ph_baseline_ce` kept (held by PID 3412413). `nt_intrnal_17`, `nt_intrnal17_new` are not agent DBs — never touched. | 2026-11-02 |
 | R8 | Lint tools (`ruff`, `pylint-odoo`) may be installed into `odoo_19/.venv`. | 2026-11-02 |
 | R9 | During a step, new questions are written to DECISIONS.md (§7) and work continues with the agent's default. Stop and wait **only** if the question is destructive or changes money or permissions logic. | 2026-11-02 |
 
@@ -21,11 +21,12 @@ Re-read at the start of every step. "Client" decisions come from the project own
 
 | # | Decision | Date |
 |---|---|---|
-| S1 | **Pharmacy (step 5) on hold** until Enterprise vs Community is confirmed. Still unknown as of 2026-11-02. `pharmacy_retail` stays unmodified. | 2026-11-02 |
+| S1 | ~~Pharmacy (step 5) on hold~~ → **`pharmacy_retail` removed by the owner** (2026-11-02, "i delete the pharma"). Deletion committed in this repo; recoverable from history (`git show 858b91e:pharmacy_retail/...`). Phase 2 / step 5 out of scope unless re-requested. | 2026-11-02 |
 | S2 | After step 3, deliver the demo-able **golden cycle** (tender → project → measurement → certificate → invoice + Arabic PDF + minimal demo data) **before** the rest of step 4. | 2026-11-02 |
 | S3 | Scope additions accepted for planning: unit rate analysis, stock integration, labor/equipment cost from daily reports, price escalation (فروق أسعار). | 2026-11-02 |
 | S4 | **UX & dashboards: design now, build later.** `UX_SPEC.md` must be reviewed by the owner before any UX code. Native Odoo 19 views/widgets first; OWL only for the Overview page; minimal SCSS with Odoo/Bootstrap variables, no core style overrides; must work in Arabic RTL and at tablet width. Schedule: menu + form standard after step 3, **before** the golden-cycle demo; project dashboard, Overview and My Approvals in step 4. | 2026-11-02 |
 
+| S8 | **Reorder: UX Phase A before step 3** — menu restructure, base SCSS, form standard on Tender (form + kanban), Daily Report, Subcontract, Handover; screenshots EN + AR of every changed screen in the report. Certificate, Variation Order, Project, Measurement forms and all dashboards stay after step 3. | 2026-11-02 |
 | S5 | **UX_SPEC answers** (2026-11-02): Q1 divergence threshold = 10 percentage points as a **company setting**, not hardcoded. Q2 show three labelled figures everywhere — **Certified** (approved certificates), **Invoiced** (posted invoices), **Collected** (payments) — with the same definitions on every screen (UX_SPEC §3.0). Q3 no bulk approval. Q4 cash-flow forecast excludes uncertified work; "Executed not yet certified" shown as a separate line. Q5 Overview for Mgmt/Finance/PMs approved. Q6 online only for now, client confirmation pending (OPEN). Q7 no drag-and-drop on tenders. | 2026-11-02 |
 | S7 | **Certified vs Invoiced are always compared on the same basis: both excluding VAT, both including escalation (فروق أسعار).** A step 3 test must assert it (same project, same period → Certified = Invoiced once every approved certificate is invoiced). | 2026-11-02 |
 | S6 | **Step 2 requirement:** record rules restrict project managers to **their own projects** (and the documents of those projects). | 2026-11-02 |
@@ -108,4 +109,4 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | Q7 | 2 | Site Engineer sees prices and amounts? | Hidden (quantities only) | resolved: owner \"defaults OK\" 2026-11-02 |
 | Q8 | 2 | Read-only Client Viewer (portal) now or with the certificate PDF (golden cycle)? | With the golden cycle | resolved: owner "defaults OK" 2026-11-02 |
 
-| Q9 | 2 | `pharmacy_retail/` disappeared from disk ~12:25 on 2026-11-02 and its 116 files are **staged as deleted** in this repo's index — not done by the agent. Intended? | Not restored, not unstaged, not committed (agent commits use `git commit --only <paths>`). Recoverable from HEAD | open |
+| Q9 | 2 | ~~`pharmacy_retail/` disappeared from disk ~12:25 on 2026-11-02 and its 116 files are **staged as deleted** in this repo's index — not done by the agent. Intended? | Not restored, not unstaged, not committed (agent commits use `git commit --only <paths>`). Recoverable from HEAD~~ | resolved: owner deleted it on purpose (S1) |
