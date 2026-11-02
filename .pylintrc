@@ -1,0 +1,12 @@
+# pylint-odoo configuration for this repo.
+# Run from odoo_19/:  .venv/bin/pylint --rcfile=custom_addons/.pylintrc custom_addons/nt_construction
+[MASTER]
+load-plugins=pylint_odoo
+
+[ODOOLINT]
+valid-odoo-versions=19.0
+manifest-required-authors=National Technology
+
+[MESSAGES CONTROL]
+disable=all
+enable=odoolint

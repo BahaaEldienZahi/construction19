@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, UserError
+from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 
 class TenderTender(models.Model):
@@ -17,7 +16,7 @@ class TenderTender(models.Model):
         required=True,
         copy=False,
         readonly=True,
-        default=lambda self: _('New'),
+        default=lambda self: self.env._('New'),
         tracking=True,
     )
     client_reference = fields.Char(
@@ -27,20 +26,17 @@ class TenderTender(models.Model):
     )
     client_id = fields.Many2one(
         'res.partner',
-        string='Client',
         required=True,
         tracking=True,
     )
-    description = fields.Text(string='Description')
+    description = fields.Text()
     company_id = fields.Many2one(
         'res.company',
-        string='Company',
         required=True,
         default=lambda self: self.env.company,
     )
     currency_id = fields.Many2one(
         'res.currency',
-        string='Currency',
         default=lambda self: self.env.company.currency_id,
     )
     user_id = fields.Many2one(
@@ -54,22 +50,19 @@ class TenderTender(models.Model):
     # Dates
     # ---------------------------------------------------------------
     submission_deadline = fields.Datetime(
-        string='Submission Deadline',
         tracking=True,
     )
-    opening_date = fields.Date(string='Opening Date')
+    opening_date = fields.Date()
     date_won = fields.Date(string='Award Date', readonly=True, copy=False)
 
     # ---------------------------------------------------------------
     # Financials
     # ---------------------------------------------------------------
     estimated_value = fields.Monetary(
-        string='Estimated Value',
         currency_field='currency_id',
         help='القيمة التقديرية للمناقصة قبل الترسية',
     )
     awarded_value = fields.Monetary(
-        string='Awarded Value',
         currency_field='currency_id',
         copy=False,
         help='القيمة الفعلية بعد الترسية، ممكن تختلف عن التقديرية',
@@ -87,7 +80,7 @@ class TenderTender(models.Model):
         ('cancelled', 'Cancelled'),
     ], string='Status', default='draft', required=True, copy=False, tracking=True)
 
-    lost_reason = fields.Text(string='Lost Reason', copy=False)
+    lost_reason = fields.Text(copy=False)
     cancel_reason = fields.Text(string='Cancellation Reason', copy=False)
 
     # ---------------------------------------------------------------
@@ -125,8 +118,8 @@ class TenderTender(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', _('New')) == _('New'):
-                vals['name'] = self.env['ir.sequence'].next_by_code('tender.tender') or _('New')
+            if vals.get('name', self.env._('New')) == self.env._('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('tender.tender') or self.env._('New')
         return super().create(vals_list)
 
     def _compute_project_count(self):
@@ -148,35 +141,35 @@ class TenderTender(models.Model):
     def action_submit(self):
         for rec in self:
             if rec.state != 'draft':
-                raise UserError(_('Only draft tenders can be submitted.'))
+                raise UserError(self.env._('Only draft tenders can be submitted.'))
             if not rec.submission_deadline:
-                raise ValidationError(_('Please set a submission deadline before submitting.'))
+                raise ValidationError(self.env._('Please set a submission deadline before submitting.'))
         self.write({'state': 'submitted'})
 
     def action_under_evaluation(self):
         for rec in self:
             if rec.state != 'submitted':
-                raise UserError(_('Only submitted tenders can move to evaluation.'))
+                raise UserError(self.env._('Only submitted tenders can move to evaluation.'))
         self.write({'state': 'under_evaluation'})
 
     def action_set_won(self):
         for rec in self:
             if rec.state not in ('submitted', 'under_evaluation'):
-                raise UserError(_('Tender must be submitted or under evaluation before it can be won.'))
+                raise UserError(self.env._('Tender must be submitted or under evaluation before it can be won.'))
             if not rec.awarded_value:
-                raise ValidationError(_('Please enter the awarded value before marking the tender as won.'))
+                raise ValidationError(self.env._('Please enter the awarded value before marking the tender as won.'))
         self.write({'state': 'won', 'date_won': fields.Date.context_today(self)})
 
     def action_set_lost(self):
         for rec in self:
             if rec.state not in ('submitted', 'under_evaluation'):
-                raise UserError(_('Tender must be submitted or under evaluation before it can be marked as lost.'))
+                raise UserError(self.env._('Tender must be submitted or under evaluation before it can be marked as lost.'))
         self.write({'state': 'lost'})
 
     def action_cancel(self):
         for rec in self:
             if rec.state == 'won':
-                raise UserError(_('A won tender cannot be cancelled directly. Please handle the linked project first.'))
+                raise UserError(self.env._('A won tender cannot be cancelled directly. Please handle the linked project first.'))
         self.write({'state': 'cancelled'})
 
     def action_reset_draft(self):
@@ -188,12 +181,12 @@ class TenderTender(models.Model):
     def action_create_project(self):
         self.ensure_one()
         if self.state != 'won':
-            raise UserError(_('Only won tenders can be converted into an execution project.'))
+            raise UserError(self.env._('Only won tenders can be converted into an execution project.'))
         if self.project_id:
-            raise UserError(_('This tender already has a linked project.'))
+            raise UserError(self.env._('This tender already has a linked project.'))
 
         project = self.env['project.project'].create({
-            'name': self.name and f'{self.name} - {self.client_id.name}' or self.client_id.name,
+            'name': (self.name and f'{self.name} - {self.client_id.name}') or self.client_id.name,
             'partner_id': self.client_id.id,
             'company_id': self.company_id.id,
             'user_id': self.user_id.id,
@@ -214,7 +207,7 @@ class TenderTender(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Execution Project'),
+            'name': self.env._('Execution Project'),
             'res_model': 'project.project',
             'view_mode': 'form',
             'res_id': self.project_id.id,
@@ -224,7 +217,7 @@ class TenderTender(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Bill of Quantities'),
+            'name': self.env._('Bill of Quantities'),
             'res_model': 'boq.line',
             'view_mode': 'list,form',
             'domain': [('tender_id', '=', self.id)],

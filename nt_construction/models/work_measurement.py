@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -10,16 +9,16 @@ class WorkMeasurement(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date desc, id desc'
 
-    name = fields.Char(default=lambda self: _('New'), readonly=True, copy=False)
+    name = fields.Char(default=lambda self: self.env._('New'), readonly=True, copy=False)
     project_id = fields.Many2one(
-        'project.project', string='Project', required=True,
+        'project.project', required=True,
         domain=[('is_construction_project', '=', True)], tracking=True,
     )
     company_id = fields.Many2one(related='project_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one(related='project_id.construction_currency_id', readonly=True)
     date = fields.Date(default=fields.Date.context_today, required=True)
-    period_from = fields.Date(string='Period From')
-    period_to = fields.Date(string='Period To')
+    period_from = fields.Date()
+    period_to = fields.Date()
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -32,14 +31,14 @@ class WorkMeasurement(models.Model):
         domain="[('project_id', '=', project_id), ('state', '=', 'confirmed')]",
     )
     payment_certificate_id = fields.Many2one(
-        'boq.payment.certificate', string='Payment Certificate',
+        'boq.payment.certificate',
         readonly=True, copy=False,
     )
     progress_ids = fields.One2many(
         'boq.line.progress', 'work_measurement_id', string='Progress Entries',
     )
     total_executed_value = fields.Monetary(
-        string='Total Executed Value', currency_field='currency_id',
+        currency_field='currency_id',
         compute='_compute_total_executed', store=True,
     )
 
@@ -51,8 +50,8 @@ class WorkMeasurement(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', _('New')) == _('New'):
-                vals['name'] = self.env['ir.sequence'].next_by_code('work.measurement') or _('New')
+            if vals.get('name', self.env._('New')) == self.env._('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('work.measurement') or self.env._('New')
         return super().create(vals_list)
 
     @api.depends('daily_report_ids', 'daily_report_ids.progress_ids')
@@ -67,7 +66,7 @@ class WorkMeasurement(models.Model):
     def action_confirm(self):
         for wm in self:
             if wm.state != 'draft':
-                raise UserError(_('Only draft measurements can be confirmed.'))
+                raise UserError(self.env._('Only draft measurements can be confirmed.'))
         self.write({'state': 'confirmed'})
 
     def action_reset_draft(self):

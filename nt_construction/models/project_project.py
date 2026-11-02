@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class ProjectProject(models.Model):
@@ -30,14 +29,13 @@ class ProjectProject(models.Model):
         ('commercial', 'Commercial'),
         ('industrial', 'Industrial'),
         ('infrastructure', 'Infrastructure'),
-    ], string='Construction Type')
+    ])
 
     client_po_number = fields.Char(string='Client PO Number')
-    contract_number = fields.Char(string='Contract Number', copy=False)
-    contract_signing_date = fields.Date(string='Contract Signing Date')
+    contract_number = fields.Char(copy=False)
+    contract_signing_date = fields.Date()
 
     contract_value = fields.Monetary(
-        string='Contract Value',
         currency_field='construction_currency_id',
         help='القيمة التعاقدية بعد الترسية (ممكن تتحدث لاحقاً بأوامر التغيير - Variation Orders)',
     )
@@ -49,7 +47,7 @@ class ProjectProject(models.Model):
 
     site_start_date = fields.Date(string='Site Handover / Start Date')
     site_completion_date = fields.Date(string='Contractual Completion Date')
-    actual_completion_date = fields.Date(string='Actual Completion Date', copy=False)
+    actual_completion_date = fields.Date(copy=False)
 
     site_location = fields.Text(
         string='Site Address',
@@ -128,7 +126,7 @@ class ProjectProject(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Tender'),
+            'name': self.env._('Tender'),
             'res_model': 'tender.tender',
             'view_mode': 'form',
             'res_id': self.tender_id.id,
@@ -143,7 +141,7 @@ class ProjectProject(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Bill of Quantities'),
+            'name': self.env._('Bill of Quantities'),
             'res_model': 'boq.line',
             'view_mode': 'list,form',
             'domain': [('project_id', '=', self.id)],
@@ -180,7 +178,7 @@ class ProjectProject(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Subcontract Agreements'),
+            'name': self.env._('Subcontract Agreements'),
             'res_model': 'subcontract.agreement',
             'view_mode': 'list,form',
             'domain': [('project_id', '=', self.id)],
@@ -202,7 +200,7 @@ class ProjectProject(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Site Daily Reports'),
+            'name': self.env._('Site Daily Reports'),
             'res_model': 'site.daily.report',
             'view_mode': 'list,form',
             'domain': [('project_id', '=', self.id)],
@@ -237,7 +235,7 @@ class ProjectProject(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Handover / Delivery'),
+            'name': self.env._('Handover / Delivery'),
             'res_model': 'project.handover',
             'view_mode': 'list,form',
             'domain': [('project_id', '=', self.id)],

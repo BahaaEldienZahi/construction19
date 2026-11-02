@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -13,9 +12,9 @@ class SiteDailyReport(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date desc, id desc'
 
-    name = fields.Char(default=lambda self: _('New'), readonly=True, copy=False)
+    name = fields.Char(default=lambda self: self.env._('New'), readonly=True, copy=False)
     project_id = fields.Many2one(
-        'project.project', string='Project', required=True,
+        'project.project', required=True,
         domain=[('is_construction_project', '=', True)], tracking=True,
     )
     company_id = fields.Many2one(related='project_id.company_id', store=True, readonly=True)
@@ -33,10 +32,10 @@ class SiteDailyReport(models.Model):
         ('rain', 'Rain'),
         ('sandstorm', 'Sandstorm / Khamaseen'),
         ('other', 'Other'),
-    ], string='Weather', default='clear')
+    ], default='clear')
 
-    manpower_ids = fields.One2many('site.daily.report.manpower', 'report_id', string='Manpower')
-    equipment_ids = fields.One2many('site.daily.report.equipment', 'report_id', string='Equipment')
+    manpower_ids = fields.One2many('site.daily.report.manpower', 'report_id')
+    equipment_ids = fields.One2many('site.daily.report.equipment', 'report_id')
     progress_ids = fields.One2many(
         'boq.line.progress', 'daily_report_id', string='Quantities Executed Today',
     )
@@ -63,8 +62,8 @@ class SiteDailyReport(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', _('New')) == _('New'):
-                vals['name'] = self.env['ir.sequence'].next_by_code('site.daily.report') or _('New')
+            if vals.get('name', self.env._('New')) == self.env._('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('site.daily.report') or self.env._('New')
         return super().create(vals_list)
 
     @api.depends('manpower_ids.headcount', 'equipment_ids.hours_worked',
@@ -80,7 +79,7 @@ class SiteDailyReport(models.Model):
     def action_confirm(self):
         for rec in self:
             if rec.state != 'draft':
-                raise UserError(_('Only draft reports can be confirmed.'))
+                raise UserError(self.env._('Only draft reports can be confirmed.'))
         self.write({'state': 'confirmed'})
 
     def action_reset_draft(self):
@@ -103,15 +102,15 @@ class SiteDailyReportManpower(models.Model):
         ('painter', 'Painter'),
         ('general_labor', 'General Labor'),
         ('other', 'Other'),
-    ], string='Trade', required=True, default='general_labor')
+    ], required=True, default='general_labor')
     is_subcontractor = fields.Boolean(string='Subcontractor Crew')
     subcontract_agreement_id = fields.Many2one(
         'subcontract.agreement', string='Subcontract',
         domain="[('project_id', '=', project_id)]",
     )
-    headcount = fields.Integer(string='Headcount', required=True, default=1)
+    headcount = fields.Integer(required=True, default=1)
     hours = fields.Float(string='Hours Worked', default=8.0)
-    note = fields.Char(string='Note')
+    note = fields.Char()
 
 
 class SiteDailyReportEquipment(models.Model):
@@ -125,7 +124,7 @@ class SiteDailyReportEquipment(models.Model):
         ('owned', 'Company Owned'),
         ('rented', 'Rented'),
     ], string='Type', default='owned')
-    count = fields.Integer(string='Count', default=1)
-    hours_worked = fields.Float(string='Hours Worked')
-    hours_idle = fields.Float(string='Hours Idle')
-    idle_reason = fields.Char(string='Idle Reason')
+    count = fields.Integer(default=1)
+    hours_worked = fields.Float()
+    hours_idle = fields.Float()
+    idle_reason = fields.Char()

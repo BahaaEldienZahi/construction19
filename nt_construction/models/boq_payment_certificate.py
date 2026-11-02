@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_compare
 
@@ -10,21 +9,21 @@ class BoqPaymentCertificate(models.Model):
     _inherit = ['construction.approval.mixin', 'mail.thread', 'mail.activity.mixin']
     _order = 'date desc, id desc'
 
-    name = fields.Char(default=lambda self: _('New'), readonly=True, copy=False)
+    name = fields.Char(default=lambda self: self.env._('New'), readonly=True, copy=False)
     project_id = fields.Many2one(
-        'project.project', string='Project', required=True,
+        'project.project', required=True,
         domain=[('is_construction_project', '=', True)], tracking=True,
     )
     date = fields.Date(default=fields.Date.context_today, required=True)
-    period_from = fields.Date(string='Period From')
-    period_to = fields.Date(string='Period To')
+    period_from = fields.Date()
+    period_to = fields.Date()
     company_id = fields.Many2one(related='project_id.company_id', store=True, index=True)
     currency_id = fields.Many2one(related='project_id.construction_currency_id', readonly=True)
 
     line_ids = fields.One2many('boq.payment.certificate.line', 'certificate_id', string='Lines')
 
     gross_amount = fields.Monetary(
-        string='Gross Amount', currency_field='currency_id',
+        currency_field='currency_id',
         compute='_compute_amounts', store=True,
     )
     retention_percentage = fields.Float(
@@ -39,19 +38,17 @@ class BoqPaymentCertificate(models.Model):
         help='المبلغ المسترد من الدفعة المقدمة في المستخلص ده',
     )
     net_payable = fields.Monetary(
-        string='Net Payable', currency_field='currency_id',
+        currency_field='currency_id',
         compute='_compute_amounts', store=True,
     )
     move_id = fields.Many2one('account.move', string='Customer Invoice', readonly=True, copy=False)
     move_state = fields.Selection(related='move_id.state', string='Invoice Status')
 
-
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', _('New')) == _('New'):
-                vals['name'] = self.env['ir.sequence'].next_by_code('boq.payment.certificate') or _('New')
+            if vals.get('name', self.env._('New')) == self.env._('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('boq.payment.certificate') or self.env._('New')
         return super().create(vals_list)
 
     @api.depends('line_ids.amount_this_period', 'retention_percentage', 'advance_recovery_amount')
@@ -70,14 +67,14 @@ class BoqPaymentCertificate(models.Model):
                     'date': cert.date,
                     'period_name': cert.name,
                     'quantity_executed': line.quantity_this_period,
-                    'note': _('Auto-created from Payment Certificate %s', cert.name),
+                    'note': self.env._('Auto-created from Payment Certificate %s', cert.name),
                 })
 
     def action_view_invoice(self):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Customer Invoice'),
+            'name': self.env._('Customer Invoice'),
             'res_model': 'account.move',
             'view_mode': 'form',
             'res_id': self.move_id.id,
@@ -86,11 +83,11 @@ class BoqPaymentCertificate(models.Model):
     def action_create_invoice(self):
         self.ensure_one()
         if self.state != 'approved':
-            raise UserError(_('Only approved certificates can be invoiced.'))
+            raise UserError(self.env._('Only approved certificates can be invoiced.'))
         if self.move_id:
-            raise UserError(_('This certificate already has a linked invoice.'))
+            raise UserError(self.env._('This certificate already has a linked invoice.'))
         if float_compare(self.net_payable, 0.0, precision_digits=2) <= 0:
-            raise UserError(_('Net payable amount must be positive to create an invoice.'))
+            raise UserError(self.env._('Net payable amount must be positive to create an invoice.'))
 
         move = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -98,7 +95,7 @@ class BoqPaymentCertificate(models.Model):
             'invoice_date': self.date,
             'invoice_origin': self.name,
             'invoice_line_ids': [Command.create({
-                'name': _(
+                'name': self.env._(
                     '%(cert)s - %(project)s (Net after %(retention).1f%% retention & advance recovery)',
                     cert=self.name, project=self.project_id.name, retention=self.retention_percentage,
                 ),
@@ -109,7 +106,7 @@ class BoqPaymentCertificate(models.Model):
         self.move_id = move.id
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Customer Invoice'),
+            'name': self.env._('Customer Invoice'),
             'res_model': 'account.move',
             'view_mode': 'form',
             'res_id': move.id,
@@ -166,7 +163,7 @@ class BoqPaymentCertificateLine(models.Model):
         for line in self:
             if line.boq_line_id.quantity_contracted and \
                     line.cumulative_qty_after > line.boq_line_id.quantity_contracted * 1.001:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     'Cumulative quantity after this certificate (%(after).2f) would exceed the contracted '
                     'quantity (%(contracted).2f) for BOQ line "%(line)s".',
                     after=line.cumulative_qty_after,

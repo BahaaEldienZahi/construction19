@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -9,9 +8,9 @@ class BoqVariationOrder(models.Model):
     _inherit = ['construction.approval.mixin', 'mail.thread', 'mail.activity.mixin']
     _order = 'date desc, id desc'
 
-    name = fields.Char(default=lambda self: _('New'), readonly=True, copy=False)
+    name = fields.Char(default=lambda self: self.env._('New'), readonly=True, copy=False)
     project_id = fields.Many2one(
-        'project.project', string='Project', required=True,
+        'project.project', required=True,
         domain=[('is_construction_project', '=', True)], tracking=True,
     )
     date = fields.Date(default=fields.Date.context_today, required=True)
@@ -29,8 +28,8 @@ class BoqVariationOrder(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', _('New')) == _('New'):
-                vals['name'] = self.env['ir.sequence'].next_by_code('boq.variation.order') or _('New')
+            if vals.get('name', self.env._('New')) == self.env._('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('boq.variation.order') or self.env._('New')
         return super().create(vals_list)
 
     @api.depends('line_ids.delta_amount')
@@ -70,7 +69,7 @@ class BoqVariationOrderLine(models.Model):
     name = fields.Char(string='Description', required=True)
     uom_id = fields.Many2one('uom.uom', string='UoM')
     delta_qty = fields.Float(string='Qty Change (+/-)', digits='Product Unit of Measure')
-    unit_price = fields.Monetary(string='Unit Price', currency_field='currency_id')
+    unit_price = fields.Monetary(currency_field='currency_id')
     delta_amount = fields.Monetary(
         string='Amount Change', currency_field='currency_id',
         compute='_compute_delta_amount', store=True,
@@ -94,9 +93,9 @@ class BoqVariationOrderLine(models.Model):
         for line in self:
             project = line.variation_order_id.project_id
             if line.boq_line_id and line.boq_line_id.project_id != project:
-                raise ValidationError(_('The selected BOQ line does not belong to the variation order\'s project.'))
+                raise ValidationError(self.env._('The selected BOQ line does not belong to the variation order\'s project.'))
             if line.parent_boq_line_id and line.parent_boq_line_id.project_id != project:
-                raise ValidationError(_('The selected parent line does not belong to the variation order\'s project.'))
+                raise ValidationError(self.env._('The selected parent line does not belong to the variation order\'s project.'))
 
     def _apply_to_boq(self):
         self.ensure_one()

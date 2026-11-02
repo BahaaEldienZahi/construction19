@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class SubcontractAgreement(models.Model):
@@ -9,24 +8,24 @@ class SubcontractAgreement(models.Model):
     _inherit = ['construction.approval.mixin', 'mail.thread', 'mail.activity.mixin']
     _order = 'date desc, id desc'
 
-    name = fields.Char(default=lambda self: _('New'), readonly=True, copy=False)
+    name = fields.Char(default=lambda self: self.env._('New'), readonly=True, copy=False)
     project_id = fields.Many2one(
-        'project.project', string='Project', required=True,
+        'project.project', required=True,
         domain=[('is_construction_project', '=', True)], tracking=True,
     )
     company_id = fields.Many2one(related='project_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one(related='project_id.construction_currency_id', readonly=True)
     date = fields.Date(default=fields.Date.context_today, required=True, tracking=True)
     partner_id = fields.Many2one('res.partner', string='Subcontractor', required=True, tracking=True)
-    contract_value = fields.Monetary(string='Contract Value', currency_field='currency_id')
+    contract_value = fields.Monetary(currency_field='currency_id')
     scope_of_work = fields.Text(string='Scope of Work')
-    start_date = fields.Date(string='Start Date')
-    completion_date = fields.Date(string='Completion Date')
+    start_date = fields.Date()
+    completion_date = fields.Date()
     retention_percentage = fields.Float(string='Retention %', default=5.0)
 
     line_ids = fields.One2many('subcontract.agreement.line', 'agreement_id', string='Lines')
     total_value = fields.Monetary(
-        string='Total Value', currency_field='currency_id',
+        currency_field='currency_id',
         compute='_compute_total_value', store=True,
     )
 
@@ -38,8 +37,8 @@ class SubcontractAgreement(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', _('New')) == _('New'):
-                vals['name'] = self.env['ir.sequence'].next_by_code('subcontract.agreement') or _('New')
+            if vals.get('name', self.env._('New')) == self.env._('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('subcontract.agreement') or self.env._('New')
         return super().create(vals_list)
 
     @api.depends('line_ids.subtotal')
@@ -66,10 +65,10 @@ class SubcontractAgreementLine(models.Model):
     code = fields.Char(related='boq_line_id.code', readonly=True)
     uom_id = fields.Many2one(related='boq_line_id.uom_id', readonly=True)
 
-    quantity = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True, default=1.0)
-    unit_price = fields.Monetary(string='Unit Price', currency_field='currency_id')
+    quantity = fields.Float(digits='Product Unit of Measure', required=True, default=1.0)
+    unit_price = fields.Monetary(currency_field='currency_id')
     subtotal = fields.Monetary(
-        string='Subtotal', currency_field='currency_id',
+        currency_field='currency_id',
         compute='_compute_subtotal', store=True,
     )
 
@@ -90,4 +89,4 @@ class SubcontractAgreementLine(models.Model):
     def _check_boq_line_project_match(self):
         for line in self:
             if line.boq_line_id and line.boq_line_id.project_id != line.agreement_id.project_id:
-                raise ValidationError(_('The BOQ line does not belong to the same project as the agreement.'))
+                raise ValidationError(self.env._('The BOQ line does not belong to the same project as the agreement.'))

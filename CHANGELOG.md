@@ -5,6 +5,18 @@ Each entry lists what changed and the evidence (commands + results). Older statu
 "complete / 100% pass" for a module that had no tests and several crashing paths
 (see `BASELINE.md`).
 
+## Unreleased — Step 2: security & roles (in progress)
+
+### Lint cleanup (first commit of step 2)
+- ruff (core `ruff.toml`): 37 findings → **0**. pylint-odoo (`custom_addons/.pylintrc`): 150 warnings → **0**, 10.00/10.
+- `_()` → `self.env._()`; redundant `string=` removed (labels unchanged); manifest `description`/`installable` removed.
+- Regression caught by the install run, not by lint: `ruff --fix` re-sorted `models/__init__.py` and broke
+  registry loading (mixin imported after its users). Order restored, file excluded from import sorting (DECISIONS L2).
+```
+-i nt_construction, new DB agent_s2_lint                  → 0 failed, 0 error(s) of 10 tests; 0 WARNING/ERROR lines
+-i nt_construction --with-demo, new DB agent_s2_lint_demo → 0 failed, 0 error(s) of 10 tests; 0 WARNING/ERROR lines
+```
+
 ## nt_construction 19.0.1.1.0 — Step 1: stabilization (2026-11-02)
 
 ### Fixed

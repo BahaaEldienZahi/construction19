@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -15,9 +14,9 @@ class ProjectHandover(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date desc, id desc'
 
-    name = fields.Char(default=lambda self: _('New'), readonly=True, copy=False)
+    name = fields.Char(default=lambda self: self.env._('New'), readonly=True, copy=False)
     project_id = fields.Many2one(
-        'project.project', string='Project', required=True,
+        'project.project', required=True,
         domain=[('is_construction_project', '=', True)], tracking=True,
     )
     company_id = fields.Many2one(related='project_id.company_id', store=True, readonly=True)
@@ -34,7 +33,7 @@ class ProjectHandover(models.Model):
     # ---------------------------------------------------------------
     # Provisional (Taking-Over) handover
     # ---------------------------------------------------------------
-    provisional_handover_date = fields.Date(string='Provisional Handover Date', tracking=True)
+    provisional_handover_date = fields.Date(tracking=True)
     defects_liability_months = fields.Integer(string='Defects Liability Period (months)', default=12)
     defects_liability_end_date = fields.Date(
         string='DLP End Date', compute='_compute_dlp_end_date', store=True,
@@ -43,15 +42,15 @@ class ProjectHandover(models.Model):
     # ---------------------------------------------------------------
     # Punch / Snag list
     # ---------------------------------------------------------------
-    punch_list_ids = fields.One2many('project.handover.punch.item', 'handover_id', string='Punch List')
+    punch_list_ids = fields.One2many('project.handover.punch.item', 'handover_id')
     punch_list_open_count = fields.Integer(compute='_compute_punch_counts')
     punch_list_total_count = fields.Integer(compute='_compute_punch_counts')
 
     # ---------------------------------------------------------------
     # Final handover
     # ---------------------------------------------------------------
-    final_handover_date = fields.Date(string='Final Handover Date', tracking=True)
-    final_acceptance_notes = fields.Text(string='Final Acceptance Notes')
+    final_handover_date = fields.Date(tracking=True)
+    final_acceptance_notes = fields.Text()
 
     # ---------------------------------------------------------------
     # Retention release (informational — actual GL entries handled by
@@ -79,7 +78,7 @@ class ProjectHandover(models.Model):
     retention_release_stage2_done = fields.Boolean(default=False, copy=False, tracking=True)
     retention_release_stage2_date = fields.Date(copy=False)
 
-    notes = fields.Text(string='Notes')
+    notes = fields.Text()
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -89,8 +88,8 @@ class ProjectHandover(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', _('New')) == _('New'):
-                vals['name'] = self.env['ir.sequence'].next_by_code('project.handover') or _('New')
+            if vals.get('name', self.env._('New')) == self.env._('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('project.handover') or self.env._('New')
         return super().create(vals_list)
 
     @api.depends('provisional_handover_date', 'defects_liability_months')
@@ -121,24 +120,24 @@ class ProjectHandover(models.Model):
     def action_confirm_provisional_handover(self):
         for rec in self:
             if rec.state != 'draft':
-                raise UserError(_('Only draft handovers can be moved to provisional handover.'))
+                raise UserError(self.env._('Only draft handovers can be moved to provisional handover.'))
             if not rec.provisional_handover_date:
-                raise UserError(_('Please set the provisional handover date first.'))
+                raise UserError(self.env._('Please set the provisional handover date first.'))
         self.write({'state': 'provisional'})
 
     def action_release_retention_stage1(self):
         for rec in self:
             if rec.state != 'provisional':
-                raise UserError(_('Stage 1 retention release requires the handover to be at provisional stage.'))
+                raise UserError(self.env._('Stage 1 retention release requires the handover to be at provisional stage.'))
             if rec.retention_release_stage1_done:
-                raise UserError(_('Stage 1 retention has already been released.'))
+                raise UserError(self.env._('Stage 1 retention has already been released.'))
             rec.write({
                 'retention_release_stage1_amount': rec.retention_held_total * (
                         rec.retention_release_stage1_percentage / 100.0),
                 'retention_release_stage1_done': True,
                 'retention_release_stage1_date': fields.Date.context_today(rec),
             })
-            rec.message_post(body=_(
+            rec.message_post(body=self.env._(
                 'Stage 1 retention release recorded: %(amount).2f %(currency)s. Please coordinate the actual '
                 'payment/credit note with Finance.',
                 amount=rec.retention_release_stage1_amount, currency=rec.currency_id.symbol or '',
@@ -147,10 +146,10 @@ class ProjectHandover(models.Model):
     def action_final_handover(self):
         for rec in self:
             if rec.state != 'provisional':
-                raise UserError(_('Final handover requires a confirmed provisional handover first.'))
+                raise UserError(self.env._('Final handover requires a confirmed provisional handover first.'))
             open_items = rec.punch_list_ids.filtered(lambda p: p.status == 'open')
             if open_items:
-                raise UserError(_(
+                raise UserError(self.env._(
                     'Cannot proceed to final handover: %s punch list item(s) are still open. '
                     'Close them first or remove items that no longer apply.',
                     len(open_items),
@@ -162,16 +161,16 @@ class ProjectHandover(models.Model):
     def action_release_retention_stage2(self):
         for rec in self:
             if rec.state != 'final':
-                raise UserError(_('Stage 2 retention release requires final handover to be confirmed.'))
+                raise UserError(self.env._('Stage 2 retention release requires final handover to be confirmed.'))
             if rec.retention_release_stage2_done:
-                raise UserError(_('Stage 2 retention has already been released.'))
+                raise UserError(self.env._('Stage 2 retention has already been released.'))
             rec.write({
                 'retention_release_stage2_amount': rec.retention_held_total * (
                         rec.retention_release_stage2_percentage / 100.0),
                 'retention_release_stage2_done': True,
                 'retention_release_stage2_date': fields.Date.context_today(rec),
             })
-            rec.message_post(body=_(
+            rec.message_post(body=self.env._(
                 'Stage 2 (final) retention release recorded: %(amount).2f %(currency)s. Please coordinate the actual '
                 'payment/credit note with Finance.',
                 amount=rec.retention_release_stage2_amount, currency=rec.currency_id.symbol or '',
@@ -180,9 +179,9 @@ class ProjectHandover(models.Model):
     def action_close(self):
         for rec in self:
             if rec.state != 'final':
-                raise UserError(_('Only a project at final handover stage can be closed.'))
+                raise UserError(self.env._('Only a project at final handover stage can be closed.'))
             if not rec.retention_release_stage2_done:
-                raise UserError(_('Please release Stage 2 retention before closing the handover.'))
+                raise UserError(self.env._('Please release Stage 2 retention before closing the handover.'))
         self.write({'state': 'closed'})
         for rec in self:
             if not rec.project_id.actual_completion_date:
@@ -203,13 +202,13 @@ class ProjectHandoverPunchItem(models.Model):
 
     handover_id = fields.Many2one('project.handover', required=True, ondelete='cascade', index=True)
     project_id = fields.Many2one(related='handover_id.project_id', store=True)
-    description = fields.Char(string='Description', required=True)
-    location = fields.Char(string='Location')
+    description = fields.Char(required=True)
+    location = fields.Char()
     responsible_party = fields.Selection([
         ('main_contractor', 'Main Contractor'),
         ('subcontractor', 'Subcontractor'),
         ('client_consultant', 'Client / Consultant'),
-    ], string='Responsible Party', default='main_contractor', required=True)
+    ], default='main_contractor', required=True)
     subcontract_agreement_id = fields.Many2one(
         'subcontract.agreement', string='Related Subcontract',
         domain="[('project_id', '=', project_id)]",

@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -14,7 +13,7 @@ class BoqLineProgress(models.Model):
     project_id = fields.Many2one(
         related='boq_line_id.project_id', string='Project', store=True, readonly=True,
     )
-    date = fields.Date(string='Date', required=True, default=fields.Date.context_today)
+    date = fields.Date(required=True, default=fields.Date.context_today)
     period_name = fields.Char(string='Period / Certificate Ref', help='مثال: مستخلص رقم 3')
     quantity_executed = fields.Float(
         string='Executed Qty (This Period)', digits='Product Unit of Measure', required=True,
@@ -27,7 +26,7 @@ class BoqLineProgress(models.Model):
         help='التقرير اليومي (السركي) اللي اتسجلت فيه الكمية دي، لو موجود',
     )
     work_measurement_id = fields.Many2one(
-        'work.measurement', string='Work Measurement', ondelete='set null', index=True,
+        'work.measurement', ondelete='set null', index=True,
         help='قياس العمل المرتبط بهذه الكمية المنفذة، لو موجود',
     )
 
@@ -35,8 +34,8 @@ class BoqLineProgress(models.Model):
     def _check_leaf_line_only(self):
         for rec in self:
             if rec.boq_line_id.child_ids:
-                raise ValidationError(_(
-                    'Progress cannot be recorded on a chapter (group) line; record it on its sub-lines.'
+                raise ValidationError(self.env._(
+                    'Progress cannot be recorded on a chapter (group) line; record it on its sub-lines.',
                 ))
 
     @api.constrains('quantity_executed', 'boq_line_id')
@@ -46,7 +45,7 @@ class BoqLineProgress(models.Model):
             other_entries = line.progress_ids - rec
             cumulative = sum(other_entries.mapped('quantity_executed')) + rec.quantity_executed
             if line.quantity_contracted and cumulative > line.quantity_contracted * 1.001:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     'Total executed quantity (%(executed).2f) would exceed the contracted quantity '
                     '(%(contracted).2f) for BOQ line "%(line)s". Check the figures, or raise the '
                     'contracted quantity through a Variation Order.',

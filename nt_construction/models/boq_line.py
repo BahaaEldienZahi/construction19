@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_compare
 
@@ -17,15 +16,15 @@ class BoqLine(models.Model):
     # (as-contracted / as-built). Never both.
     # ---------------------------------------------------------------
     tender_id = fields.Many2one(
-        'tender.tender', string='Tender',
+        'tender.tender',
         ondelete='cascade', index=True,
     )
     project_id = fields.Many2one(
-        'project.project', string='Project',
+        'project.project',
         ondelete='cascade', index=True,
     )
     company_id = fields.Many2one(
-        'res.company', string='Company',
+        'res.company',
         default=lambda self: self.env.company,
     )
     currency_id = fields.Many2one(
@@ -54,10 +53,10 @@ class BoqLine(models.Model):
     # ---------------------------------------------------------------
     uom_id = fields.Many2one('uom.uom', string='UoM')
     quantity_contracted = fields.Float(string='Contracted Qty', digits='Product Unit of Measure')
-    unit_price = fields.Monetary(string='Unit Price', currency_field='currency_id')
+    unit_price = fields.Monetary(currency_field='currency_id')
 
     total_contracted = fields.Monetary(
-        string='Total Contracted', currency_field='currency_id',
+        currency_field='currency_id',
         compute='_compute_total_contracted', store=True, recursive=True,
     )
 
@@ -82,7 +81,7 @@ class BoqLine(models.Model):
     # Optional linkage to execution tracking
     # ---------------------------------------------------------------
     analytic_account_id = fields.Many2one(
-        'account.analytic.account', string='Analytic Account',
+        'account.analytic.account',
         help='لتتبع التكلفة الفعلية (مواد/عمالة/مقاولين باطن) المرتبطة بالبند ده',
     )
     task_id = fields.Many2one('project.task', string='Related Task')
@@ -129,7 +128,7 @@ class BoqLine(models.Model):
     @api.depends('quantity_contracted', 'unit_price', 'child_ids.total_contracted')
     def _compute_total_contracted(self):
         # bottom-up: group lines sum their children, leaf lines compute qty * price
-        for line in self.sorted(key=lambda l: l.level, reverse=True):
+        for line in self.sorted(key=lambda rec: rec.level, reverse=True):
             if line.child_ids:
                 line.total_contracted = sum(line.child_ids.mapped('total_contracted'))
             else:
@@ -140,7 +139,7 @@ class BoqLine(models.Model):
         'child_ids.quantity_executed_cumulative', 'child_ids.amount_executed_cumulative',
     )
     def _compute_execution(self):
-        for line in self.sorted(key=lambda l: l.level, reverse=True):
+        for line in self.sorted(key=lambda rec: rec.level, reverse=True):
             if line.child_ids:
                 qty_exec = sum(line.child_ids.mapped('quantity_executed_cumulative'))
                 amount_exec = sum(line.child_ids.mapped('amount_executed_cumulative'))
@@ -171,29 +170,29 @@ class BoqLine(models.Model):
     def _check_not_self_parent(self):
         for line in self:
             if line.parent_id and line.parent_id.id == line.id:
-                raise ValidationError(_('A BOQ line cannot be its own parent.'))
+                raise ValidationError(self.env._('A BOQ line cannot be its own parent.'))
 
     @api.constrains('parent_id')
     def _check_parent_recursion(self):
         if self._has_cycle():
-            raise ValidationError(_('You cannot create a loop in the BOQ hierarchy.'))
+            raise ValidationError(self.env._('You cannot create a loop in the BOQ hierarchy.'))
 
     @api.constrains('quantity_contracted', 'unit_price')
     def _check_non_negative(self):
         for line in self:
             if float_compare(line.quantity_contracted, 0.0, precision_digits=4) < 0:
-                raise ValidationError(_('The contracted quantity must be zero or more.'))
+                raise ValidationError(self.env._('The contracted quantity must be zero or more.'))
             if float_compare(line.unit_price, 0.0, precision_digits=4) < 0:
-                raise ValidationError(_('The unit price must be zero or more.'))
+                raise ValidationError(self.env._('The unit price must be zero or more.'))
 
     @api.constrains('parent_id', 'tender_id', 'project_id')
     def _check_parent_same_owner(self):
         for line in self:
             if line.parent_id:
                 if line.tender_id and line.parent_id.tender_id != line.tender_id:
-                    raise ValidationError(_('A sub-line must belong to the same tender as its parent line.'))
+                    raise ValidationError(self.env._('A sub-line must belong to the same tender as its parent line.'))
                 if line.project_id and line.parent_id.project_id != line.project_id:
-                    raise ValidationError(_('A sub-line must belong to the same project as its parent line.'))
+                    raise ValidationError(self.env._('A sub-line must belong to the same project as its parent line.'))
 
     # ---------------------------------------------------------------
     # Helpers

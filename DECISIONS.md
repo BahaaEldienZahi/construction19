@@ -75,6 +75,15 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | U7 | **Approved by owner 2026-11-02 (+ rule S7).** Invoiced is compared like-for-like with Certified because step 3 books revenue at gross work value (retention → Retention Receivable, advance recovery → Customer Advances); Collected is shown as % of the invoices' receivable total, not of contract | Different bases would make the three figures look inconsistent |
 | U8 | **Approved by owner 2026-11-02.** One shared Python helper computes Executed / Certified / Invoiced / Collected for card, Overview and pivots (+0.5 d on UX-6) | Guarantees "same definitions on every screen" (S5 Q2) |
 
+## 6b. Agent decisions (step 2) — open to review
+
+| # | Decision | Why |
+|---|---|---|
+| L1 | Lint = `ruff check --config ruff.toml` (core Odoo config) + `pylint --rcfile=custom_addons/.pylintrc` (pylint-odoo, `odoolint` only, `manifest-required-authors=National Technology`) | OCA author check doesn't apply to a private module; rcfile makes the command reproducible |
+| L2 | `models/__init__.py` keeps a hand-written import order (mixin first) with `# ruff: file-ignore[unsorted-imports]` | `ruff --fix` sorted it alphabetically and the registry failed to load (`inherits from non-existing model 'construction.approval.mixin'`) |
+| L3 | Manifest `description` removed; Apps falls back to `README.md` (Odoo `module.py` README lookup). `installable: True` removed (default) | pylint-odoo C8103/C8116 |
+| L4 | `_()` → `self.env._()` everywhere (85 calls); redundant `string=` equal to the auto label removed (62 fields), so labels are unchanged | pylint-odoo prefer-env-translation / attribute-string-redundant |
+
 ## 7. Questions raised during steps (R9) — agent default applied unless marked STOP
 
 | # | Step | Question | Default applied | Status |
