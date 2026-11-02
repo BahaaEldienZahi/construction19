@@ -37,6 +37,11 @@ cost, price escalation), QWeb PDFs, dashboards, demo data, Arabic deliverables
 (DEMO_SCRIPT_AR, UAT_CHECKLIST_AR, USER_GUIDE_AR, INSTALL_AND_DEPLOY).
 Estimate: ~10–13 weeks total (see plan); step 1 consumed ~1 day of the 2–3 d budget.
 
+**UX & dashboards** (`UX_SPEC.md`, draft awaiting owner review, no code): menu restructure, form
+standard, search views (all currently commented out), tender kanban — 5.5 d after step 3, before the
+golden-cycle demo; project dashboard, My Approvals, Overview (OWL), RTL/tablet pass — 11.5 d in step 4.
+Open questions Q1–Q7 in `UX_SPEC.md` §10.
+
 ## D. Blockers / environment
 
 | Item | Impact |

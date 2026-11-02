@@ -23,6 +23,7 @@ Re-read at the start of every step. "Client" decisions come from the project own
 | S1 | **Pharmacy (step 5) on hold** until Enterprise vs Community is confirmed. Still unknown as of 2026-11-02. `pharmacy_retail` stays unmodified. | 2026-11-02 |
 | S2 | After step 3, deliver the demo-able **golden cycle** (tender → project → measurement → certificate → invoice + Arabic PDF + minimal demo data) **before** the rest of step 4. | 2026-11-02 |
 | S3 | Scope additions accepted for planning: unit rate analysis, stock integration, labor/equipment cost from daily reports, price escalation (فروق أسعار). | 2026-11-02 |
+| S4 | **UX & dashboards: design now, build later.** `UX_SPEC.md` must be reviewed by the owner before any UX code. Native Odoo 19 views/widgets first; OWL only for the Overview page; minimal SCSS with Odoo/Bootstrap variables, no core style overrides; must work in Arabic RTL and at tablet width. Schedule: menu + form standard after step 3, **before** the golden-cycle demo; project dashboard, Overview and My Approvals in step 4. | 2026-11-02 |
 
 ## 3. Data & migration (from project owner)
 
@@ -55,3 +56,14 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | A8 | Executed vs certified tracked separately: measurement (حصر) = executed, certificate = certified/billed (planned, step 3) | Removes double counting; gives over/under billing |
 | A9 | Module tests run with `--test-tags /nt_construction` (not bare `--test-enable`) | Bare flag runs every core module's tests (hours) |
 | A10 | Upgrade test = install the baseline commit (`858b91e`, v19.0.1.0.0) from a git worktree, then `-u` with current code | Self-contained; does not depend on old non-agent DBs |
+
+## 6. Agent decisions (UX spec draft) — open to review
+
+| # | Decision | Why |
+|---|---|---|
+| U1 | "My Approvals" is placed under the Overview menu (Overview › My Approvals), not as its own top-level entry | Keeps the owner's 9-menu business order |
+| U2 | My Approvals = read-only SQL view (`UNION ALL`) over the approval documents + `mail.activity` on submit; no approve-from-list in v1 (Q3) | One source for the list, the project card count and the Overview KPI; approver sees the lines first |
+| U3 | Rejected / cancelled shown as a ribbon, not as statusbar steps | Statusbar shows the happy path only |
+| U4 | Tender kanban: drag-and-drop disabled (Q7) | State changes must run the button logic and chatter |
+| U5 | Project card uses core `o_kanban_dashboard`, `progress_bar` and `dashboard_graph` widgets (all in Community `web`) | Native first, no custom JS for the card |
+| U6 | Divergence threshold provisional default 10 points, configurable (Q1) | Needs a number to design; not a business rule yet |
