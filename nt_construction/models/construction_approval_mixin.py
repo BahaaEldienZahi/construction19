@@ -102,10 +102,14 @@ class ConstructionApprovalMixin(models.AbstractModel):
         })
 
     def action_cancel(self):
+        self._check_cancel_allowed()
+        self._workflow_write({'state': 'cancelled'})
+
+    def _check_cancel_allowed(self):
+        """Hook: models able to reverse the effects of an approval override it."""
         for rec in self:
             if rec.state == 'approved':
                 raise UserError(self.env._('An approved record cannot be cancelled directly. Reverse its effects manually first.'))
-        self._workflow_write({'state': 'cancelled'})
 
     def _on_final_approval(self):
         """Hook for subclasses — called once, right after state becomes 'approved'."""

@@ -35,6 +35,7 @@ custom_addons/            ← its own git repo (separate from the Odoo core repo
 ├── BASELINE.md           Phase 0 facts (as received)
 ├── CHANGELOG.md          per-step changes with evidence
 ├── DECISIONS.md          working rules + client/agent decisions (re-read every step)
+├── ACCOUNTING_EXAMPLES.md worked journal entries (10M EGP project), each asserted by a test
 ├── GAP_LIST.md           open items, provisional decisions, blockers
 ├── UX_SPEC.md            menus, form standard, dashboards (reviewed)
 ├── docs/                 UX_PHASE_A.md + screenshots/ (latest set only)

@@ -23,8 +23,12 @@
                     <button name="action_reject" string="Reject" type="object" class="btn-secondary"
                             invisible="state not in ('submitted', 'approved_l1')" confirm="Reject this certificate?"
                             groups="nt_construction.group_construction_approver_l1,project.group_project_manager"/>
+                    <button name="action_cancel" string="Cancel &amp; Reverse Invoice" type="object" class="btn-secondary"
+                            invisible="state != 'approved'"
+                            confirm="Cancel this approved certificate? Its posted invoice is reversed by a credit note and its quantities are no longer certified."
+                            groups="nt_construction.group_construction_accountant,project.group_project_manager"/>
                     <button name="action_reset_draft" string="Reset to Draft" type="object" class="btn-secondary"
-                            invisible="state not in ('rejected', 'cancelled')" groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager"/>
+                            invisible="state not in ('rejected', 'cancelled') or move_id" groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved_l1,approved"/>
                 </header>
                 <sheet>
@@ -38,6 +42,8 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger" invisible="state != 'rejected'"/>
+                    <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-secondary" invisible="state != 'cancelled'"/>
+                    <widget name="web_ribbon" title="Final" bg_color="text-bg-info" invisible="not is_final or state == 'cancelled'"/>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
                     </div>
@@ -48,6 +54,7 @@
                         </group>
                         <group name="when_value">
                             <field name="date" readonly="state != 'draft'"/>
+                            <field name="is_final" readonly="state != 'draft'"/>
                             <label for="period_from" string="Period"/>
                             <div class="o_row">
                                 <field name="period_from" readonly="state != 'draft'" class="oe_inline"/>

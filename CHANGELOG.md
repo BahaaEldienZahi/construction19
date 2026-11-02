@@ -5,6 +5,31 @@ Each entry lists what changed and the evidence (commands + results). Older statu
 "complete / 100% pass" for a module that had no tests and several crashing paths
 (see `BASELINE.md`).
 
+## nt_construction 19.0.2.1.0 — Accounting examples, certificate cancellation, final certificate (2026-11-02)
+
+Owner request: ACCOUNTING_EXAMPLES.md with a 10,000,000 EGP project; scenarios without a test get one.
+
+### Added
+- `ACCOUNTING_EXAMPLES.md`: advance, certificate 1, certificate 2 (previous / current / total, escalation),
+  subcontractor bill, cancellation of certificate 2, final certificate, retention release stages 1-2, with
+  account code, debit and credit, and totals.
+- `tests/test_accounting_examples.py` (9 tests, EGP company): asserts every entry of the document, account by account.
+- **Cancel an approved certificate** (F12, new: scenario g had no implementation): posted unpaid invoice →
+  credit note reconciled with it; latest approved certificate only; blocked after retention release or payments.
+- **Final certificate** flag (F13, new: scenario h had no implementation): recovers the whole remaining advance;
+  no certificate after it.
+- `static/description/index.html`: Odoo no longer renders README.md as reStructuredText at install
+  (removed the docutils `<string>:18 Unexpected indentation` message printed at nt_construction install).
+
+### Evidence
+- `ruff check`: All checks passed. `pylint-odoo`: 10.00/10.
+- `-i nt_construction`, agent_ex_fresh: `0 failed, 0 error(s) of 60 tests`; 0 WARNING/ERROR log records.
+- `-i --with-demo`, agent_ex_demo: `0 failed, 0 error(s) of 60 tests`; 0 WARNING/ERROR log records.
+- install at 58fd657 then `-u`, agent_ex_up: `0 failed, 0 error(s) of 60 tests`; 0 WARNING/ERROR log records.
+- Correction to earlier entries: "0 WARNING/ERROR lines" counted Odoo log records only. Two docutils messages
+  (`<string>:38`, `<string>:43`) printed to stderr while a core module installs (before nt_construction loads) are
+  still there; they are not from this repo.
+
 ## nt_construction 19.0.2.0.0 — Step 3: accounting core (2026-11-02)
 
 Owner decisions S7, S12-S15; agent decisions F1-F11 (DECISIONS.md).

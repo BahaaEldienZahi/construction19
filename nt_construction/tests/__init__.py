@@ -1,4 +1,5 @@
 from . import (
+    test_accounting_examples,
     test_arabic_digits,
     test_step1_stabilization,
     test_step2_roles,

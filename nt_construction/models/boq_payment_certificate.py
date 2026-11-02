@@ -79,6 +79,11 @@ class BoqPaymentCertificate(models.Model):
     move_id = fields.Many2one('account.move', string='Customer Invoice', readonly=True, copy=False,
                               check_company=True)
     move_state = fields.Selection(related='move_id.state', string='Invoice Status')
+    reversal_move_ids = fields.One2many(related='move_id.reversal_move_ids', string='Credit Notes')
+    is_final = fields.Boolean(
+        string='Final Certificate', copy=False, tracking=True,
+        help='Closing account of the project (F13): recovers the whole remaining advance, whatever the '
+             'recovery %, and no certificate can be submitted after it.')
     measurement_ids = fields.One2many('work.measurement', 'payment_certificate_id', string='Measurements')
 
     @api.model_create_multi
@@ -134,7 +139,7 @@ class BoqPaymentCertificate(models.Model):
         if 'advance_recovery_amount' in vals and not self.env.context.get('nt_refresh'):
             vals = dict(vals, advance_recovery_manual=True)
         res = super().write(vals)
-        if not self.env.context.get('nt_refresh') and {'line_ids', 'project_id'} & set(vals):
+        if not self.env.context.get('nt_refresh') and {'line_ids', 'project_id', 'is_final'} & set(vals):
             self._refresh_draft_values()
         return res
 
@@ -146,7 +151,10 @@ class BoqPaymentCertificate(models.Model):
         for cert in drafts.filtered(lambda c: not c.advance_recovery_manual):
             project = cert.project_id
             remaining = project.advance_invoiced_amount - project.advance_recovered_amount
-            proposed = max(0.0, min(cert.work_amount * project.advance_recovery_percentage / 100.0, remaining))
+            if cert.is_final:
+                proposed = max(0.0, remaining)  # final certificate: recover everything left (F13)
+            else:
+                proposed = max(0.0, min(cert.work_amount * project.advance_recovery_percentage / 100.0, remaining))
             proposed = cert.currency_id.round(proposed) if cert.currency_id else proposed
             if cert.advance_recovery_amount != proposed:
                 cert.advance_recovery_amount = proposed
@@ -192,6 +200,12 @@ class BoqPaymentCertificate(models.Model):
                 raise UserError(self.env._(
                     '%(other)s is already waiting for approval on this project. Approve or reject it '
                     'before submitting %(cert)s.', other=pending.name, cert=cert.name))
+            final = self.search([('project_id', '=', cert.project_id.id), ('id', '!=', cert.id),
+                                 ('is_final', '=', True), ('state', '=', 'approved')], limit=1)
+            if final:
+                raise UserError(self.env._(
+                    '%(final)s is the final certificate of this project: no certificate can follow it.',
+                    final=final.name))
             cert._refresh_draft_values()
             if cert.project_id.escalation_enabled and any(
                     float_is_zero(line.current_index, precision_digits=6) for line in cert.escalation_line_ids):
@@ -202,6 +216,57 @@ class BoqPaymentCertificate(models.Model):
         """Certified quantities are read from approved certificate lines (boq.line computes);
         nothing is written to execution progress any more (no double counting, DECISIONS A8)."""
         self.measurement_ids.filtered(lambda m: m.state == 'confirmed')._workflow_write({'state': 'linked'})
+
+    def action_cancel(self):
+        """Cancel a certificate. An approved one (F12) is cancelled only if it is the latest approved
+        certificate of its project, nothing is in approval after it and no retention was released;
+        its posted invoice is reversed by a credit note (unpaid invoices only), a draft one is cancelled."""
+        approved = self.filtered(lambda c: c.state == 'approved')
+        if approved:
+            self._check_construction_role('nt_construction.group_construction_accountant')
+        for cert in approved:
+            project = cert.project_id
+            others = self.search([('project_id', '=', project.id), ('id', '!=', cert.id),
+                                  ('state', 'in', ('submitted', 'approved_l1', 'approved'))])
+            later = others.filtered(lambda c: c.state != 'approved' or (
+                c.approval_l2_date, c.id) > (cert.approval_l2_date, cert.id))
+            if later:
+                raise UserError(self.env._(
+                    '%(cert)s cannot be cancelled: %(later)s was issued after it. Cancel the later '
+                    'certificates first.', cert=cert.name, later=', '.join(later.mapped('name'))))
+            if any(project.sudo().handover_ids.mapped(
+                    lambda h: h.retention_release_stage1_done or h.retention_release_stage2_done)):
+                raise UserError(self.env._(
+                    '%(cert)s cannot be cancelled: retention was already released on this project.', cert=cert.name))
+            move = cert.move_id
+            if move.state == 'posted':
+                if move.payment_state not in ('not_paid', 'reversed'):
+                    raise UserError(self.env._(
+                        'Invoice %(move)s of %(cert)s already has payments. Unreconcile them first, then '
+                        'cancel the certificate.', move=move.name, cert=cert.name))
+                if move.payment_state != 'reversed':
+                    move._reverse_moves([{
+                        'ref': self.env._('Cancellation of certificate %(cert)s', cert=cert.name),
+                        'invoice_date': fields.Date.context_today(self),
+                        'construction_project_id': project.id,
+                        'construction_move_kind': 'certificate',
+                    }], cancel=True)
+            elif move.state == 'draft':
+                move.button_cancel()
+            cert.measurement_ids.sudo()._workflow_write({'state': 'confirmed', 'payment_certificate_id': False})
+            cert.message_post(body=self.env._('Certificate cancelled; invoice %(move)s reversed.',
+                                              move=move.display_name or '-'))
+        return super().action_cancel()
+
+    def _check_cancel_allowed(self):
+        """Approved certificates are reversible (action_cancel above checks the conditions)."""
+        return
+
+    def action_reset_draft(self):
+        if any(cert.state == 'cancelled' and cert.move_id for cert in self):
+            raise UserError(self.env._(
+                'A cancelled certificate that was invoiced cannot be reopened. Issue a new certificate.'))
+        return super().action_reset_draft()
 
     def action_view_invoice(self):
         self.ensure_one()
