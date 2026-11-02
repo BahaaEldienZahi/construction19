@@ -28,7 +28,7 @@ Tender (as-bid)
 - **States**: draft → submitted → under_evaluation → won/lost/cancelled
 - **Purpose**: Bid management before award
 - **Linked BOQ**: `boq_line_ids` (tender_id filled, project_id empty)
-- **Conversion to Project**: `action_set_won()` → triggers project creation in inherited `project.project.create_execution_project()`
+- **Conversion to Project**: `action_set_won()` sets state; the user then clicks `action_create_project()`, which creates the project and copies the BOQ via `boq.line._copy_tree_to_project()`
 - **Key fields**: name (seq), client_id, estimated_value, awarded_value, state (tracked)
 
 ### 2. **Project Inheritance (`project.project`)**
@@ -36,7 +36,7 @@ Tender (as-bid)
 - **BOQ after conversion**: `boq_line_ids` (project_id filled, different from as-bid)
 - **Retention & advance**: `retention_percentage` (default 5%), `advance_payment_percentage` (affects certificates)
 - **Contract tracking**: `contract_value` (starts from awarded_value, updated by Variation Orders)
-- **Key methods**: `create_execution_project()` – copies tender→project + BOQ, clears as-bid BOQ
+- **Key methods**: project creation lives in `tender.tender.action_create_project()`; the as-bid BOQ is **kept** on the tender
 
 ### 3. **BOQ Line Hierarchy (`boq.line`)**
 - **Structure**: `parent_id` + `child_ids` → Chapter→Item→Sub-item
@@ -57,7 +57,7 @@ Tender (as-bid)
 
 ### 5. **Variation Order (`boq.variation.order`)**
 - **Inherits**: `construction.approval.mixin` + mail.thread/activity.mixin
-- **State flow**: draft → submitted → approved_l1 → approved → rejected/cancelled
+- **State flow**: uses the mixin selection: draft → submitted → approved_l1 → approved, plus rejected/cancelled
 - **Lines**: Can modify existing BOQ lines (qty/price) OR add new lines under a chapter
 - **Final approval hook**: `_on_final_approval()` → applies all line changes, updates `project.contract_value`
 - **Applied flag**: Once approved, marked `applied=True` (idempotent)
@@ -70,7 +70,7 @@ Tender (as-bid)
   - `retention_amount` = gross × project.retention_percentage / 100
   - `net_payable` = gross - retention - advance_recovery
 - **Final approval hook**: Creates `boq.line.progress` records (feeds cumulative execution)
-- **Invoice creation**: `action_create_customer_invoice()` → Creates `account.move` linked to project's customer
+- **Invoice creation**: `action_create_invoice()` → Creates `account.move` linked to project's customer
 
 ### 7. **Purchase Order (`purchase.order` inherited)**
 - **Extended fields**: `project_id`, `boq_line_id` on lines
@@ -131,7 +131,7 @@ You can layer Odoo Studio's "Approval Rules" on top for audit trail & notificati
 - Always wrap computed defaults with `_()` for translations
 
 ### 5. **Constraint Patterns**
-- **SQL constraints**: For uniqueness (e.g., tender name per company)
+- **DB constraints**: `models.Constraint` for uniqueness (e.g., tender name per company). `_sql_constraints` is ignored in Odoo 19
 - **@api.constrains**: For cross-field validation (e.g., PO line's BOQ matches project)
 - **ValidationError**: User-facing, immediate failure during create/write
 - **UserError**: Action-level (state transition), raised before write
@@ -210,13 +210,13 @@ nt_construction.boq.payment.certificate
 - **Trace**: Enable logging in `construction_approval_mixin.action_approve_l1()` to see group check
 
 ### BOQ Recalculation After Bulk Edits
-```python
-# After creating/modifying many boq.line records:
-for line in boq_lines:
-    line._compute_total_contracted()
-    line._compute_execution()
-# Or trigger via ORM:
-self.env['boq.line'].search([...]).invalidate_cache()
+Stored computes (`recursive=True`) recompute automatically on write; call `env.flush_all()`
+if you need the values in SQL. Do not call compute methods by hand.
+
+### Running tests
+```bash
+./odoo-bin -c odoo.conf --addons-path=$AP -d <new_db> -i nt_construction \
+  --test-tags /nt_construction --stop-after-init --log-level=test
 ```
 
 ---
@@ -263,5 +263,5 @@ nt_construction/
 3. **State transitions are immutable**: Use `copy=False` on state and approval fields to prevent accidental replication
 4. **Approval workflow is not visible to non-approver groups**: Test with actual user in correct group, not just admin
 5. **BOQ changes only via Variation Order**: Direct BOQ line edits should be prevented at UI level (see XML readonly attributes)
-6. **Payment Certificate → Invoice**: Calls `action_create_customer_invoice()` to generate account.move; ensure project has customer linked
+6. **Payment Certificate → Invoice**: Calls `action_create_invoice()` to generate account.move; ensure project has customer linked
 
