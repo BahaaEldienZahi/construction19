@@ -13,6 +13,7 @@ Estimates are working days for one developer. Updated: 2026-11-02 (after UX Phas
 | A2 | **VAT on escalation** | Escalation amount is part of the VAT base | Client tax advisor | Tax taken from a configurable setting / product tax; **no hardcoded tax logic**. |
 | A3 | Labor cost source for daily reports | Flat hourly rate per trade (alt: payroll actual cost, +3 d, needs `hr`) | Client | Configurable rate table |
 | A4 | Site storage | One warehouse per project (alt: sub-location under central warehouse, −1 d) | Client | Option on project |
+| A6 | Retention on escalation | Retention applies to escalation too (project option `retention_on_escalation`, default on) | Client contracts | Configurable per project |
 | A5 | Executed vs certified quantities | Measurement (حصر) = executed; certificate = certified/billed; tracked separately | — (NT design, step 3) | — |
 
 ## B. Known defects still open (from BASELINE.md)

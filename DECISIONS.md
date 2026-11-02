@@ -30,6 +30,10 @@ Re-read at the start of every step. "Client" decisions come from the project own
 | S9 | **Western digits (0-9) for all amounts and dates in Arabic, on screens and PDFs; Arabic text stays Arabic.** Odoo-native, no core patching. PROVISIONAL until the client confirms. Implemented as the language record *Arabic (Egypt)* `ar_EG` (module data, inactive by default): the web client forces Arabic-Indic digits only for `ar_001`/`ar_SA`/`ar_SY`, and translations fall back to `ar.po` | 2026-11-02 |
 | S10 | `rtlcss` is a required server dependency → `INSTALL_AND_DEPLOY.md` with the install command | 2026-11-02 |
 | S11 | Screenshots: only the latest set per screen in the repo (`docs/screenshots/`); intermediate captures are not committed | 2026-11-02 |
+| S12 | **Certificate invoice VAT base = gross work value of the period incl. escalation.** Retention and advance recovery are deducted as separate lines; retention release later carries no VAT | 2026-11-02 |
+| S13 | **Withholding tax booked on the certificate invoice** as a configurable withholding tax on the gross work value (Dr WHT receivable); receivable = what the client pays. Rate: Settings default, overridable per project | 2026-11-02 |
+| S14 | **VAT on the advance invoice** (Dr Receivable / Cr Customer Advances + VAT). Advance recovery lines carry the same VAT negatively so VAT is not charged twice. Advance tax is a Settings default, may be none | 2026-11-02 |
+| S15 | **QS enters cumulative quantity to date** per item; previous (approved certificates), current = total − previous, and amounts for each column are computed | 2026-11-02 |
 | S5 | **UX_SPEC answers** (2026-11-02): Q1 divergence threshold = 10 percentage points as a **company setting**, not hardcoded. Q2 show three labelled figures everywhere — **Certified** (approved certificates), **Invoiced** (posted invoices), **Collected** (payments) — with the same definitions on every screen (UX_SPEC §3.0). Q3 no bulk approval. Q4 cash-flow forecast excludes uncertified work; "Executed not yet certified" shown as a separate line. Q5 Overview for Mgmt/Finance/PMs approved. Q6 online only for now, client confirmation pending (OPEN). Q7 no drag-and-drop on tenders. | 2026-11-02 |
 | S7 | **Certified vs Invoiced are always compared on the same basis: both excluding VAT, both including escalation (فروق أسعار).** A step 3 test must assert it (same project, same period → Certified = Invoiced once every approved certificate is invoiced). | 2026-11-02 |
 | S6 | **Step 2 requirement:** record rules restrict project managers to **their own projects** (and the documents of those projects). | 2026-11-02 |
@@ -50,6 +54,7 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | P2 | VAT on escalation | Escalation is in the VAT base | Client tax advisor |
 | P3 | Labor cost source | Flat hourly rate per trade | Client |
 | P4 | Site storage | One warehouse per project | Client |
+| P5 | Retention base on escalation | Retention also applies to the escalation amount (project option, default on) | Client contracts |
 
 ## 5. Agent decisions (step 1) — open to review
 
