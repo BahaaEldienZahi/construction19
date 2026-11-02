@@ -44,6 +44,7 @@ class WorkMeasurement(models.Model):
     total_executed_value = fields.Monetary(
         currency_field='currency_id',
         compute='_compute_total_executed', store=True,
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
 
     _name_uniq = models.Constraint(
@@ -68,10 +69,15 @@ class WorkMeasurement(models.Model):
             wm.total_executed_value = total
 
     def action_confirm(self):
+        self._check_construction_role('nt_construction.group_construction_quantity_surveyor')
         for wm in self:
             if wm.state != 'draft':
                 raise UserError(self.env._('Only draft measurements can be confirmed.'))
         self._workflow_write({'state': 'confirmed'})
 
     def action_reset_draft(self):
+        self._check_construction_role('nt_construction.group_construction_quantity_surveyor')
+        if any(wm.state == 'linked' or wm.payment_certificate_id for wm in self):
+            # DECISIONS Q6: a measurement already billed cannot be reopened
+            raise UserError(self.env._('A measurement linked to a payment certificate cannot be reset to draft.'))
         self._workflow_write({'state': 'draft'})

@@ -56,7 +56,7 @@
                 <header>
 
                     <!-- Submit -->
-                    <button name="action_submit_for_approval"
+                    <button name="action_submit_for_approval" groups="nt_construction.group_construction_project_manager,project.group_project_manager"
                             string="Submit For Approval"
                             type="object"
                             class="oe_highlight"
@@ -64,7 +64,7 @@
 
 
                     <!-- Level 1 Approval -->
-                    <button name="action_approve_l1"
+                    <button name="action_approve_l1" groups="nt_construction.group_construction_approver_l1,project.group_project_manager"
                             string="Approve Level 1"
                             type="object"
                             class="oe_highlight"
@@ -72,7 +72,7 @@
 
 
                     <!-- Final Approval -->
-                    <button name="action_approve_l2"
+                    <button name="action_approve_l2" groups="nt_construction.group_construction_approver_l2,project.group_project_manager"
                             string="Final Approve"
                             type="object"
                             class="oe_highlight"
@@ -80,7 +80,7 @@
 
 
                     <!-- Reject -->
-                    <button name="action_reject"
+                    <button name="action_reject" groups="nt_construction.group_construction_approver_l1,project.group_project_manager"
                             string="Reject"
                             type="object"
                             class="btn-secondary"
@@ -88,7 +88,7 @@
 
 
                     <!-- Cancel -->
-                    <button name="action_cancel"
+                    <button name="action_cancel" groups="nt_construction.group_construction_project_manager,project.group_project_manager"
                             string="Cancel"
                             type="object"
                             class="btn-secondary"

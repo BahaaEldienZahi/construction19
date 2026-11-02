@@ -11,6 +11,10 @@ class BoqVariationOrder(models.Model):
     _workflow_guarded_fields = (
         'state', 'approver_l1_id', 'approval_l1_date', 'approver_l2_id', 'approval_l2_date', 'applied',
     )
+    _submit_group_xmlids = (
+        'nt_construction.group_construction_quantity_surveyor',
+        'nt_construction.group_construction_project_manager',
+    )
     _order = 'date desc, id desc'
 
     name = fields.Char(default=lambda self: self.env._('New'), readonly=True, copy=False)
@@ -28,6 +32,7 @@ class BoqVariationOrder(models.Model):
     total_delta_amount = fields.Monetary(
         string='Net Change', currency_field='currency_id',
         compute='_compute_total_delta_amount', store=True,
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
     applied = fields.Boolean(readonly=True, copy=False, default=False)
 
@@ -77,10 +82,11 @@ class BoqVariationOrderLine(models.Model):
     name = fields.Char(string='Description', required=True)
     uom_id = fields.Many2one('uom.uom', string='UoM')
     delta_qty = fields.Float(string='Qty Change (+/-)', digits='Product Unit of Measure')
-    unit_price = fields.Monetary(currency_field='currency_id')
+    unit_price = fields.Monetary(currency_field='currency_id', groups='nt_construction.group_construction_see_amounts,project.group_project_manager')
     delta_amount = fields.Monetary(
         string='Amount Change', currency_field='currency_id',
         compute='_compute_delta_amount', store=True,
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
 
     @api.depends('delta_qty', 'unit_price')

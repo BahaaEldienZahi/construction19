@@ -8,9 +8,9 @@
         <field name="arch" type="xml">
             <form string="Site Daily Report">
                 <header>
-                    <button name="action_confirm" string="Confirm Report" type="object"
+                    <button name="action_confirm" groups="nt_construction.group_construction_project_manager,project.group_project_manager" string="Confirm Report" type="object"
                             class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                    <button name="action_reset_draft" groups="nt_construction.group_construction_project_manager,project.group_project_manager" string="Reset to Draft" type="object"
                             class="btn-secondary" invisible="state != 'confirmed'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
                 </header>

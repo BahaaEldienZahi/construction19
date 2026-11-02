@@ -12,6 +12,7 @@ class BoqPaymentCertificate(models.Model):
     _workflow_guarded_fields = (
         'state', 'approver_l1_id', 'approval_l1_date', 'approver_l2_id', 'approval_l2_date', 'move_id',
     )
+    _submit_group_xmlids = ('nt_construction.group_construction_quantity_surveyor',)
     _order = 'date desc, id desc'
 
     name = fields.Char(default=lambda self: self.env._('New'), readonly=True, copy=False)
@@ -88,6 +89,7 @@ class BoqPaymentCertificate(models.Model):
 
     def action_create_invoice(self):
         self.ensure_one()
+        self._check_construction_role('nt_construction.group_construction_accountant')
         if self.state != 'approved':
             raise UserError(self.env._('Only approved certificates can be invoiced.'))
         if self.move_id:

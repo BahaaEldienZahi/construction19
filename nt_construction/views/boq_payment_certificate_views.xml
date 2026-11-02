@@ -7,19 +7,19 @@
         <field name="arch" type="xml">
             <form string="Payment Certificate">
                 <header>
-                    <button name="action_submit_for_approval" string="Submit for Approval" type="object"
+                    <button name="action_submit_for_approval" groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager" string="Submit for Approval" type="object"
                             class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="action_approve_l1" string="Approve (L1)" type="object"
+                    <button name="action_approve_l1" groups="nt_construction.group_construction_approver_l1,project.group_project_manager" string="Approve (L1)" type="object"
                             class="btn-primary" invisible="state != 'submitted'"
                     />
-                    <button name="action_approve_l2" string="Final Approve (L2)" type="object"
+                    <button name="action_approve_l2" groups="nt_construction.group_construction_approver_l2,project.group_project_manager" string="Final Approve (L2)" type="object"
                             class="btn-success" invisible="state != 'approved_l1'"
                     />
-                    <button name="action_reject" string="Reject" type="object"
+                    <button name="action_reject" groups="nt_construction.group_construction_approver_l1,project.group_project_manager" string="Reject" type="object"
                             invisible="state not in ('submitted', 'approved_l1')"/>
-                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                    <button name="action_reset_draft" groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager" string="Reset to Draft" type="object"
                             invisible="state != 'rejected'"/>
-                    <button name="action_create_invoice" string="Create Invoice" type="object"
+                    <button name="action_create_invoice" groups="nt_construction.group_construction_accountant,project.group_project_manager" string="Create Invoice" type="object"
                             class="btn-success" invisible="state != 'approved' or move_id"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,approved_l1,approved"/>

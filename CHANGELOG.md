@@ -5,7 +5,7 @@ Each entry lists what changed and the evidence (commands + results). Older statu
 "complete / 100% pass" for a module that had no tests and several crashing paths
 (see `BASELINE.md`).
 
-## Unreleased — Step 2: security & roles (in progress)
+## nt_construction 19.0.1.2.0 — Step 2: security & roles (2026-11-02)
 
 ### Lint cleanup (first commit of step 2)
 - ruff (core `ruff.toml`): 37 findings → **0**. pylint-odoo (`custom_addons/.pylintrc`): 150 warnings → **0**, 10.00/10.
@@ -27,6 +27,30 @@ Each entry lists what changed and the evidence (commands + results). Older statu
 ```
 -i nt_construction, new DB agent_s2_sec → 0 failed, 0 error(s) of 21 tests; 0 WARNING/ERROR lines
 mutation check: guard forced open → 10 failed, 5 error(s) of 21 tests (tests detect the bypass); file restored
+```
+
+### Roles, own-project rules (third part of step 2; owner: "defaults OK")
+- 7 roles as groups (one privilege each, combinable) + "Construction Approval" privilege (L1 < L2):
+  Tender Engineer, Site Engineer, Quantity Surveyor, Project Manager, Accountant, Approver L1, Approver L2 / Management.
+  Client Viewer (8th, portal) deferred to the golden cycle (DECISIONS Q8).
+- ACL matrix rewritten: 84 rows, no more access for every internal user (DECISIONS Q2, L15).
+- Own-project rules for Site Engineer / QS / PM (project manager or Construction Team member), company-wide
+  for Tender Engineer, Accountant, Approvers; 47 rules in total (L10). Construction projects: "invited users",
+  team auto-followed; company required (L9).
+- Role checks on every workflow action, matching button `groups`; segregation of duties L1 ≠ L2 (Q4);
+  handover reset blocked after a retention release, measurement reset blocked once linked (Q6);
+  prices/amounts hidden from Site Engineers at field level (Q7, L13).
+- `tests/test_step2_roles.py`: 13 tests. Step 1/2 tests use a second approver for L2.
+
+### Evidence (step 2 final)
+```
+ruff check --config ruff.toml custom_addons/nt_construction            → All checks passed!
+pylint --rcfile=custom_addons/.pylintrc custom_addons/nt_construction  → 10.00/10
+-i nt_construction, new DB agent_s2_fresh                  → 0 failed, 0 error(s) of 34 tests; 0 WARNING/ERROR lines
+-i nt_construction --with-demo, new DB agent_s2_demo       → 0 failed, 0 error(s) of 34 tests; 0 WARNING/ERROR lines
+baseline 858b91e installed in agent_s2_upgrade             → 11 WARNING lines (= BASELINE W1-W4, expected)
+-u nt_construction on agent_s2_upgrade (→ 19.0.1.2.0)      → 0 failed, 0 error(s) of 34 tests; 0 WARNING/ERROR lines
+   after upgrade: 47 nt_construction rules, 84 ACL rows, 8 groups; old base.group_user ACLs: 0
 ```
 
 ## nt_construction 19.0.1.1.0 — Step 1: stabilization (2026-11-02)

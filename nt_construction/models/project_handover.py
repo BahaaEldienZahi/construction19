@@ -66,12 +66,14 @@ class ProjectHandover(models.Model):
     retention_held_total = fields.Monetary(
         string='Total Retention Held (Client Side)', currency_field='currency_id',
         compute='_compute_retention_held_total',
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
     retention_release_stage1_percentage = fields.Float(
         string='Release % at Provisional Handover', default=50.0,
     )
     retention_release_stage1_amount = fields.Monetary(
         string='Stage 1 Release Amount', currency_field='currency_id', copy=False,
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
     retention_release_stage1_done = fields.Boolean(default=False, copy=False, tracking=True)
     retention_release_stage1_date = fields.Date(copy=False)
@@ -81,6 +83,7 @@ class ProjectHandover(models.Model):
     )
     retention_release_stage2_amount = fields.Monetary(
         string='Stage 2 Release Amount', currency_field='currency_id', copy=False,
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
     retention_release_stage2_done = fields.Boolean(default=False, copy=False, tracking=True)
     retention_release_stage2_date = fields.Date(copy=False)
@@ -125,6 +128,7 @@ class ProjectHandover(models.Model):
     # Workflow
     # ---------------------------------------------------------------
     def action_confirm_provisional_handover(self):
+        self._check_construction_role('nt_construction.group_construction_project_manager')
         for rec in self:
             if rec.state != 'draft':
                 raise UserError(self.env._('Only draft handovers can be moved to provisional handover.'))
@@ -133,6 +137,7 @@ class ProjectHandover(models.Model):
         self._workflow_write({'state': 'provisional'})
 
     def action_release_retention_stage1(self):
+        self._check_construction_role('nt_construction.group_construction_accountant')
         for rec in self:
             if rec.state != 'provisional':
                 raise UserError(self.env._('Stage 1 retention release requires the handover to be at provisional stage.'))
@@ -151,6 +156,7 @@ class ProjectHandover(models.Model):
             ))
 
     def action_final_handover(self):
+        self._check_construction_role('nt_construction.group_construction_project_manager')
         for rec in self:
             if rec.state != 'provisional':
                 raise UserError(self.env._('Final handover requires a confirmed provisional handover first.'))
@@ -166,6 +172,7 @@ class ProjectHandover(models.Model):
         self._workflow_write({'state': 'final'})
 
     def action_release_retention_stage2(self):
+        self._check_construction_role('nt_construction.group_construction_accountant')
         for rec in self:
             if rec.state != 'final':
                 raise UserError(self.env._('Stage 2 retention release requires final handover to be confirmed.'))
@@ -184,6 +191,7 @@ class ProjectHandover(models.Model):
             ))
 
     def action_close(self):
+        self._check_construction_role('nt_construction.group_construction_project_manager')
         for rec in self:
             if rec.state != 'final':
                 raise UserError(self.env._('Only a project at final handover stage can be closed.'))
@@ -195,6 +203,10 @@ class ProjectHandover(models.Model):
                 rec.project_id.actual_completion_date = rec.final_handover_date
 
     def action_reset_draft(self):
+        self._check_construction_role('nt_construction.group_construction_project_manager')
+        if any(rec.retention_release_stage1_done or rec.retention_release_stage2_done for rec in self):
+            # DECISIONS Q6: once retention is released the handover cannot be reopened
+            raise UserError(self.env._('A handover with a recorded retention release cannot be reset to draft.'))
         self._workflow_write({
             'state': 'draft',
             'retention_release_stage1_done': False,

@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ProjectProject(models.Model):
@@ -24,6 +25,13 @@ class ProjectProject(models.Model):
         string='Construction Project', default=False,
         help='فعّلها للمشاريع اللي هتتبع فيها المقاولة (BOQ، مستخلصات، إلخ)',
     )
+    construction_member_ids = fields.Many2many(
+        'res.users', 'project_construction_member_rel', 'project_id', 'user_id',
+        string='Construction Team',
+        domain=[('share', '=', False)],
+        help='Site engineers and quantity surveyors working on this project. With the project '
+             'manager, they are the only construction-role users who see its documents.',
+    )
     construction_type = fields.Selection([
         ('residential', 'Residential'),
         ('commercial', 'Commercial'),
@@ -38,6 +46,7 @@ class ProjectProject(models.Model):
     contract_value = fields.Monetary(
         currency_field='construction_currency_id',
         help='القيمة التعاقدية بعد الترسية (ممكن تتحدث لاحقاً بأوامر التغيير - Variation Orders)',
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
     construction_currency_id = fields.Many2one(
         'res.currency', string='Contract Currency',
@@ -86,6 +95,7 @@ class ProjectProject(models.Model):
     boq_total_contracted = fields.Monetary(
         string='BOQ Total', currency_field='construction_currency_id',
         compute='_compute_boq_total_contracted', store=True,
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
     boq_percentage_complete = fields.Float(
         string='BOQ Progress %',
@@ -122,6 +132,43 @@ class ProjectProject(models.Model):
     # ---------------------------------------------------------------
     # Smart buttons
     # ---------------------------------------------------------------
+    # ---------------------------------------------------------------
+    # Visibility: construction projects are "invited users only"; the project manager and the
+    # construction team are followers, so core project rules show the project to them only
+    # (company-wide roles see all construction projects through nt_construction rules).
+    # ---------------------------------------------------------------
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('is_construction_project'):
+                vals.setdefault('privacy_visibility', 'followers')
+        projects = super().create(vals_list)
+        projects.filtered('is_construction_project')._subscribe_construction_team()
+        return projects
+
+    def write(self, vals):
+        if vals.get('is_construction_project') and 'privacy_visibility' not in vals:
+            vals = dict(vals, privacy_visibility='followers')
+        res = super().write(vals)
+        if {'is_construction_project', 'user_id', 'construction_member_ids'} & set(vals):
+            self.filtered('is_construction_project')._subscribe_construction_team()
+        return res
+
+    def _subscribe_construction_team(self):
+        for project in self:
+            partners = (project.user_id | project.construction_member_ids).partner_id
+            if partners:
+                # the writer is allowed to change the project; following is a side effect
+                project.sudo().message_subscribe(partner_ids=partners.ids)
+
+    @api.constrains('is_construction_project', 'company_id')
+    def _check_construction_company(self):
+        # documents, record rules and accounting are per company (DECISIONS L9)
+        for project in self:
+            if project.is_construction_project and not project.company_id:
+                raise ValidationError(self.env._(
+                    'Construction project %(project)s must belong to a company.', project=project.display_name))
+
     def action_view_tender(self):
         self.ensure_one()
         return {
@@ -158,6 +205,7 @@ class ProjectProject(models.Model):
     total_subcontracted_committed = fields.Monetary(
         string='Total Subcontracted (Approved)', currency_field='construction_currency_id',
         compute='_compute_total_subcontracted_committed',
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
 
     @api.depends('subcontract_agreement_ids')
@@ -215,6 +263,7 @@ class ProjectProject(models.Model):
     retention_held_amount = fields.Monetary(
         string='Retention Held (Client Side)', currency_field='construction_currency_id',
         compute='_compute_retention_held_amount',
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
 
     def _compute_handover_count(self):

@@ -57,11 +57,12 @@ class BoqLine(models.Model):
     # ---------------------------------------------------------------
     uom_id = fields.Many2one('uom.uom', string='UoM')
     quantity_contracted = fields.Float(string='Contracted Qty', digits='Product Unit of Measure')
-    unit_price = fields.Monetary(currency_field='currency_id')
+    unit_price = fields.Monetary(currency_field='currency_id', groups='nt_construction.group_construction_see_amounts,project.group_project_manager')
 
     total_contracted = fields.Monetary(
         currency_field='currency_id',
         compute='_compute_total_contracted', store=True, recursive=True,
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
 
     # ---------------------------------------------------------------
@@ -76,6 +77,7 @@ class BoqLine(models.Model):
     amount_executed_cumulative = fields.Monetary(
         string='Executed Value (Cumulative)', currency_field='currency_id',
         compute='_compute_execution', store=True, recursive=True,
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
     percentage_complete = fields.Float(
         string='% Complete', compute='_compute_execution', store=True, recursive=True,
@@ -102,6 +104,7 @@ class BoqLine(models.Model):
         string='Committed Cost', currency_field='currency_id',
         compute='_compute_committed_amount', store=True,
         help='إجمالي قيمة أوامر الشراء (خامات/معدات) المؤكدة + اتفاقيات المقاولة من الباطن المعتمدة والمرتبطة بالبند ده',
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
 
     @api.depends(

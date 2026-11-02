@@ -8,17 +8,17 @@
         <field name="arch" type="xml">
             <form string="Project Handover">
                 <header>
-                    <button name="action_confirm_provisional_handover" string="Confirm Provisional" type="object"
+                    <button name="action_confirm_provisional_handover" groups="nt_construction.group_construction_project_manager,project.group_project_manager" string="Confirm Provisional" type="object"
                             class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="action_release_retention_stage1" string="Release Stage 1 (50%)" type="object"
+                    <button name="action_release_retention_stage1" groups="nt_construction.group_construction_accountant,project.group_project_manager" string="Release Stage 1 (50%)" type="object"
                             class="btn-info" invisible="state != 'provisional' or retention_release_stage1_done"/>
-                    <button name="action_final_handover" string="Finalize Handover" type="object"
+                    <button name="action_final_handover" groups="nt_construction.group_construction_project_manager,project.group_project_manager" string="Finalize Handover" type="object"
                             class="btn-success" invisible="state != 'provisional'"/>
-                    <button name="action_release_retention_stage2" string="Release Stage 2 (50%)" type="object"
+                    <button name="action_release_retention_stage2" groups="nt_construction.group_construction_accountant,project.group_project_manager" string="Release Stage 2 (50%)" type="object"
                             class="btn-info" invisible="state != 'final' or retention_release_stage2_done"/>
-                    <button name="action_close" string="Close Project" type="object"
+                    <button name="action_close" groups="nt_construction.group_construction_project_manager,project.group_project_manager" string="Close Project" type="object"
                             class="btn-success" invisible="state != 'final'"/>
-                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                    <button name="action_reset_draft" groups="nt_construction.group_construction_project_manager,project.group_project_manager" string="Reset to Draft" type="object"
                             class="btn-secondary" invisible="state == 'draft'"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,provisional,final,closed"/>

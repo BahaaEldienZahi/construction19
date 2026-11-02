@@ -91,4 +91,230 @@
         <field name="model_id" ref="model_work_measurement"/>
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
+    <!-- ===== Role rules (DECISIONS Q2/Q3, S6). Group rules are OR-ed: a user holding an
+         own-project role and a company-wide role (e.g. QS + Approver) sees the whole company. ===== -->
+
+    <record id="rule_project_project_own_project" model="ir.rule">
+        <field name="name">Project Project: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="domain_force">['|', ('user_id', '=', user.id), ('construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_site_engineer')), Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_project_project_all" model="ir.rule">
+        <field name="name">Project Project: all construction projects of allowed companies</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="domain_force">[('is_construction_project', '=', True)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_tender_engineer')), Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1'))]"/>
+    </record>
+
+    <record id="rule_boq_line_own_project" model="ir.rule">
+        <field name="name">Boq Line: own projects (site engineer)</field>
+        <field name="model_id" ref="model_boq_line"/>
+        <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_site_engineer'))]"/>
+    </record>
+
+    <record id="rule_boq_line_all" model="ir.rule">
+        <field name="name">Boq Line: all records of allowed companies</field>
+        <field name="model_id" ref="model_boq_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_boq_line_tender_only" model="ir.rule">
+        <field name="name">Boq Line: tender BOQ only (tender engineer)</field>
+        <field name="model_id" ref="model_boq_line"/>
+        <field name="domain_force">[('project_id', '=', False)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_tender_engineer'))]"/>
+    </record>
+
+    <record id="rule_boq_line_progress_own_project" model="ir.rule">
+        <field name="name">Boq Line Progress: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="model_boq_line_progress"/>
+        <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_site_engineer')), Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_boq_line_progress_all" model="ir.rule">
+        <field name="name">Boq Line Progress: all records of allowed companies</field>
+        <field name="model_id" ref="model_boq_line_progress"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_site_daily_report_own_project" model="ir.rule">
+        <field name="name">Site Daily Report: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="model_site_daily_report"/>
+        <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_site_engineer')), Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_site_daily_report_all" model="ir.rule">
+        <field name="name">Site Daily Report: all records of allowed companies</field>
+        <field name="model_id" ref="model_site_daily_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_site_daily_report_manpower_own_project" model="ir.rule">
+        <field name="name">Site Daily Report Manpower: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="model_site_daily_report_manpower"/>
+        <field name="domain_force">['|', ('report_id.project_id.user_id', '=', user.id), ('report_id.project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_site_engineer')), Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_site_daily_report_manpower_all" model="ir.rule">
+        <field name="name">Site Daily Report Manpower: all records of allowed companies</field>
+        <field name="model_id" ref="model_site_daily_report_manpower"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_site_daily_report_equipment_own_project" model="ir.rule">
+        <field name="name">Site Daily Report Equipment: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="model_site_daily_report_equipment"/>
+        <field name="domain_force">['|', ('report_id.project_id.user_id', '=', user.id), ('report_id.project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_site_engineer')), Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_site_daily_report_equipment_all" model="ir.rule">
+        <field name="name">Site Daily Report Equipment: all records of allowed companies</field>
+        <field name="model_id" ref="model_site_daily_report_equipment"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_work_measurement_own_project" model="ir.rule">
+        <field name="name">Work Measurement: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="model_work_measurement"/>
+        <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_site_engineer')), Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_work_measurement_all" model="ir.rule">
+        <field name="name">Work Measurement: all records of allowed companies</field>
+        <field name="model_id" ref="model_work_measurement"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_boq_variation_order_own_project" model="ir.rule">
+        <field name="name">Boq Variation Order: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="model_boq_variation_order"/>
+        <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_site_engineer')), Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_boq_variation_order_all" model="ir.rule">
+        <field name="name">Boq Variation Order: all records of allowed companies</field>
+        <field name="model_id" ref="model_boq_variation_order"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_boq_variation_order_line_own_project" model="ir.rule">
+        <field name="name">Boq Variation Order Line: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="model_boq_variation_order_line"/>
+        <field name="domain_force">['|', ('variation_order_id.project_id.user_id', '=', user.id), ('variation_order_id.project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_site_engineer')), Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_boq_variation_order_line_all" model="ir.rule">
+        <field name="name">Boq Variation Order Line: all records of allowed companies</field>
+        <field name="model_id" ref="model_boq_variation_order_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_subcontract_agreement_own_project" model="ir.rule">
+        <field name="name">Subcontract Agreement: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="model_subcontract_agreement"/>
+        <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_subcontract_agreement_all" model="ir.rule">
+        <field name="name">Subcontract Agreement: all records of allowed companies</field>
+        <field name="model_id" ref="model_subcontract_agreement"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_subcontract_agreement_line_own_project" model="ir.rule">
+        <field name="name">Subcontract Agreement Line: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="model_subcontract_agreement_line"/>
+        <field name="domain_force">['|', ('agreement_id.project_id.user_id', '=', user.id), ('agreement_id.project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_subcontract_agreement_line_all" model="ir.rule">
+        <field name="name">Subcontract Agreement Line: all records of allowed companies</field>
+        <field name="model_id" ref="model_subcontract_agreement_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_boq_payment_certificate_own_project" model="ir.rule">
+        <field name="name">Boq Payment Certificate: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="model_boq_payment_certificate"/>
+        <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_boq_payment_certificate_all" model="ir.rule">
+        <field name="name">Boq Payment Certificate: all records of allowed companies</field>
+        <field name="model_id" ref="model_boq_payment_certificate"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_boq_payment_certificate_line_own_project" model="ir.rule">
+        <field name="name">Boq Payment Certificate Line: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="model_boq_payment_certificate_line"/>
+        <field name="domain_force">['|', ('certificate_id.project_id.user_id', '=', user.id), ('certificate_id.project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_boq_payment_certificate_line_all" model="ir.rule">
+        <field name="name">Boq Payment Certificate Line: all records of allowed companies</field>
+        <field name="model_id" ref="model_boq_payment_certificate_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_project_handover_own_project" model="ir.rule">
+        <field name="name">Project Handover: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="model_project_handover"/>
+        <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_site_engineer')), Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_project_handover_all" model="ir.rule">
+        <field name="name">Project Handover: all records of allowed companies</field>
+        <field name="model_id" ref="model_project_handover"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_project_handover_punch_item_own_project" model="ir.rule">
+        <field name="name">Project Handover Punch Item: own projects (site engineer / QS / PM)</field>
+        <field name="model_id" ref="model_project_handover_punch_item"/>
+        <field name="domain_force">['|', ('handover_id.project_id.user_id', '=', user.id), ('handover_id.project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_site_engineer')), Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
+
+    <record id="rule_project_handover_punch_item_all" model="ir.rule">
+        <field name="name">Project Handover Punch Item: all records of allowed companies</field>
+        <field name="model_id" ref="model_project_handover_punch_item"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_accountant')), Command.link(ref('group_construction_approver_l1')), Command.link(ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record id="rule_boq_line_own_project_or_tender" model="ir.rule">
+        <field name="name">Boq Line: tender BOQ + own projects (QS / PM)</field>
+        <field name="model_id" ref="model_boq_line"/>
+        <field name="domain_force">['|', ('project_id', '=', False), '|', ('project_id.user_id', '=', user.id), ('project_id.construction_member_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_construction_quantity_surveyor')), Command.link(ref('group_construction_project_manager'))]"/>
+    </record>
 </odoo>

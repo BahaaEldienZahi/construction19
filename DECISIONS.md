@@ -87,18 +87,25 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | L6 | **Approval documents frozen once submitted** (certificate, VO, subcontract + their lines): no write/create/unlink of content until rejected → reset to draft. Approved documents cannot be deleted | Approving then editing amounts is the same bypass |
 | L7 | Reset to draft on approval documents only from `rejected`/`cancelled` (the form button already showed it only on `rejected`); approved documents are never reset — corrections go through a new document (VO / credit note) | Server now enforces what the UI intended |
 | L8 | `_check_company_auto = True` + `check_company=True` on cross-company links; global multi-company `ir.rule` on all 15 construction models (lines via their parent); old rules file rewritten (dropped non-existent `subcontract.payment.certificate`) and added to the manifest | Multi-company safety (brief) |
+| L9 | A construction project must have a company (constraint). Odoo 19 projects may be company-less; such a project's documents had no company and vanished behind the company rules | Found by the role tests |
+| L10 | Construction projects default to privacy "Invited internal users"; the project manager (`user_id`) and the Construction Team (`construction_member_ids`) are auto-subscribed as followers. Core `project_public_members_rule` is OR-ed with ours, so with "All internal users" every PM/SE would see every project | Implements S6/Q3 with core mechanisms, no core rule override |
+| L11 | Side effects that need more rights than the actor's role run `sudo()` **after** the role check, uid unchanged: final-approval effects (VO → BOQ/contract value, certificate → progress) and tender → project conversion | Approvers / tender engineers must not get write access to BOQ or projects |
+| L12 | `project.group_project_manager` (Project › Administrator) acts as Construction Admin: full ACL, passes role checks. It does **not** bypass approval groups or segregation of duties | Keeps step 1 admin flows; admin is not an approver by default except `base.user_admin` (existing data) |
+| L13 | Prices/amounts hidden from Site Engineers with field-level `groups` (technical group "See Prices and Amounts" implied by every other role); Odoo removes these fields from the views | Q7; enforced on RPC too, not only in the UI |
+| L14 | Approvers have write ACL on certificates / VOs / subcontracts (needed for the state change); they can therefore edit **draft** documents. Submitted+ documents are frozen (L6) | Alternative (approval via sudo) hides who changed what |
+| L15 | Upgrade removes the old `base.group_user` ACLs: after upgrading a DB, internal users without a construction role lose access until a role is assigned | Expected with D1 (no real data); to note in INSTALL_AND_DEPLOY |
 
 ## 7. Questions raised during steps (R9) — agent default applied unless marked STOP
 
 | # | Step | Question | Default applied | Status |
 |---|---|---|---|---|
 | Q1 | 2 | 11 untracked folders appeared in `custom_addons/` on 2026-11-02 ~12:24 (`accounting_addons/`, `create_bill_from_po/`, `hr-community/`, `hr_payroll_community/`, `muk_web_*` ×7). Track them in this repo? | Left untouched: not committed, not ignored, not installed. Commits name files explicitly | open |
-| Q2 | 2 | Role matrix for the 8 roles (UX/step 2 report §"Role matrix") | Proposal only; not wired | **STOP** |
-| Q3 | 2 | Definition of "own project" for PM (S6) and Site Engineer | PM = `project.user_id`; Site Engineer / QS = new `construction_member_ids` on project | **STOP** |
-| Q4 | 2 | Can the same user give L1 and L2 approval on one document? | Forbidden (segregation of duties) — not yet implemented | **STOP** |
-| Q5 | 2 | Reject restricted to approvers (L1+). Previously any user could reject (button had no group) | Applied (reversible, no data) | **STOP — confirm** |
-| Q6 | 2 | Handover reset to draft after a retention release, and measurement reset after it is linked to a certificate: allowed today (button visible in every non-draft state) | Unchanged for now; proposal: block once a release is recorded / once linked | **STOP** (money) |
-| Q7 | 2 | Site Engineer sees prices and amounts? | Hidden (quantities only) | **STOP** |
-| Q8 | 2 | Read-only Client Viewer (portal) now or with the certificate PDF (golden cycle)? | With the golden cycle | open |
+| Q2 | 2 | Role matrix for the 8 roles (UX/step 2 report §"Role matrix") | Proposal only; not wired | resolved: owner \"defaults OK\" 2026-11-02 |
+| Q3 | 2 | Definition of "own project" for PM (S6) and Site Engineer | PM = `project.user_id`; Site Engineer / QS = new `construction_member_ids` on project | resolved: owner \"defaults OK\" 2026-11-02 |
+| Q4 | 2 | Can the same user give L1 and L2 approval on one document? | Forbidden (segregation of duties) — not yet implemented | resolved: owner \"defaults OK\" 2026-11-02 |
+| Q5 | 2 | Reject restricted to approvers (L1+). Previously any user could reject (button had no group) | Applied (reversible, no data) | resolved: owner \"defaults OK\" 2026-11-02 |
+| Q6 | 2 | Handover reset to draft after a retention release, and measurement reset after it is linked to a certificate: allowed today (button visible in every non-draft state) | Unchanged for now; proposal: block once a release is recorded / once linked | resolved: owner \"defaults OK\" 2026-11-02 |
+| Q7 | 2 | Site Engineer sees prices and amounts? | Hidden (quantities only) | resolved: owner \"defaults OK\" 2026-11-02 |
+| Q8 | 2 | Read-only Client Viewer (portal) now or with the certificate PDF (golden cycle)? | With the golden cycle | resolved: owner "defaults OK" 2026-11-02 |
 
 | Q9 | 2 | `pharmacy_retail/` disappeared from disk ~12:25 on 2026-11-02 and its 116 files are **staged as deleted** in this repo's index — not done by the agent. Intended? | Not restored, not unstaged, not committed (agent commits use `git commit --only <paths>`). Recoverable from HEAD | open |

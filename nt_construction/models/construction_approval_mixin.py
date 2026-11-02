@@ -17,6 +17,8 @@ class ConstructionApprovalMixin(models.AbstractModel):
     # Subclasses may override these xmlids if they need different approver groups
     _approval_group_l1_xmlid = 'nt_construction.group_construction_approver_l1'
     _approval_group_l2_xmlid = 'nt_construction.group_construction_approver_l2'
+    # roles allowed to submit (and create/edit) the document; set per model
+    _submit_group_xmlids = ()
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -34,6 +36,7 @@ class ConstructionApprovalMixin(models.AbstractModel):
     rejection_reason = fields.Text(copy=False)
 
     def action_submit_for_approval(self):
+        self._check_construction_role(*self._submit_group_xmlids)
         for rec in self:
             if rec.state != 'draft':
                 raise UserError(self.env._('Only draft records can be submitted for approval.'))
@@ -57,13 +60,20 @@ class ConstructionApprovalMixin(models.AbstractModel):
         for rec in self:
             if rec.state != 'approved_l1':
                 raise UserError(self.env._('Record must have Level 1 approval before final approval.'))
+            if rec.approver_l1_id == self.env.user:
+                # segregation of duties (DECISIONS Q4)
+                raise UserError(self.env._(
+                    '%(doc)s: you gave the Level 1 approval, so the final approval must come from '
+                    'another approver.', doc=rec.display_name))
         self._workflow_write({
             'state': 'approved',
             'approver_l2_id': self.env.user.id,
             'approval_l2_date': fields.Datetime.now(),
         })
         # side effects (apply VO to BOQ, link invoice, ...) run with workflow rights
-        self._as_workflow()._on_final_approval()
+        # approval rights were checked above; the side effects touch records the approver
+        # may only read (BOQ, project contract value), so they run as superuser (uid unchanged)
+        self._as_workflow().sudo()._on_final_approval()
 
     def action_reject(self):
         if not self.env.user.has_group(self._approval_group_l1_xmlid):

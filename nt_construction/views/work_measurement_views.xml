@@ -62,16 +62,14 @@
             <form string="Work Measurement">
                 <header>
 
-                    <button
-                            name="action_confirm"
+                    <button name="action_confirm" groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager"
                             type="object"
                             string="Confirm"
                             class="oe_highlight"
                             invisible="state != 'draft'"/>
 
 
-                    <button
-                            name="action_reset_draft"
+                    <button name="action_reset_draft" groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager"
                             type="object"
                             string="Reset Draft"
                             invisible="state == 'draft'"/>

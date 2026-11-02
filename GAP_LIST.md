@@ -1,7 +1,7 @@
 # GAP LIST
 
 Honest list of what is **not** done, provisional decisions awaiting confirmation, and blockers.
-Estimates are working days for one developer. Updated: 2026-11-02 (after step 1).
+Estimates are working days for one developer. Updated: 2026-11-02 (after step 2).
 
 ## A. Provisional decisions — pending client confirmation (OPEN)
 
@@ -22,9 +22,8 @@ Estimates are working days for one developer. Updated: 2026-11-02 (after step 1)
 | Retention release creates no journal entries | Step 3 | in step 3 |
 | Step 3 test required by DECISIONS S7: Certified = Invoiced (both excl. VAT, both incl. escalation) once all approved certificates are invoiced | Step 3 | in step 3 |
 | Multi-currency: `boq.line.currency_id` = company currency while certificates/VOs use project contract currency; committed amounts summed without conversion | Step 3 | in step 3 |
-| Record rules file not loaded; references non-existent model `subcontract.payment.certificate` | Step 2 | in step 2 |
-| Any internal user can `write({'state': 'approved'})` on certificates (approval bypass) | Step 2 | in step 2 |
-| Role model (8 roles) missing; daily report / handover / subcontract / measurement manager-only | Step 2 | 3 d |
+| Read-only Client Viewer (8th role, portal) — with the certificate PDF | Golden cycle (DECISIONS Q8) | in golden cycle |
+| Per-role UI smoke (menus/views load for each of the 7 roles; only Site Engineer views are tested) | Step 4 / UX-5 tour | 0.5 d |
 | Work measurement has no action to generate a certificate | Step 4 / golden cycle | in step 4 |
 | VO overwrites BOQ line in place (no history of previous qty/price) | Step 4 | in step 4 |
 | Project analytic account not auto-created | Step 4 | in step 4 |

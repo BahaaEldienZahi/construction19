@@ -7,6 +7,7 @@ class SubcontractAgreement(models.Model):
     _description = 'Subcontract Agreement'
     _check_company_auto = True
     _inherit = ['construction.approval.mixin', 'mail.thread', 'mail.activity.mixin']
+    _submit_group_xmlids = ('nt_construction.group_construction_project_manager',)
     _order = 'date desc, id desc'
 
     name = fields.Char(default=lambda self: self.env._('New'), readonly=True, copy=False)

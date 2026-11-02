@@ -14,6 +14,8 @@ class TestStep2WorkflowGuard(TransactionCase):
         cls.approver = new_test_user(
             cls.env, login='nt_s2_approver', groups=groups + ',nt_construction.group_construction_approver_l2')
         cls.user = new_test_user(cls.env, login='nt_s2_user', groups=groups)  # no approval rights
+        cls.final_approver = new_test_user(
+            cls.env, login='nt_s2_final_approver', groups='base.group_user,nt_construction.group_construction_approver_l2')
         cls.client = cls.env['res.partner'].create({'name': 'S2 Client'})
         cls.subcontractor = cls.env['res.partner'].create({'name': 'S2 Subcontractor'})
 
@@ -43,7 +45,7 @@ class TestStep2WorkflowGuard(TransactionCase):
         cert = self._certificate()
         cert.action_submit_for_approval()
         cert.action_approve_l1()
-        cert.action_approve_l2()
+        cert.with_user(self.final_approver).action_approve_l2()
         self.assertEqual(cert.state, 'approved')
         return cert
 
@@ -142,7 +144,7 @@ class TestStep2WorkflowGuard(TransactionCase):
         })
         vo.action_submit_for_approval()
         vo.action_approve_l1()
-        vo.action_approve_l2()
+        vo.with_user(self.final_approver).action_approve_l2()
         self.assertTrue(vo.applied)
         self.assertEqual(self.project.contract_value, 1200.0)
         with self.assertRaises(UserError):

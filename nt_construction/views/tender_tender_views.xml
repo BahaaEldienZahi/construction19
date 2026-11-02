@@ -8,19 +8,19 @@
         <field name="arch" type="xml">
             <form string="Tender">
                 <header>
-                    <button name="action_submit" string="Submit" type="object"
+                    <button name="action_submit" groups="nt_construction.group_construction_tender_engineer,project.group_project_manager" string="Submit" type="object"
                             class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="action_under_evaluation" string="Move to Evaluation" type="object"
+                    <button name="action_under_evaluation" groups="nt_construction.group_construction_tender_engineer,project.group_project_manager" string="Move to Evaluation" type="object"
                             class="btn-primary" invisible="state != 'submitted'"/>
-                    <button name="action_set_won" string="Mark as Won" type="object"
+                    <button name="action_set_won" groups="nt_construction.group_construction_tender_engineer,nt_construction.group_construction_approver_l2,project.group_project_manager" string="Mark as Won" type="object"
                             class="btn-success" invisible="state not in ('submitted', 'under_evaluation')"/>
-                    <button name="action_set_lost" string="Mark as Lost" type="object"
+                    <button name="action_set_lost" groups="nt_construction.group_construction_tender_engineer,nt_construction.group_construction_approver_l2,project.group_project_manager" string="Mark as Lost" type="object"
                             invisible="state not in ('submitted', 'under_evaluation')"/>
-                    <button name="action_create_project" string="Create Execution Project" type="object"
+                    <button name="action_create_project" groups="nt_construction.group_construction_tender_engineer,nt_construction.group_construction_approver_l2,project.group_project_manager" string="Create Execution Project" type="object"
                             class="btn-success" invisible="state != 'won' or project_id"/>
-                    <button name="action_cancel" string="Cancel" type="object"
+                    <button name="action_cancel" groups="nt_construction.group_construction_tender_engineer,project.group_project_manager" string="Cancel" type="object"
                             invisible="state in ('cancelled', 'won')"/>
-                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                    <button name="action_reset_draft" groups="nt_construction.group_construction_tender_engineer,project.group_project_manager" string="Reset to Draft" type="object"
                             invisible="state not in ('lost', 'cancelled')"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,under_evaluation,won"/>
@@ -141,7 +141,8 @@
     </record>
 
     <!-- Menu -->
-    <menuitem id="menu_tender_root" name="Tenders &amp; Construction" sequence="45"/>
+    <menuitem id="menu_tender_root" name="Tenders &amp; Construction" sequence="45"
+              groups="nt_construction.group_construction_tender_engineer,nt_construction.group_construction_site_engineer,nt_construction.group_construction_quantity_surveyor,nt_construction.group_construction_project_manager,nt_construction.group_construction_accountant,nt_construction.group_construction_approver_l1,project.group_project_manager"/>
     <menuitem id="menu_tender_tender" name="Tenders" parent="menu_tender_root"
               action="action_tender_tender" sequence="10"/>
     <menuitem id="menu_boq_line" name="Bill of Quantities" parent="menu_tender_root"

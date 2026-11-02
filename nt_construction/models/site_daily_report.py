@@ -48,6 +48,7 @@ class SiteDailyReport(models.Model):
     total_amount_executed_today = fields.Monetary(
         string="Today's Executed Value", currency_field='currency_id',
         compute='_compute_totals', store=True,
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
     )
     currency_id = fields.Many2one(related='project_id.construction_currency_id', readonly=True)
 
@@ -80,12 +81,14 @@ class SiteDailyReport(models.Model):
             )
 
     def action_confirm(self):
+        self._check_construction_role('nt_construction.group_construction_project_manager')
         for rec in self:
             if rec.state != 'draft':
                 raise UserError(self.env._('Only draft reports can be confirmed.'))
         self._workflow_write({'state': 'confirmed'})
 
     def action_reset_draft(self):
+        self._check_construction_role('nt_construction.group_construction_project_manager')
         self._workflow_write({'state': 'draft'})
 
 

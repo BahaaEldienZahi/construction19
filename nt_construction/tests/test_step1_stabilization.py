@@ -18,6 +18,11 @@ class TestStep1Stabilization(TransactionCase):
             groups='base.group_user,project.group_project_manager,'
                    'nt_construction.group_construction_approver_l2',
         )
+        # final approval must come from another approver (segregation of duties, DECISIONS Q4)
+        cls.final_approver = new_test_user(
+            cls.env, login='nt_step1_final_approver',
+            groups='base.group_user,nt_construction.group_construction_approver_l2',
+        )
         # master data is created as superuser; business documents as the manager
         cls.client = cls.env['res.partner'].create({'name': 'Step1 Client'})
         cls.subcontractor = cls.env['res.partner'].create({'name': 'Step1 Subcontractor'})
@@ -66,7 +71,7 @@ class TestStep1Stabilization(TransactionCase):
         })
         agreement.action_submit_for_approval()
         agreement.action_approve_l1()
-        agreement.action_approve_l2()
+        agreement.with_user(self.final_approver).action_approve_l2()
         return agreement
 
     def test_project_subcontract_computes(self):
@@ -108,7 +113,7 @@ class TestStep1Stabilization(TransactionCase):
         vo = self._variation_order()
         vo.action_submit_for_approval()
         vo.action_approve_l1()
-        vo.action_approve_l2()
+        vo.with_user(self.final_approver).action_approve_l2()
         self.assertEqual(vo.state, 'approved')
         self.assertTrue(vo.applied)
         self.assertEqual(self.project.contract_value, 1200.0)

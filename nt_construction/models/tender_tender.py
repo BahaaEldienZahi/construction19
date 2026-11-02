@@ -143,6 +143,8 @@ class TenderTender(models.Model):
     # State transitions
     # ---------------------------------------------------------------
     def action_submit(self):
+        self._check_construction_role(
+            'nt_construction.group_construction_tender_engineer', 'nt_construction.group_construction_approver_l2')
         for rec in self:
             if rec.state != 'draft':
                 raise UserError(self.env._('Only draft tenders can be submitted.'))
@@ -151,12 +153,16 @@ class TenderTender(models.Model):
         self._workflow_write({'state': 'submitted'})
 
     def action_under_evaluation(self):
+        self._check_construction_role(
+            'nt_construction.group_construction_tender_engineer', 'nt_construction.group_construction_approver_l2')
         for rec in self:
             if rec.state != 'submitted':
                 raise UserError(self.env._('Only submitted tenders can move to evaluation.'))
         self._workflow_write({'state': 'under_evaluation'})
 
     def action_set_won(self):
+        self._check_construction_role(
+            'nt_construction.group_construction_tender_engineer', 'nt_construction.group_construction_approver_l2')
         for rec in self:
             if rec.state not in ('submitted', 'under_evaluation'):
                 raise UserError(self.env._('Tender must be submitted or under evaluation before it can be won.'))
@@ -165,18 +171,24 @@ class TenderTender(models.Model):
         self._workflow_write({'state': 'won', 'date_won': fields.Date.context_today(self)})
 
     def action_set_lost(self):
+        self._check_construction_role(
+            'nt_construction.group_construction_tender_engineer', 'nt_construction.group_construction_approver_l2')
         for rec in self:
             if rec.state not in ('submitted', 'under_evaluation'):
                 raise UserError(self.env._('Tender must be submitted or under evaluation before it can be marked as lost.'))
         self._workflow_write({'state': 'lost'})
 
     def action_cancel(self):
+        self._check_construction_role(
+            'nt_construction.group_construction_tender_engineer', 'nt_construction.group_construction_approver_l2')
         for rec in self:
             if rec.state == 'won':
                 raise UserError(self.env._('A won tender cannot be cancelled directly. Please handle the linked project first.'))
         self._workflow_write({'state': 'cancelled'})
 
     def action_reset_draft(self):
+        self._check_construction_role(
+            'nt_construction.group_construction_tender_engineer', 'nt_construction.group_construction_approver_l2')
         self._workflow_write({'state': 'draft', 'lost_reason': False, 'cancel_reason': False})
 
     # ---------------------------------------------------------------
@@ -188,8 +200,13 @@ class TenderTender(models.Model):
             raise UserError(self.env._('Only won tenders can be converted into an execution project.'))
         if self.project_id:
             raise UserError(self.env._('This tender already has a linked project.'))
+        self._check_construction_role(
+            'nt_construction.group_construction_tender_engineer', 'nt_construction.group_construction_approver_l2')
 
-        project = self.env['project.project'].create({
+        # the tender engineer may not create projects nor write project BOQ lines: the
+        # conversion runs as superuser once the role is checked (uid unchanged)
+        tender = self.sudo()
+        project = tender.env['project.project'].create({
             'name': (self.name and f'{self.name} - {self.client_id.name}') or self.client_id.name,
             'partner_id': self.client_id.id,
             'company_id': self.company_id.id,
@@ -202,7 +219,7 @@ class TenderTender(models.Model):
         self._workflow_write({'project_id': project.id})
 
         # Duplicate the tendered BOQ tree onto the project as the contracted baseline
-        for root_line in self.boq_line_ids:
+        for root_line in tender.boq_line_ids:
             root_line._copy_tree_to_project(project)
 
         return self.action_view_project()

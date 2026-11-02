@@ -25,6 +25,17 @@ class ConstructionWorkflowGuard(models.AbstractModel):
     def _workflow_write(self, vals):
         return self._as_workflow().write(vals)
 
+    def _check_construction_role(self, *group_xmlids):
+        """Raise unless the user holds one of the roles. Project administrators
+        (``project.group_project_manager``) act as construction admins and always pass."""
+        user = self.env.user
+        if self.env.su or user.has_group('project.group_project_manager'):
+            return
+        if not any(user.has_group(xmlid) for xmlid in group_xmlids):
+            names = [self.env.ref(xmlid).name for xmlid in group_xmlids]
+            raise UserError(self.env._(
+                'This action is reserved to: %(roles)s.', roles=', '.join(names)))
+
     def _is_workflow_context(self):
         return self.env.context.get('construction_workflow') is _WORKFLOW_TOKEN
 
