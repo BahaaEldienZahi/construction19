@@ -35,6 +35,7 @@ would also run every installed core module's tests.
 custom_addons/            ← its own git repo (separate from the Odoo core repo)
 ├── BASELINE.md           Phase 0 facts (as received)
 ├── CHANGELOG.md          per-step changes with evidence
+├── DECISIONS.md          working rules + client/agent decisions (re-read every step)
 ├── GAP_LIST.md           open items, provisional decisions, blockers
 ├── nt_construction/      module (README.md in Arabic, AGENTS.md for developers)
 └── pharmacy_retail/      Odoo S.A. module, unmodified

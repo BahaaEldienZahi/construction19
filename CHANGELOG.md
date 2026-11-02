@@ -29,14 +29,16 @@ Each entry lists what changed and the evidence (commands + results). Older statu
 - All user-facing error/chatter strings wrapped in `_()` with named parameters; source
   language English (Arabic comes via `i18n/ar.po`, later step). Command API instead of tuples.
 
-### Evidence
+### Evidence (re-run 2026-11-02 under DECISIONS R6: `agent_` DBs, `--http-port 8079`)
 ```
--i nt_construction on new DB nt_s1_fresh2  → 0 failed, 0 error(s) of 10 tests; 0 WARNING/ERROR lines
--u nt_construction on copy of Phase 0 DB (19.0.1.0.0 → 19.0.1.1.0) nt_s1_upgrade2
-                                           → 0 failed, 0 error(s) of 10 tests; 0 WARNING/ERROR lines
--i nt_construction --with-demo on new DB nt_s1_demo
-                                           → 0 failed, 0 error(s) of 10 tests; 0 WARNING/ERROR lines
+-i nt_construction, new DB agent_s1_fresh            → 0 failed, 0 error(s) of 10 tests; 0 WARNING/ERROR lines
+-i nt_construction --with-demo, new DB agent_s1_demo → 0 failed, 0 error(s) of 10 tests; 0 WARNING/ERROR lines
+baseline 858b91e (19.0.1.0.0) installed in agent_s1_upgrade → 11 WARNING lines (= BASELINE W1-W4, expected)
+-u nt_construction on agent_s1_upgrade (→ 19.0.1.1.0) → 0 failed, 0 error(s) of 10 tests; 0 WARNING/ERROR lines
+   after upgrade: 6 unique constraints present in pg_constraint; 4 new sequences (SUB/, SDR/, WM/, HO/) present
 ```
+Lint (not yet fixed, see GAP_LIST §B): ruff 37 findings (35 auto-fixable); pylint-odoo 150 style
+warnings, 0 errors, 8.28/10.
 
 ### Repo
 - `custom_addons/` is now its own git repository; removed the 11 status `.md` files,

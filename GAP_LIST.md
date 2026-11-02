@@ -27,6 +27,7 @@ Estimates are working days for one developer. Updated: 2026-11-02 (after step 1)
 | Work measurement has no action to generate a certificate | Step 4 / golden cycle | in step 4 |
 | VO overwrites BOQ line in place (no history of previous qty/price) | Step 4 | in step 4 |
 | Project analytic account not auto-created | Step 4 | in step 4 |
+| Lint not clean (2026-11-02, step 1 code): ruff 37 findings (35 auto-fixable: import order, EOF newline, coding header, `l` var name); pylint-odoo 150 style warnings, 0 errors (85 `prefer-env-translation`, 62 `attribute-string-redundant`, 3 manifest keys), score 8.28/10 | Proposed: first commit of step 2 | 0.5 d |
 | No `i18n/ar.po`; strings that used to be hardcoded Arabic now show English until it exists | Step 6 (partial earlier for the demo PDF) | in step 6 |
 
 ## C. Not started (scope)
@@ -40,6 +41,5 @@ Estimate: ~10–13 weeks total (see plan); step 1 consumed ~1 day of the 2–3 d
 
 | Item | Impact |
 |---|---|
-| **Enterprise 19 source not available** (only Enterprise 18 on this machine) | `pharmacy_retail` cannot be installed or tested. Step 5 on hold until Enterprise vs Community is confirmed. |
-| `ruff` / `pylint-odoo` not installed in `.venv` | Lint gate not yet run (awaiting OK to install). |
+| **Enterprise 19 source not available** (only Enterprise 18 on this machine); Enterprise vs Community for the client **still unknown** (2026-11-02) | `pharmacy_retail` cannot be installed or tested. Step 5 on hold (DECISIONS S1). |
 | `odoo.conf` addons_path points to missing `construction19/` and omits `custom_addons/` | Tests use `--addons-path` explicitly. `odoo.conf` belongs to the core repo; not changed. |
