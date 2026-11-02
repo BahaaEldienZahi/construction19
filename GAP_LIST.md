@@ -5,6 +5,8 @@ Estimates are working days for one developer. Updated: 2026-11-02 (after UX Phas
 
 ## A. Provisional decisions — pending client confirmation (OPEN)
 
+- A0 **Arabic number format**: Western digits via `ar_EG` (DECISIONS S9) — client to confirm. PDFs verified in step 3/golden cycle.
+
 | # | Item | Provisional default | Who confirms | Implementation rule |
 |---|---|---|---|---|
 | A1 | **Price escalation basis (فروق أسعار)** | Public-procurement formula (Law 182/2018) for government clients; same engine with contract-specific coefficients for private / FIDIC contracts | Client legal / contracts | Fully configurable per project: indices, coefficients, fixed portion, base date, threshold. **No hardcoded coefficients or formula constants.** |
@@ -47,5 +49,5 @@ Q1–Q7 answered by the owner (DECISIONS S5); **Q6 (offline on tablet) still ope
 
 | Item | Impact |
 |---|---|
-| **`rtlcss` not installed** on this machine; Odoo needs it (npm) to build the Arabic RTL CSS — without it the Arabic UI is not mirrored | Must be in INSTALL_AND_DEPLOY and on every server (DECISIONS Q10) |
+| **`rtlcss` not installed** on this machine; Odoo needs it (npm) to build the Arabic RTL CSS — without it the Arabic UI is not mirrored | In `INSTALL_AND_DEPLOY.md` §1 (S10); must be installed on every server |
 | `odoo.conf` addons_path points to missing `construction19/` and omits `custom_addons/` | Tests use `--addons-path` explicitly. `odoo.conf` belongs to the core repo; not changed. |

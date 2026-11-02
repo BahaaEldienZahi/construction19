@@ -27,6 +27,9 @@ Re-read at the start of every step. "Client" decisions come from the project own
 | S4 | **UX & dashboards: design now, build later.** `UX_SPEC.md` must be reviewed by the owner before any UX code. Native Odoo 19 views/widgets first; OWL only for the Overview page; minimal SCSS with Odoo/Bootstrap variables, no core style overrides; must work in Arabic RTL and at tablet width. Schedule: menu + form standard after step 3, **before** the golden-cycle demo; project dashboard, Overview and My Approvals in step 4. | 2026-11-02 |
 
 | S8 | **Reorder: UX Phase A before step 3** — menu restructure, base SCSS, form standard on Tender (form + kanban), Daily Report, Subcontract, Handover; screenshots EN + AR of every changed screen in the report. Certificate, Variation Order, Project, Measurement forms and all dashboards stay after step 3. | 2026-11-02 |
+| S9 | **Western digits (0-9) for all amounts and dates in Arabic, on screens and PDFs; Arabic text stays Arabic.** Odoo-native, no core patching. PROVISIONAL until the client confirms. Implemented as the language record *Arabic (Egypt)* `ar_EG` (module data, inactive by default): the web client forces Arabic-Indic digits only for `ar_001`/`ar_SA`/`ar_SY`, and translations fall back to `ar.po` | 2026-11-02 |
+| S10 | `rtlcss` is a required server dependency → `INSTALL_AND_DEPLOY.md` with the install command | 2026-11-02 |
+| S11 | Screenshots: only the latest set per screen in the repo (`docs/screenshots/`); intermediate captures are not committed | 2026-11-02 |
 | S5 | **UX_SPEC answers** (2026-11-02): Q1 divergence threshold = 10 percentage points as a **company setting**, not hardcoded. Q2 show three labelled figures everywhere — **Certified** (approved certificates), **Invoiced** (posted invoices), **Collected** (payments) — with the same definitions on every screen (UX_SPEC §3.0). Q3 no bulk approval. Q4 cash-flow forecast excludes uncertified work; "Executed not yet certified" shown as a separate line. Q5 Overview for Mgmt/Finance/PMs approved. Q6 online only for now, client confirmation pending (OPEN). Q7 no drag-and-drop on tenders. | 2026-11-02 |
 | S7 | **Certified vs Invoiced are always compared on the same basis: both excluding VAT, both including escalation (فروق أسعار).** A step 3 test must assert it (same project, same period → Certified = Invoiced once every approved certificate is invoiced). | 2026-11-02 |
 | S6 | **Step 2 requirement:** record rules restrict project managers to **their own projects** (and the documents of those projects). | 2026-11-02 |
@@ -109,7 +112,7 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | UX-A7 | Handover state label "Provisional Handover (DLP Started)" → "Provisional (DLP)" | Long label collapsed the statusbar in Arabic |
 | UX-A8 | Construction projects action uses the core project views until the dashboard (after step 3) | Scope S8 |
 | UX-A9 | Screenshots via headless Chrome over `--remote-debugging-pipe` with the Python stdlib; `rtlcss@4.3.0` installed with npm **in the scratchpad only** for the capture (not system, not `.venv`) | R8 only covers lint tools in `.venv` |
-| UX-A10 | Screenshots committed under `docs/screenshots/ux_phase_a/` (34 PNG, 2.5 MB) | Reviewable with the report |
+| UX-A10 | ~~`docs/screenshots/ux_phase_a/`~~ → `docs/screenshots/` (S11), latest set only: 34 PNG, 2.5 MB, Arabic captured with `ar_EG` | Reviewable with the report |
 
 ## 7. Questions raised during steps (R9) — agent default applied unless marked STOP
 
@@ -124,5 +127,5 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | Q7 | 2 | Site Engineer sees prices and amounts? | Hidden (quantities only) | resolved: owner \"defaults OK\" 2026-11-02 |
 | Q8 | 2 | Read-only Client Viewer (portal) now or with the certificate PDF (golden cycle)? | With the golden cycle | resolved: owner "defaults OK" 2026-11-02 |
 
-| Q9 | 2 | ~~`pharmacy_retail/` disappeared from disk ~12:25 on 2026-11-02 and its 116 files are **staged as deleted** in this repo's index — not done by the agent. Intended? | Not restored, not unstaged, not committed (agent commits use `git commit --only <paths>`). Recoverable from HEAD~~ | resolved: owner deleted it on purpose (S1) |
-| Q10 | A | Deployment: production servers need `rtlcss` (npm) for Arabic RTL; also confirm Arabic number format (core `ar_001` shows Arabic-Indic digits in dates) | Listed in GAP_LIST §D; INSTALL_AND_DEPLOY | open |
+| Q9 | 2 | ~~`pharmacy_retail/` disappeared from disk ~12:25 on 2026-11-02 and its 116 files are **staged as deleted** in this repo's index — not done by the agent. Intended? | Not restored, not unstaged, not committed (agent commits use `git commit --only <paths>`). Recoverable from HEAD~~ | resolved: owner deleted it on purpose (S1); re-confirmed 2026-11-02 ("Keep it deleted"), nothing staged |
+| Q10 | A | Deployment: production servers need `rtlcss` (npm) for Arabic RTL; also confirm Arabic number format (core `ar_001` shows Arabic-Indic digits in dates) | resolved by owner 2026-11-02 → S9 (Western digits, provisional), S10 (rtlcss in INSTALL_AND_DEPLOY) | resolved |

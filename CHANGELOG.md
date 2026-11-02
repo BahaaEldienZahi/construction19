@@ -5,6 +5,16 @@ Each entry lists what changed and the evidence (commands + results). Older statu
 "complete / 100% pass" for a module that had no tests and several crashing paths
 (see `BASELINE.md`).
 
+## nt_construction 19.0.1.3.1 — Arabic digits, deployment notes (2026-11-02)
+- Language *Arabic (Egypt)* `ar_EG` (inactive data record): Arabic text, RTL, Western digits (DECISIONS S9, provisional).
+- `tests/test_arabic_digits.py` (2 tests): server-side dates, datetimes and amounts in `ar_EG` use 0-9.
+- `INSTALL_AND_DEPLOY.md` started: rtlcss (required), addons path, upgrade note, Arabic language, roles.
+- Screenshots moved to `docs/screenshots/` (latest set only), Arabic re-captured with `ar_EG`.
+```
+-i nt_construction, new DB agent_q10 → 0 failed, 0 error(s) of 39 tests; 0 WARNING/ERROR lines
+screenshot server (agent_uxa_shots, ar_EG, 34 captures) → 0 WARNING/ERROR lines
+```
+
 ## nt_construction 19.0.1.3.0 — UX Phase A (2026-11-02)
 
 Report with screenshots (EN/AR, desktop/tablet): `docs/UX_PHASE_A.md`.
