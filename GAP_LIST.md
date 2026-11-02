@@ -20,6 +20,7 @@ Estimates are working days for one developer. Updated: 2026-11-02 (after step 1)
 | Double counting: daily-report progress + certificate approval both create `boq.line.progress` (3 executed shows 6) | Step 3 (certificate rewrite, A5) | in step 3 |
 | Certificate invoice books net only to revenue; retention not recognized; no VAT; no advance account | Step 3 | in step 3 |
 | Retention release creates no journal entries | Step 3 | in step 3 |
+| Step 3 test required by DECISIONS S7: Certified = Invoiced (both excl. VAT, both incl. escalation) once all approved certificates are invoiced | Step 3 | in step 3 |
 | Multi-currency: `boq.line.currency_id` = company currency while certificates/VOs use project contract currency; committed amounts summed without conversion | Step 3 | in step 3 |
 | Record rules file not loaded; references non-existent model `subcontract.payment.certificate` | Step 2 | in step 2 |
 | Any internal user can `write({'state': 'approved'})` on certificates (approval bypass) | Step 2 | in step 2 |

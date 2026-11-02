@@ -15,6 +15,7 @@ Re-read at the start of every step. "Client" decisions come from the project own
 | R6 | Test databases: only names prefixed `agent_`, only `--http-port 8079`. Drop own `agent_` DBs at the end of each step. | 2026-11-02 |
 | R7 | Never touch the owner's Odoo server (PID 2575728, `odoo-bin -c odoo.conf --dev xml`) or its DBs. Old `nt_*` / `ph_*` DBs are dropped later, once the owner stops that server. | 2026-11-02 |
 | R8 | Lint tools (`ruff`, `pylint-odoo`) may be installed into `odoo_19/.venv`. | 2026-11-02 |
+| R9 | During a step, new questions are written to DECISIONS.md (§7) and work continues with the agent's default. Stop and wait **only** if the question is destructive or changes money or permissions logic. | 2026-11-02 |
 
 ## 2. Scope & sequencing (from project owner)
 
@@ -26,6 +27,7 @@ Re-read at the start of every step. "Client" decisions come from the project own
 | S4 | **UX & dashboards: design now, build later.** `UX_SPEC.md` must be reviewed by the owner before any UX code. Native Odoo 19 views/widgets first; OWL only for the Overview page; minimal SCSS with Odoo/Bootstrap variables, no core style overrides; must work in Arabic RTL and at tablet width. Schedule: menu + form standard after step 3, **before** the golden-cycle demo; project dashboard, Overview and My Approvals in step 4. | 2026-11-02 |
 
 | S5 | **UX_SPEC answers** (2026-11-02): Q1 divergence threshold = 10 percentage points as a **company setting**, not hardcoded. Q2 show three labelled figures everywhere — **Certified** (approved certificates), **Invoiced** (posted invoices), **Collected** (payments) — with the same definitions on every screen (UX_SPEC §3.0). Q3 no bulk approval. Q4 cash-flow forecast excludes uncertified work; "Executed not yet certified" shown as a separate line. Q5 Overview for Mgmt/Finance/PMs approved. Q6 online only for now, client confirmation pending (OPEN). Q7 no drag-and-drop on tenders. | 2026-11-02 |
+| S7 | **Certified vs Invoiced are always compared on the same basis: both excluding VAT, both including escalation (فروق أسعار).** A step 3 test must assert it (same project, same period → Certified = Invoiced once every approved certificate is invoiced). | 2026-11-02 |
 | S6 | **Step 2 requirement:** record rules restrict project managers to **their own projects** (and the documents of those projects). | 2026-11-02 |
 
 ## 3. Data & migration (from project owner)
@@ -70,5 +72,10 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | U4 | Tender kanban: drag-and-drop disabled (confirmed by owner, S5 Q7) | State changes must run the button logic and chatter |
 | U5 | Project card uses core `o_kanban_dashboard`, `progress_bar` and `dashboard_graph` widgets (all in Community `web`) | Native first, no custom JS for the card |
 | U6 | ~~Divergence threshold provisional~~ → superseded by S5 Q1 (10 points, company setting) | — |
-| U7 | Invoiced is compared like-for-like with Certified because step 3 books revenue at gross work value (retention → Retention Receivable, advance recovery → Customer Advances); Collected is shown as % of the invoices' receivable total, not of contract | Different bases would make the three figures look inconsistent |
-| U8 | One shared Python helper computes Executed / Certified / Invoiced / Collected for card, Overview and pivots (+0.5 d on UX-6) | Guarantees "same definitions on every screen" (S5 Q2) |
+| U7 | **Approved by owner 2026-11-02 (+ rule S7).** Invoiced is compared like-for-like with Certified because step 3 books revenue at gross work value (retention → Retention Receivable, advance recovery → Customer Advances); Collected is shown as % of the invoices' receivable total, not of contract | Different bases would make the three figures look inconsistent |
+| U8 | **Approved by owner 2026-11-02.** One shared Python helper computes Executed / Certified / Invoiced / Collected for card, Overview and pivots (+0.5 d on UX-6) | Guarantees "same definitions on every screen" (S5 Q2) |
+
+## 7. Questions raised during steps (R9) — agent default applied unless marked STOP
+
+| # | Step | Question | Default applied | Status |
+|---|---|---|---|---|

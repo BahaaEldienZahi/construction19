@@ -168,6 +168,8 @@ so the same project and date always give the same numbers. All amounts exclude V
 | **Collected / المحصل** | Σ payments reconciled to those invoices (cash received, incl. VAT, after retention / advance / WHT deductions). Shown as an amount and as % of the invoices' receivable total, not as % of contract, because the bases differ |
 | **Executed not yet certified / منفذ غير معتمد** | max(0, Executed − Certified). Shown as its own line; never added to Certified, Invoiced or the cash-flow forecast (Q4) |
 
+**Rule (owner, DECISIONS S7):** Certified and Invoiced are always on the same basis — **both excluding VAT, both including escalation**. A step 3 test asserts that, once every approved certificate is invoiced, Certified = Invoiced for the same project and period.
+
 Default view of *Projects › Construction Projects* (domain `is_construction_project = True`).
 It's a `kanban` view on `project.project` with `class="o_kanban_dashboard"` (the same class the
 Invoicing journal dashboard uses), so it gets core styling without custom CSS.
