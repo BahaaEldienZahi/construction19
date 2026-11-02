@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_construction" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.nt_construction</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="60"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Construction" string="Construction" name="nt_construction"
+                     groups="account.group_account_manager,project.group_project_manager">
+                    <block title="Client Certificates" name="construction_client">
+                        <setting string="Accounts" help="Retention deducted from each certificate and advances received from the client">
+                            <div class="content-group">
+                                <div class="row mt8">
+                                    <label for="construction_revenue_account_id" class="col-lg-5 o_light_label"/>
+                                    <field name="construction_revenue_account_id" options="{'no_create': True}"/>
+                                </div>
+                                <div class="row">
+                                    <label for="construction_retention_account_id" class="col-lg-5 o_light_label"/>
+                                    <field name="construction_retention_account_id" options="{'no_create': True}"/>
+                                </div>
+                                <div class="row">
+                                    <label for="construction_advance_account_id" class="col-lg-5 o_light_label"/>
+                                    <field name="construction_advance_account_id" options="{'no_create': True}"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting string="Taxes" help="VAT and withholding tax on certificate invoices, VAT on advance invoices">
+                            <div class="content-group">
+                                <div class="row mt8">
+                                    <label for="construction_sale_tax_id" class="col-lg-5 o_light_label"/>
+                                    <field name="construction_sale_tax_id" options="{'no_create': True}"/>
+                                </div>
+                                <div class="row">
+                                    <label for="construction_withholding_tax_id" class="col-lg-5 o_light_label"/>
+                                    <field name="construction_withholding_tax_id" options="{'no_create': True}"/>
+                                </div>
+                                <div class="row">
+                                    <label for="construction_advance_tax_id" class="col-lg-5 o_light_label"/>
+                                    <field name="construction_advance_tax_id" options="{'no_create': True}"/>
+                                </div>
+                                <div class="row">
+                                    <label for="construction_escalation_vat" class="col-lg-5 o_light_label"/>
+                                    <field name="construction_escalation_vat"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Subcontractor Certificates" name="construction_subcontract">
+                        <setting string="Accounts and Taxes" help="Vendor bills created from approved subcontractor certificates">
+                            <div class="content-group">
+                                <div class="row mt8">
+                                    <label for="construction_subcontract_cost_account_id" class="col-lg-5 o_light_label"/>
+                                    <field name="construction_subcontract_cost_account_id" options="{'no_create': True}"/>
+                                </div>
+                                <div class="row">
+                                    <label for="construction_retention_payable_account_id" class="col-lg-5 o_light_label"/>
+                                    <field name="construction_retention_payable_account_id" options="{'no_create': True}"/>
+                                </div>
+                                <div class="row">
+                                    <label for="construction_purchase_tax_id" class="col-lg-5 o_light_label"/>
+                                    <field name="construction_purchase_tax_id" options="{'no_create': True}"/>
+                                </div>
+                                <div class="row">
+                                    <label for="construction_purchase_withholding_tax_id" class="col-lg-5 o_light_label"/>
+                                    <field name="construction_purchase_withholding_tax_id" options="{'no_create': True}"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Dashboards" name="construction_dashboards">
+                        <setting string="Executed vs Certified Alert" help="Difference in percentage points that turns a project card orange or red">
+                            <field name="construction_divergence_threshold"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_construction_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'nt_construction', 'bin_size': False}</field>
+    </record>
+</odoo>

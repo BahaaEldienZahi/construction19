@@ -59,9 +59,44 @@
                     </group>
                     <group>
                         <group string="Billing Terms">
+                            <field name="construction_currency_id" groups="base.group_multi_currency"/>
                             <field name="retention_percentage"/>
+                            <field name="retention_on_escalation"/>
                             <field name="advance_payment_percentage"/>
+                            <field name="advance_recovery_percentage"/>
+                            <field name="construction_withholding_tax_id" options="{'no_create': True}"/>
                         </group>
+                        <group string="Advance &amp; Retention">
+                            <field name="advance_invoiced_amount"/>
+                            <field name="advance_recovered_amount"/>
+                            <field name="advance_remaining_amount"/>
+                            <field name="retention_held_amount"/>
+                            <button name="action_create_advance_invoice" type="object" string="Create Advance Invoice"
+                                    class="btn-secondary" colspan="2"
+                                    invisible="not advance_payment_percentage"
+                                    groups="nt_construction.group_construction_accountant,project.group_project_manager"/>
+                        </group>
+                    </group>
+                    <group string="Price Escalation">
+                        <group>
+                            <field name="escalation_enabled"/>
+                            <field name="escalation_base_date" invisible="not escalation_enabled"/>
+                        </group>
+                        <group invisible="not escalation_enabled">
+                            <field name="escalation_fixed_portion"/>
+                            <field name="escalation_threshold"/>
+                            <field name="escalation_deduct_threshold"/>
+                        </group>
+                    </group>
+                    <field name="escalation_component_ids" invisible="not escalation_enabled">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="coefficient"/>
+                            <field name="base_index"/>
+                        </list>
+                    </field>
+                    <group>
                         <group string="Progress">
                             <field name="boq_percentage_complete" widget="progressbar"/>
                             <field name="task_progress_percentage" widget="progressbar"/>

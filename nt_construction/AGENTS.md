@@ -50,10 +50,12 @@ Tender (as-bid)
 - **Leaf lines only**: qty, unit_price; group lines compute from children
 - **No direct editing in UI**: Changes via `boq.variation.order` (approval-gated)
 
-### 4. **BOQ Progress (`boq.line.progress`)**
-- **Purpose**: Track execution (quantities, dates, notes) per period
-- **Created by**: Payment Certificates on final approval (`_on_final_approval()`)
-- **Feeds**: Cumulative execution metrics in `boq.line` via aggregation
+### 4. **BOQ Progress (`boq.line.progress`)** — executed vs reported vs certified (DECISIONS A8)
+- Lines come from daily reports (`daily_report_id`) and work measurements (`work_measurement_id`).
+- **Executed** (`quantity_executed_cumulative`) = progress of **confirmed measurements only**.
+- **Reported** (`quantity_reported_cumulative`) = progress of confirmed daily reports (informational).
+- **Certified** (`quantity_certified_cumulative`) = current qty of **approved client certificate lines**.
+- Certificates never create progress lines (that was the BASELINE double counting).
 
 ### 5. **Variation Order (`boq.variation.order`)**
 - **Inherits**: `construction.approval.mixin` + mail.thread/activity.mixin
@@ -62,15 +64,18 @@ Tender (as-bid)
 - **Final approval hook**: `_on_final_approval()` → applies all line changes, updates `project.contract_value`
 - **Applied flag**: Once approved, marked `applied=True` (idempotent)
 
-### 6. **Payment Certificate (`boq.payment.certificate`)**
-- **Inherits**: `construction.approval.mixin` + mail.thread/activity.mixin
-- **Lines**: Selected BOQ lines + qty/amount this period
-- **Auto-computed**:
-  - `gross_amount` = sum of line amounts
-  - `retention_amount` = gross × project.retention_percentage / 100
-  - `net_payable` = gross - retention - advance_recovery
-- **Final approval hook**: Creates `boq.line.progress` records (feeds cumulative execution)
-- **Invoice creation**: `action_create_invoice()` → Creates `account.move` linked to project's customer
+### 6. **Payment Certificate (`boq.payment.certificate`)** — step 3
+- QS enters **total quantity to date** per item (`quantity_total`); `quantity_previous` (approved
+  certificates) and `unit_price` are snapshots refreshed in draft and frozen at submission;
+  `quantity_this_period` = total − previous. One certificate per project in approval at a time.
+- Header: work previous / current / total, escalation (project formula, `boq.payment.certificate.escalation`),
+  `gross_amount` = work + escalation, retention (P5: also on escalation, project option), advance recovery
+  (proposed, editable in draft), VAT / withholding preview, `net_payable`.
+- `_get_invoice_line_vals()` is the single source of the invoice lines (S12-S14): work and escalation
+  (VAT + withholding, revenue account), retention (negative, Retention Receivable), advance recovery
+  (negative, Customer Advances, advance VAT). Accounts and taxes come from Construction Settings (`res.company`).
+- Shared figures: `project._get_construction_financials()` → executed / certified / invoiced / collected (S7).
+- Subcontractor side: `subcontract.certificate` → vendor bill (Cr Retention Payable).
 
 ### 7. **Purchase Order (`purchase.order` inherited)**
 - **Extended fields**: `project_id`, `boq_line_id` on lines

@@ -1,6 +1,6 @@
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -16,7 +16,9 @@ class ProjectHandover(models.Model):
     _workflow_guarded_fields = (
         'state',
         'retention_release_stage1_amount', 'retention_release_stage1_done', 'retention_release_stage1_date',
+        'retention_release_stage1_move_id',
         'retention_release_stage2_amount', 'retention_release_stage2_done', 'retention_release_stage2_date',
+        'retention_release_stage2_move_id',
     )
     _order = 'date desc, id desc'
 
@@ -77,6 +79,7 @@ class ProjectHandover(models.Model):
     )
     retention_release_stage1_done = fields.Boolean(default=False, copy=False, tracking=True)
     retention_release_stage1_date = fields.Date(copy=False)
+    retention_release_stage1_move_id = fields.Many2one('account.move', readonly=True, copy=False, check_company=True)
 
     retention_release_stage2_percentage = fields.Float(
         string='Release % at Final Handover', default=50.0,
@@ -87,6 +90,7 @@ class ProjectHandover(models.Model):
     )
     retention_release_stage2_done = fields.Boolean(default=False, copy=False, tracking=True)
     retention_release_stage2_date = fields.Date(copy=False)
+    retention_release_stage2_move_id = fields.Many2one('account.move', readonly=True, copy=False, check_company=True)
 
     notes = fields.Text()
 
@@ -163,17 +167,7 @@ class ProjectHandover(models.Model):
                 raise UserError(self.env._('Stage 1 retention release requires the handover to be at provisional stage.'))
             if rec.retention_release_stage1_done:
                 raise UserError(self.env._('Stage 1 retention has already been released.'))
-            rec._workflow_write({
-                'retention_release_stage1_amount': rec.retention_held_total * (
-                        rec.retention_release_stage1_percentage / 100.0),
-                'retention_release_stage1_done': True,
-                'retention_release_stage1_date': fields.Date.context_today(rec),
-            })
-            rec.message_post(body=self.env._(
-                'Stage 1 retention release recorded: %(amount).2f %(currency)s. Please coordinate the actual '
-                'payment/credit note with Finance.',
-                amount=rec.retention_release_stage1_amount, currency=rec.currency_id.symbol or '',
-            ))
+            rec._release_retention(1, rec.retention_release_stage1_percentage)
 
     def action_final_handover(self):
         self._check_construction_role('nt_construction.group_construction_project_manager')
@@ -198,17 +192,50 @@ class ProjectHandover(models.Model):
                 raise UserError(self.env._('Stage 2 retention release requires final handover to be confirmed.'))
             if rec.retention_release_stage2_done:
                 raise UserError(self.env._('Stage 2 retention has already been released.'))
-            rec._workflow_write({
-                'retention_release_stage2_amount': rec.retention_held_total * (
-                        rec.retention_release_stage2_percentage / 100.0),
-                'retention_release_stage2_done': True,
-                'retention_release_stage2_date': fields.Date.context_today(rec),
+            rec._release_retention(2, rec.retention_release_stage2_percentage)
+
+    def _release_retention(self, stage, percentage):
+        """Customer invoice crediting Retention Receivable (no VAT: VAT was charged on the gross work,
+        DECISIONS S12). Debits the client receivable."""
+        self.ensure_one()
+        company = self.company_id
+        account = company.construction_retention_account_id
+        if not account:
+            raise UserError(self.env._('Configure the Retention Receivable account in Construction Settings.'))
+        currency = self.currency_id
+        amount = currency.round(self.retention_held_total * percentage / 100.0)
+        if stage == 2:
+            # never release more than what is left after stage 1
+            amount = min(amount, currency.round(self.retention_held_total - self.retention_release_stage1_amount))
+        move = self.env['account.move']
+        if not currency.is_zero(amount):
+            move = move.create({
+                'move_type': 'out_invoice',
+                'partner_id': self.project_id.partner_id.id,
+                'currency_id': currency.id,
+                'invoice_origin': self.name,
+                'construction_project_id': self.project_id.id,
+                'construction_move_kind': 'retention_release',
+                'invoice_line_ids': [Command.create({
+                    'name': self.env._('%(handover)s - Retention release, stage %(stage)s (%(pct).2f%%)',
+                                       handover=self.name, stage=stage, pct=percentage),
+                    'quantity': 1.0,
+                    'price_unit': amount,
+                    'account_id': account.id,
+                    'tax_ids': [Command.clear()],
+                })],
             })
-            rec.message_post(body=self.env._(
-                'Stage 2 (final) retention release recorded: %(amount).2f %(currency)s. Please coordinate the actual '
-                'payment/credit note with Finance.',
-                amount=rec.retention_release_stage2_amount, currency=rec.currency_id.symbol or '',
-            ))
+        prefix = f'retention_release_stage{stage}_'
+        self._workflow_write({
+            prefix + 'amount': amount,
+            prefix + 'done': True,
+            prefix + 'date': fields.Date.context_today(self),
+            prefix + 'move_id': move.id,
+        })
+        self.message_post(body=self.env._(
+            'Retention release stage %(stage)s: %(amount).2f %(currency)s invoiced (%(move)s).',
+            stage=stage, amount=amount, currency=currency.symbol or '', move=move.display_name or '-'))
+        return move
 
     def action_close(self):
         self._check_construction_role('nt_construction.group_construction_project_manager')

@@ -1,7 +1,7 @@
 # GAP LIST
 
 Honest list of what is **not** done, provisional decisions awaiting confirmation, and blockers.
-Estimates are working days for one developer. Updated: 2026-11-02 (after UX Phase A).
+Estimates are working days for one developer. Updated: 2026-11-02 (after step 3).
 
 ## A. Provisional decisions — pending client confirmation (OPEN)
 
@@ -20,13 +20,11 @@ Estimates are working days for one developer. Updated: 2026-11-02 (after UX Phas
 
 | Item | Planned step | Est. |
 |---|---|---|
-| Double counting: daily-report progress + certificate approval both create `boq.line.progress` (3 executed shows 6) | Step 3 (certificate rewrite, A5) | in step 3 |
-| Certificate invoice books net only to revenue; retention not recognized; no VAT; no advance account | Step 3 | in step 3 |
-| Retention release creates no journal entries | Step 3 | in step 3 |
-| Step 3 test required by DECISIONS S7: Certified = Invoiced (both excl. VAT, both incl. escalation) once all approved certificates are invoiced | Step 3 | in step 3 |
-| Multi-currency: `boq.line.currency_id` = company currency while certificates/VOs use project contract currency; committed amounts summed without conversion | Step 3 | in step 3 |
 | Read-only Client Viewer (8th role, portal) — with the certificate PDF | Golden cycle (DECISIONS Q8) | in golden cycle |
 | Per-role UI smoke: menus + standard views now load-tested for all 7 roles; remaining: click-through tour | Step 4 / UX-5 tour | 0.25 d |
+| Subcontractor retention release and subcontractor advances (payable side) | Step 4 | 1 d |
+| Budget vs committed vs actual with blocking when over budget | Step 4 | in step 4 |
+| Client certificate PDF (Arabic, bilingual) | Golden cycle | in golden cycle |
 | Work measurement has no action to generate a certificate | Step 4 / golden cycle | in step 4 |
 | VO overwrites BOQ line in place (no history of previous qty/price) | Step 4 | in step 4 |
 | Project analytic account not auto-created | Step 4 | in step 4 |

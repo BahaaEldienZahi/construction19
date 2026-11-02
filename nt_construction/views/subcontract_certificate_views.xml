@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_subcontract_certificate_form" model="ir.ui.view">
+        <field name="name">subcontract.certificate.form</field>
+        <field name="model">subcontract.certificate</field>
+        <field name="arch" type="xml">
+            <form string="Subcontractor Certificate">
+                <header>
+                    <button name="action_submit_for_approval" string="Submit for Approval" type="object" class="btn-primary"
+                            invisible="state != 'draft'"
+                            groups="nt_construction.group_construction_quantity_surveyor,nt_construction.group_construction_project_manager,project.group_project_manager"/>
+                    <button name="action_approve_l1" string="Approve (Level 1)" type="object" class="btn-primary"
+                            invisible="state != 'submitted'"
+                            groups="nt_construction.group_construction_approver_l1,project.group_project_manager"/>
+                    <button name="action_approve_l2" string="Final Approval (Level 2)" type="object" class="btn-primary"
+                            invisible="state != 'approved_l1'"
+                            groups="nt_construction.group_construction_approver_l2,project.group_project_manager"/>
+                    <button name="action_create_bill" string="Create Vendor Bill" type="object" class="btn-primary"
+                            invisible="state != 'approved' or move_id"
+                            groups="nt_construction.group_construction_accountant,project.group_project_manager"/>
+                    <button name="action_load_agreement_lines" string="Load Agreement Lines" type="object" class="btn-secondary"
+                            invisible="state != 'draft' or not agreement_id"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-secondary"
+                            invisible="state not in ('submitted', 'approved_l1')" confirm="Reject this certificate?"
+                            groups="nt_construction.group_construction_approver_l1,project.group_project_manager"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object" class="btn-secondary"
+                            invisible="state not in ('rejected', 'cancelled')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved_l1,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_bill" type="object" class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="not move_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Vendor Bill</span>
+                                <field name="move_state" readonly="1"/>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger" invisible="state != 'rejected'"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group name="who">
+                            <field name="agreement_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="partner_id"/>
+                            <field name="project_id"/>
+                        </group>
+                        <group name="when_value">
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Items" name="lines">
+                            <field name="line_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="agreement_line_id" options="{'no_create': True}"/>
+                                    <field name="quantity_agreed" optional="show"/>
+                                    <field name="unit_price" optional="show"/>
+                                    <field name="quantity_previous" string="Previous"/>
+                                    <field name="quantity_this_period" string="Current"/>
+                                    <field name="quantity_total" string="Total to Date"/>
+                                    <field name="amount_this_period" string="Current Amount" sum="Current"/>
+                                    <field name="amount_total" optional="hide" sum="Total"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Deductions &amp; Taxes" name="totals">
+                            <group>
+                                <group>
+                                    <field name="work_amount_total"/>
+                                    <field name="work_amount"/>
+                                    <field name="vat_amount"/>
+                                    <field name="withholding_amount"/>
+                                </group>
+                                <group>
+                                    <field name="retention_percentage"/>
+                                    <field name="retention_amount"/>
+                                    <field name="net_payable" class="fw-bold"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_subcontract_certificate_list" model="ir.ui.view">
+        <field name="name">subcontract.certificate.list</field>
+        <field name="model">subcontract.certificate</field>
+        <field name="arch" type="xml">
+            <list string="Subcontractor Certificates" multi_edit="0">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="project_id"/>
+                <field name="partner_id"/>
+                <field name="agreement_id" optional="show"/>
+                <field name="work_amount" sum="Current Work"/>
+                <field name="net_payable" sum="Net" optional="show"/>
+                <field name="move_state" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="state" widget="badge" decoration-success="state == 'approved'"
+                       decoration-info="state in ('submitted', 'approved_l1')" decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_subcontract_certificate_search" model="ir.ui.view">
+        <field name="name">subcontract.certificate.search</field>
+        <field name="model">subcontract.certificate</field>
+        <field name="arch" type="xml">
+            <search string="Search Subcontractor Certificates">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="partner_id"/>
+                <filter string="Waiting Approval" name="waiting" domain="[('state', 'in', ('submitted', 'approved_l1'))]"/>
+                <filter string="To Bill" name="to_bill" domain="[('state', '=', 'approved'), ('move_id', '=', False)]"/>
+                <group>
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Subcontractor" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_subcontract_certificate" model="ir.actions.act_window">
+        <field name="name">Subcontractor Certificates</field>
+        <field name="res_model">subcontract.certificate</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_subcontract_certificate_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Certify a subcontractor's work</p>
+            <p>Cumulative quantities per agreement line; the approved certificate becomes a vendor bill with retention.</p>
+        </field>
+    </record>
+</odoo>

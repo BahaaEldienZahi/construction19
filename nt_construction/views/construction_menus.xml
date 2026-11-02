@@ -77,6 +77,8 @@
     <menuitem id="menu_construction_billing" name="Billing" parent="menu_tender_root" sequence="60"/>
     <menuitem id="menu_boq_payment_certificate" name="Client Certificates" parent="menu_construction_billing"
               action="action_boq_payment_certificate" sequence="10"/>
+    <menuitem id="menu_subcontract_certificate" name="Subcontractor Certificates" parent="menu_construction_billing"
+              action="action_subcontract_certificate" sequence="20"/>
 
     <menuitem id="menu_construction_handover" name="Handover" parent="menu_tender_root" sequence="70"/>
     <menuitem id="menu_project_handover" name="Handovers" parent="menu_construction_handover"
@@ -90,4 +92,9 @@
               action="action_boq_cost_analysis" sequence="10"/>
     <menuitem id="menu_boq_billing_trend" name="Billing Trend" parent="menu_construction_reporting"
               action="action_boq_billing_trend" sequence="20"/>
+
+    <menuitem id="menu_construction_configuration" name="Configuration" parent="menu_tender_root" sequence="90"
+              groups="account.group_account_manager,project.group_project_manager"/>
+    <menuitem id="menu_construction_settings" name="Settings" parent="menu_construction_configuration"
+              action="action_construction_config_settings" sequence="10"/>
 </odoo>

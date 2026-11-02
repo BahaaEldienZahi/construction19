@@ -126,7 +126,7 @@ class TestStep1Stabilization(TransactionCase):
         vo = self._variation_order()
         cert = self.env['boq.payment.certificate'].create({
             'project_id': self.project.id,
-            'line_ids': [Command.create({'boq_line_id': self.project_item.id, 'quantity_this_period': 1.0})],
+            'line_ids': [Command.create({'boq_line_id': self.project_item.id, 'quantity_total': 1.0})],
         })
         self.assertEqual(vo.company_id, self.project.company_id)
         self.assertEqual(cert.company_id, self.project.company_id)

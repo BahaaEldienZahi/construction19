@@ -8,6 +8,13 @@
             <field name="padding">4</field>
             <field name="company_id" eval="False"/>
         </record>
+        <record id="seq_subcontract_certificate" model="ir.sequence">
+            <field name="name">Subcontractor Certificate Reference</field>
+            <field name="code">subcontract.certificate</field>
+            <field name="prefix">SCC/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
         <record id="seq_boq_payment_certificate" model="ir.sequence">
             <field name="name">Payment Certificate Reference</field>
             <field name="code">boq.payment.certificate</field>

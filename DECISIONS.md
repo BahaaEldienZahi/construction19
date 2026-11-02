@@ -119,6 +119,22 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | UX-A9 | Screenshots via headless Chrome over `--remote-debugging-pipe` with the Python stdlib; `rtlcss@4.3.0` installed with npm **in the scratchpad only** for the capture (not system, not `.venv`) | R8 only covers lint tools in `.venv` |
 | UX-A10 | ~~`docs/screenshots/ux_phase_a/`~~ → `docs/screenshots/` (S11), latest set only: 34 PNG, 2.5 MB, Arabic captured with `ar_EG` | Reviewable with the report |
 
+## 6d. Agent decisions (step 3) — open to review
+
+| # | Decision | Why |
+|---|---|---|
+| F1 | **Executed = confirmed measurements only**; daily-report quantities become "Reported" (informational) | Daily reports + measurements on the same work was a second double count; UX_SPEC 3.0 already defines Executed this way |
+| F2 | Certificate `quantity_previous` and `unit_price` are **snapshots** refreshed in draft and at submission, then frozen; a new line left at 0 starts at the previous total (current 0) | Approved certificates stay stable when later certificates or VO prices change |
+| F3 | **One client certificate per project in approval at a time** (same per subcontract agreement) | Previous quantities are frozen at submission; two in parallel would double-claim |
+| F4 | Total to date cannot decrease and cannot exceed the contracted quantity (+0.1 %) | Over-claim needs a VO first; corrections via reject → edit |
+| F5 | Advance recovery proposed = min(recovery % × current work, remaining advance), editable in draft (then kept) | Contracts differ; QS keeps control |
+| F6 | Retention release = customer invoice crediting Retention Receivable, no VAT; stage 2 capped at what stage 1 left | S12 (VAT on gross already); client needs a document to pay |
+| F7 | Escalation formula: factor = a + Σ bᵢ·Iᵢ/I0ᵢ − 1, with a + Σ bᵢ = 1 (validated), threshold (optional deduction) — all values per project, none in code | P1 configurable engine; client legal to confirm the regime |
+| F8 | VAT / withholding shown on the certificate are previews via `account.tax.compute_all`; the posted invoice is the accounting source | No duplicate tax engine |
+| F9 | Accounts and taxes are company settings (Construction › Configuration › Settings); nothing is created automatically | Chart of accounts differs per client; INSTALL guide lists them |
+| F10 | `account.move.construction_project_id / construction_move_kind` tag every generated invoice/bill | Reporting and the shared figures without parsing references |
+| F11 | Not in step 3 (→ step 4): budget vs committed vs actual with blocking, subcontractor retention release and advances, certificate PDF (golden cycle), measurement → certificate action | Scope of the golden cycle / step 4 |
+
 ## 7. Questions raised during steps (R9) — agent default applied unless marked STOP
 
 | # | Step | Question | Default applied | Status |

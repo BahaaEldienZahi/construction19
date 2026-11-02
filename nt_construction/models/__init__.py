@@ -13,3 +13,8 @@ from . import project_handover
 from . import site_daily_report
 from . import subcontract_agreement
 from . import work_measurement
+from . import project_finance
+from . import account_move
+from . import res_company
+from . import res_config_settings
+from . import subcontract_certificate

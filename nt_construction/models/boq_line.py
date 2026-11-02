@@ -30,8 +30,9 @@ class BoqLine(models.Model):
         'res.company',
         default=lambda self: self.env.company,
     )
+    # contract currency: project's, else tender's, else company's (multi-currency, step 3)
     currency_id = fields.Many2one(
-        related='company_id.currency_id', string='Currency', readonly=True,
+        'res.currency', compute='_compute_currency_id', store=True,
     )
 
     # ---------------------------------------------------------------
@@ -82,6 +83,24 @@ class BoqLine(models.Model):
     percentage_complete = fields.Float(
         string='% Complete', compute='_compute_execution', store=True, recursive=True,
     )
+    # reported by site engineers in confirmed daily reports (informational, not executed)
+    quantity_reported_cumulative = fields.Float(
+        string='Reported Qty (Daily Reports)', compute='_compute_reported', store=True,
+        digits='Product Unit of Measure', recursive=True,
+    )
+    # ---------------------------------------------------------------
+    # Certified (billed to the client): approved client certificates (DECISIONS A8)
+    # ---------------------------------------------------------------
+    certificate_line_ids = fields.One2many('boq.payment.certificate.line', 'boq_line_id')
+    quantity_certified_cumulative = fields.Float(
+        string='Certified Qty (Cumulative)', compute='_compute_certified', store=True,
+        digits='Product Unit of Measure', recursive=True,
+    )
+    amount_certified_cumulative = fields.Monetary(
+        string='Certified Value (Cumulative)', currency_field='currency_id',
+        compute='_compute_certified', store=True, recursive=True,
+        groups='nt_construction.group_construction_see_amounts,project.group_project_manager',
+    )
 
     # ---------------------------------------------------------------
     # Optional linkage to execution tracking
@@ -112,13 +131,28 @@ class BoqLine(models.Model):
         'subcontract_line_ids.subtotal', 'subcontract_line_ids.agreement_id.state',
     )
     def _compute_committed_amount(self):
-        # NOTE: amounts are summed without currency conversion; multi-currency
-        # conversion is part of step 3 (accounting core).
+        # PO lines are converted into the BOQ (contract) currency at the order date
         for line in self:
             confirmed_po = line.po_line_ids.filtered(lambda pol: pol.order_id.state in ('purchase', 'done'))
             approved_sub = line.subcontract_line_ids.filtered(lambda sl: sl.agreement_id.state == 'approved')
-            line.committed_amount = sum(confirmed_po.mapped('price_subtotal')) + sum(
-                approved_sub.mapped('subtotal'))
+            target = line.currency_id or line.company_id.currency_id
+            po_total = sum(
+                pol.currency_id._convert(
+                    pol.price_subtotal, target, pol.company_id,
+                    pol.order_id.date_order or fields.Date.context_today(line))
+                for pol in confirmed_po
+            )
+            sub_total = sum(
+                sl.currency_id._convert(sl.subtotal, target, line.company_id, sl.agreement_id.date)
+                for sl in approved_sub
+            )
+            line.committed_amount = po_total + sub_total
+
+    @api.depends('project_id.construction_currency_id', 'tender_id.currency_id', 'company_id.currency_id')
+    def _compute_currency_id(self):
+        for line in self:
+            line.currency_id = (line.project_id.construction_currency_id or line.tender_id.currency_id
+                                or line.company_id.currency_id)
 
     # ---------------------------------------------------------------
     # Compute methods
@@ -143,16 +177,20 @@ class BoqLine(models.Model):
                 line.total_contracted = line.quantity_contracted * line.unit_price
 
     @api.depends(
-        'progress_ids.quantity_executed', 'quantity_contracted', 'unit_price', 'total_contracted',
+        'progress_ids.quantity_executed', 'progress_ids.work_measurement_id.state',
+        'quantity_contracted', 'unit_price', 'total_contracted',
         'child_ids.quantity_executed_cumulative', 'child_ids.amount_executed_cumulative',
     )
     def _compute_execution(self):
+        # executed = confirmed measurements only (DECISIONS A8, UX_SPEC 3.0)
         for line in self.sorted(key=lambda rec: rec.level, reverse=True):
             if line.child_ids:
                 qty_exec = sum(line.child_ids.mapped('quantity_executed_cumulative'))
                 amount_exec = sum(line.child_ids.mapped('amount_executed_cumulative'))
             else:
-                qty_exec = sum(line.progress_ids.mapped('quantity_executed'))
+                measured = line.progress_ids.filtered(
+                    lambda p: p.work_measurement_id.state in ('confirmed', 'linked'))
+                qty_exec = sum(measured.mapped('quantity_executed'))
                 amount_exec = qty_exec * line.unit_price
             line.quantity_executed_cumulative = qty_exec
             line.amount_executed_cumulative = amount_exec
@@ -162,6 +200,29 @@ class BoqLine(models.Model):
                 line.percentage_complete = round((qty_exec / line.quantity_contracted) * 100, 2)
             else:
                 line.percentage_complete = 0.0
+
+    @api.depends('progress_ids.quantity_executed', 'progress_ids.daily_report_id.state',
+                 'child_ids.quantity_reported_cumulative')
+    def _compute_reported(self):
+        for line in self.sorted(key=lambda rec: rec.level, reverse=True):
+            if line.child_ids:
+                line.quantity_reported_cumulative = sum(line.child_ids.mapped('quantity_reported_cumulative'))
+            else:
+                line.quantity_reported_cumulative = sum(line.progress_ids.filtered(
+                    lambda p: p.daily_report_id.state == 'confirmed').mapped('quantity_executed'))
+
+    @api.depends('certificate_line_ids.quantity_this_period', 'certificate_line_ids.amount_this_period',
+                 'certificate_line_ids.certificate_id.state',
+                 'child_ids.quantity_certified_cumulative', 'child_ids.amount_certified_cumulative')
+    def _compute_certified(self):
+        for line in self.sorted(key=lambda rec: rec.level, reverse=True):
+            if line.child_ids:
+                line.quantity_certified_cumulative = sum(line.child_ids.mapped('quantity_certified_cumulative'))
+                line.amount_certified_cumulative = sum(line.child_ids.mapped('amount_certified_cumulative'))
+            else:
+                approved = line.certificate_line_ids.filtered(lambda cl: cl.certificate_id.state == 'approved')
+                line.quantity_certified_cumulative = sum(approved.mapped('quantity_this_period'))
+                line.amount_certified_cumulative = sum(approved.mapped('amount_this_period'))
 
     # ---------------------------------------------------------------
     # Constraints

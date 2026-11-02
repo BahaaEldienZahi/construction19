@@ -38,7 +38,7 @@ class TestStep2WorkflowGuard(TransactionCase):
         env = self.env(user=user or self.approver)
         return env['boq.payment.certificate'].create({
             'project_id': self.project.id,
-            'line_ids': [Command.create({'boq_line_id': self.item.id, 'quantity_this_period': 1.0})],
+            'line_ids': [Command.create({'boq_line_id': self.item.id, 'quantity_total': 1.0})],
         })
 
     def _approved_certificate(self):
@@ -110,10 +110,10 @@ class TestStep2WorkflowGuard(TransactionCase):
         with self.assertRaises(UserError):
             cert.write({'date': fields.Date.add(cert.date, days=1)})
         with self.assertRaises(UserError):
-            line.write({'quantity_this_period': 5.0})
+            line.write({'quantity_total': 5.0})
         with self.assertRaises(UserError):
             self.env['boq.payment.certificate.line'].create({
-                'certificate_id': cert.id, 'boq_line_id': self.item.id, 'quantity_this_period': 1.0})
+                'certificate_id': cert.id, 'boq_line_id': self.item.id, 'quantity_total': 1.0})
         with self.assertRaises(UserError):
             line.unlink()
         with self.assertRaises(UserError):
@@ -124,10 +124,10 @@ class TestStep2WorkflowGuard(TransactionCase):
         cert = self._certificate()
         cert.action_submit_for_approval()
         with self.assertRaises(UserError):
-            cert.line_ids.write({'quantity_this_period': 3.0})
+            cert.line_ids.write({'quantity_total': 3.0})
         cert.action_reject()
         cert.action_reset_draft()
-        cert.line_ids.write({'quantity_this_period': 3.0})
+        cert.line_ids.write({'quantity_total': 3.0})
         self.assertEqual(cert.line_ids.quantity_this_period, 3.0)
 
     def test_approved_document_cannot_be_reset(self):

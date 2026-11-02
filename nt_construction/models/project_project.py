@@ -2,8 +2,9 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
+# finance part (billing terms, escalation, advance, shared figures) lives in project_finance.py
 class ProjectProject(models.Model):
-    _inherit = 'project.project'
+    _inherit = 'project.project'  # pylint: disable=consider-merging-classes-inherited
 
     # ---------------------------------------------------------------
     # Tender linkage
@@ -271,14 +272,15 @@ class ProjectProject(models.Model):
             project.handover_count = self.env['project.handover'].search_count(
                 [('project_id', '=', project.id)])
 
-    @api.depends('boq_line_ids')
+    @api.depends('certificate_ids.state', 'certificate_ids.retention_amount',
+                 'handover_ids.retention_release_stage1_amount', 'handover_ids.retention_release_stage2_amount')
     def _compute_retention_held_amount(self):
-        for project in self:
-            certs = self.env['boq.payment.certificate'].search([
-                ('project_id', '=', project.id),
-                ('state', '=', 'approved'),
-            ])
-            project.retention_held_amount = sum(certs.mapped('retention_amount'))
+        # retained on approved certificates minus what handovers have released
+        for project in self.sudo():
+            retained = sum(project.certificate_ids.filtered(lambda c: c.state == 'approved').mapped('retention_amount'))
+            released = sum(project.handover_ids.mapped('retention_release_stage1_amount')) + sum(
+                project.handover_ids.mapped('retention_release_stage2_amount'))
+            project.retention_held_amount = retained - released
 
     def action_view_handovers(self):
         self.ensure_one()

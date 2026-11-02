@@ -30,6 +30,14 @@ class TestStep2Roles(TransactionCase):
         cls.qs_l1 = user('nt_qs_l1', 'quantity_surveyor', 'approver_l1')
 
         cls.client = cls.env['res.partner'].create({'name': 'Roles Client'})
+        # accounting setup needed by invoicing / retention release (step 3 settings)
+        Account = cls.env['account.account']
+        cls.env.company.write({
+            'construction_retention_account_id': Account.create(
+                {'code': 'NTR1250', 'name': 'Retention Receivable', 'account_type': 'asset_current'}).id,
+            'construction_advance_account_id': Account.create(
+                {'code': 'NTR2150', 'name': 'Customer Advances', 'account_type': 'liability_current'}).id,
+        })
         # tender -> project A as the tender engineer (conversion runs sudo inside)
         te_env = cls.env(user=cls.te)
         cls.tender = te_env['tender.tender'].create({
@@ -57,14 +65,14 @@ class TestStep2Roles(TransactionCase):
         })
         cls.cert_b = cls.env['boq.payment.certificate'].create({
             'project_id': cls.project_b.id,
-            'line_ids': [Command.create({'boq_line_id': cls.item_b.id, 'quantity_this_period': 1.0})],
+            'line_ids': [Command.create({'boq_line_id': cls.item_b.id, 'quantity_total': 1.0})],
         })
         cls.report_b = cls.env['site.daily.report'].create({'project_id': cls.project_b.id})
 
     def _cert_a(self, user=None):
         return self.env(user=user or self.qs)['boq.payment.certificate'].create({
             'project_id': self.project_a.id,
-            'line_ids': [Command.create({'boq_line_id': self.item_a.id, 'quantity_this_period': 1.0})],
+            'line_ids': [Command.create({'boq_line_id': self.item_a.id, 'quantity_total': 1.0})],
         })
 
     def _approved_cert_a(self):

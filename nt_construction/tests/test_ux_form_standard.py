@@ -66,4 +66,5 @@ class TestUxFormStandard(TransactionCase):
         self.assertEqual(root.name, 'Construction')
         self.assertEqual(
             root.child_id.sorted('sequence').mapped('name'),
-            ['Tenders', 'Projects', 'Execution', 'Contracts', 'Billing', 'Handover', 'Reporting'])
+            ['Tenders', 'Projects', 'Execution', 'Contracts', 'Billing', 'Handover', 'Reporting',
+             'Configuration'])

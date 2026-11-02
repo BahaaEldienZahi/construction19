@@ -1,68 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Step 3 (accounting core): previous / current / total, escalation, deductions, taxes.
+         The full form-standard pass (UX_SPEC 2) is applied after step 3. -->
     <record id="view_boq_payment_certificate_form" model="ir.ui.view">
         <field name="name">boq.payment.certificate.form</field>
         <field name="model">boq.payment.certificate</field>
         <field name="arch" type="xml">
             <form string="Payment Certificate">
                 <header>
-                    <button name="action_submit_for_approval" groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager" string="Submit for Approval" type="object"
-                            class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="action_approve_l1" groups="nt_construction.group_construction_approver_l1,project.group_project_manager" string="Approve (L1)" type="object"
-                            class="btn-primary" invisible="state != 'submitted'"
-                    />
-                    <button name="action_approve_l2" groups="nt_construction.group_construction_approver_l2,project.group_project_manager" string="Final Approve (L2)" type="object"
-                            class="btn-success" invisible="state != 'approved_l1'"
-                    />
-                    <button name="action_reject" groups="nt_construction.group_construction_approver_l1,project.group_project_manager" string="Reject" type="object"
-                            invisible="state not in ('submitted', 'approved_l1')"/>
-                    <button name="action_reset_draft" groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager" string="Reset to Draft" type="object"
-                            invisible="state != 'rejected'"/>
-                    <button name="action_create_invoice" groups="nt_construction.group_construction_accountant,project.group_project_manager" string="Create Invoice" type="object"
-                            class="btn-success" invisible="state != 'approved' or move_id"/>
-                    <field name="state" widget="statusbar"
-                           statusbar_visible="draft,submitted,approved_l1,approved"/>
+                    <button name="action_submit_for_approval" string="Submit for Approval" type="object" class="btn-primary"
+                            invisible="state != 'draft'" groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager"/>
+                    <button name="action_approve_l1" string="Approve (Level 1)" type="object" class="btn-primary"
+                            invisible="state != 'submitted'"
+                            groups="nt_construction.group_construction_approver_l1,project.group_project_manager"/>
+                    <button name="action_approve_l2" string="Final Approval (Level 2)" type="object" class="btn-primary"
+                            invisible="state != 'approved_l1'"
+                            groups="nt_construction.group_construction_approver_l2,project.group_project_manager"/>
+                    <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-primary"
+                            invisible="state != 'approved' or move_id"
+                            groups="nt_construction.group_construction_accountant,project.group_project_manager"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-secondary"
+                            invisible="state not in ('submitted', 'approved_l1')" confirm="Reject this certificate?"
+                            groups="nt_construction.group_construction_approver_l1,project.group_project_manager"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object" class="btn-secondary"
+                            invisible="state not in ('rejected', 'cancelled')" groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved_l1,approved"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_invoice" type="object"
-                                class="oe_stat_button" icon="fa-pencil-square-o"
+                        <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
                                 invisible="not move_id">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Invoice</span>
+                                <field name="move_state" readonly="1"/>
                             </div>
                         </button>
                     </div>
+                    <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger" invisible="state != 'rejected'"/>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
                     </div>
                     <group>
-                        <group>
-                            <field name="project_id" readonly="state != 'draft'"/>
-                            <field name="date"/>
-                            <field name="period_from"/>
-                            <field name="period_to"/>
+                        <group name="who">
+                            <field name="project_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="partner_id"/>
                         </group>
-                        <group>
-                            <field name="gross_amount"/>
-                            <field name="retention_percentage" readonly="1"/>
-                            <field name="retention_amount"/>
-                            <field name="advance_recovery_amount"/>
-                            <field name="net_payable"/>
+                        <group name="when_value">
+                            <field name="date" readonly="state != 'draft'"/>
+                            <label for="period_from" string="Period"/>
+                            <div class="o_row">
+                                <field name="period_from" readonly="state != 'draft'" class="oe_inline"/>
+                                <i class="fa fa-long-arrow-right mx-2 o_nt_period_arrow" title="to"/>
+                                <field name="period_to" readonly="state != 'draft'" class="oe_inline"/>
+                            </div>
+                            <field name="currency_id" invisible="1"/>
                         </group>
                     </group>
-                    <field name="line_ids" readonly="state != 'draft'">
-                        <list editable="bottom">
-                            <field name="boq_line_id"/>
-                            <field name="unit_price" readonly="1"/>
-                            <field name="quantity_contracted" readonly="1"/>
-                            <field name="cumulative_qty_before" readonly="1"/>
-                            <field name="quantity_this_period"/>
-                            <field name="cumulative_qty_after" readonly="1"/>
-                            <field name="amount_this_period" sum="Total"/>
-                        </list>
-                    </field>
+                    <notebook>
+                        <page string="Items" name="lines">
+                            <field name="line_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="boq_line_id" options="{'no_create': True}"/>
+                                    <field name="uom_id" optional="hide"/>
+                                    <field name="quantity_contracted" optional="hide"/>
+                                    <field name="unit_price" optional="show"/>
+                                    <field name="quantity_previous" string="Previous"/>
+                                    <field name="quantity_this_period" string="Current"/>
+                                    <field name="quantity_total" string="Total to Date"/>
+                                    <field name="amount_previous" optional="hide" sum="Previous"/>
+                                    <field name="amount_this_period" string="Current Amount" sum="Current"/>
+                                    <field name="amount_total" optional="show" sum="Total"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Escalation" name="escalation" invisible="not escalation_line_ids">
+                            <field name="escalation_line_ids" readonly="state != 'draft'">
+                                <list editable="bottom" create="0" delete="0">
+                                    <field name="name"/>
+                                    <field name="coefficient"/>
+                                    <field name="base_index"/>
+                                    <field name="current_index"/>
+                                </list>
+                            </field>
+                            <group>
+                                <field name="escalation_factor"/>
+                                <field name="escalation_amount"/>
+                            </group>
+                        </page>
+                        <page string="Deductions &amp; Taxes" name="totals">
+                            <group>
+                                <group string="Work">
+                                    <field name="work_amount_previous"/>
+                                    <field name="work_amount"/>
+                                    <field name="work_amount_total"/>
+                                    <field name="escalation_amount"/>
+                                    <field name="gross_amount" class="fw-bold"/>
+                                </group>
+                                <group string="This Certificate">
+                                    <field name="vat_amount"/>
+                                    <field name="withholding_amount"/>
+                                    <field name="retention_percentage"/>
+                                    <field name="retention_amount"/>
+                                    <field name="advance_recovery_amount" readonly="state != 'draft'"/>
+                                    <field name="net_payable" class="fw-bold"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Approval" name="approval" invisible="state == 'draft'">
+                            <group>
+                                <group>
+                                    <field name="approver_l1_id" widget="many2one_avatar_user"/>
+                                    <field name="approval_l1_date"/>
+                                </group>
+                                <group>
+                                    <field name="approver_l2_id" widget="many2one_avatar_user"/>
+                                    <field name="approval_l2_date"/>
+                                </group>
+                            </group>
+                            <field name="rejection_reason" invisible="state != 'rejected'" placeholder="Reason for rejection..."/>
+                        </page>
+                    </notebook>
                 </sheet>
                 <chatter/>
             </form>
@@ -78,8 +137,11 @@
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="date"/>
-                <field name="gross_amount" sum="Gross"/>
+                <field name="work_amount" sum="Current Work"/>
+                <field name="gross_amount" sum="Gross" optional="hide"/>
                 <field name="net_payable" sum="Net"/>
+                <field name="move_state" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'approved'"
                        decoration-danger="state == 'rejected'"

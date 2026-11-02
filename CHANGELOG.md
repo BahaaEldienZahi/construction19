@@ -5,6 +5,39 @@ Each entry lists what changed and the evidence (commands + results). Older statu
 "complete / 100% pass" for a module that had no tests and several crashing paths
 (see `BASELINE.md`).
 
+## nt_construction 19.0.2.0.0 — Step 3: accounting core (2026-11-02)
+
+Owner decisions S7, S12-S15; agent decisions F1-F11 (DECISIONS.md).
+
+### Fixed (BASELINE §3)
+- **Double counting**: certificates no longer create execution progress. Executed = confirmed measurements,
+  Reported = confirmed daily reports, Certified = approved certificate lines (A8, F1).
+- **Certificate invoice** booked the net amount to revenue only. Now: work and escalation to revenue with VAT and
+  withholding, retention to Retention Receivable, advance recovery to Customer Advances (with its VAT) (S12-S14).
+- **Retention release** created no entry. Now each stage is a customer invoice crediting Retention Receivable (F6).
+- **Multi-currency**: BOQ currency follows the contract currency; committed PO amounts are converted at the order
+  date; invoices are issued in the contract currency.
+
+### Added
+- Construction Settings (company): revenue, retention receivable, customer advances, subcontract cost, retention
+  payable accounts; VAT, withholding, advance VAT, purchase taxes; VAT on escalation (P2); alert threshold (UX Q1).
+- Client certificate: cumulative entry (S15), previous / current / total quantities and amounts, price snapshots,
+  escalation indices, deductions and tax preview; one certificate in approval per project (F3).
+- Price escalation per project: fixed portion, index components (weight, base index), threshold (P1, F7).
+- Advance invoice from the project; advance invoiced / recovered / remaining.
+- Subcontractor certificates (`subcontract.certificate`) → vendor bills with retention payable.
+- `project._get_construction_financials()`: executed / certified / invoiced / collected (UX_SPEC 3.0).
+- `tests/test_step3_accounting.py` (12 tests, debit/credit per account).
+
+### Evidence
+```
+ruff / pylint-odoo                                    → All checks passed! / 10.00/10
+-i nt_construction, new DB agent_s3_fresh             → 0 failed, 0 error(s) of 51 tests; 0 WARNING/ERROR lines
+-i nt_construction --with-demo, agent_s3_demo         → 0 failed, 0 error(s) of 51 tests; 0 WARNING/ERROR lines
+baseline 858b91e → -u, agent_s3_upgrade (19.0.2.0.0)  → 0 failed, 0 error(s) of 51 tests; 0 WARNING/ERROR lines
+mutation: escalation line removed from the invoice    → 1 failed (test_certified_equals_invoiced_excl_vat_incl_escalation)
+```
+
 ## nt_construction 19.0.1.3.1 — Arabic digits, deployment notes (2026-11-02)
 - Language *Arabic (Egypt)* `ar_EG` (inactive data record): Arabic text, RTL, Western digits (DECISIONS S9, provisional).
 - `tests/test_arabic_digits.py` (2 tests): server-side dates, datetimes and amounts in `ar_EG` use 0-9.
