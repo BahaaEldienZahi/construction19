@@ -6,13 +6,16 @@ class WorkMeasurement(models.Model):
     """Work Measurement groups daily reports into billing periods."""
     _name = 'work.measurement'
     _description = 'Work Measurement (BOQ Execution Tracking)'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _check_company_auto = True
+    _inherit = ['construction.workflow.guard', 'mail.thread', 'mail.activity.mixin']
+    _workflow_guarded_fields = ('state', 'payment_certificate_id')
     _order = 'date desc, id desc'
 
     name = fields.Char(default=lambda self: self.env._('New'), readonly=True, copy=False)
     project_id = fields.Many2one(
         'project.project', required=True,
         domain=[('is_construction_project', '=', True)], tracking=True,
+        check_company=True,
     )
     company_id = fields.Many2one(related='project_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one(related='project_id.construction_currency_id', readonly=True)
@@ -33,6 +36,7 @@ class WorkMeasurement(models.Model):
     payment_certificate_id = fields.Many2one(
         'boq.payment.certificate',
         readonly=True, copy=False,
+        check_company=True,
     )
     progress_ids = fields.One2many(
         'boq.line.progress', 'work_measurement_id', string='Progress Entries',
@@ -67,7 +71,7 @@ class WorkMeasurement(models.Model):
         for wm in self:
             if wm.state != 'draft':
                 raise UserError(self.env._('Only draft measurements can be confirmed.'))
-        self.write({'state': 'confirmed'})
+        self._workflow_write({'state': 'confirmed'})
 
     def action_reset_draft(self):
-        self.write({'state': 'draft'})
+        self._workflow_write({'state': 'draft'})

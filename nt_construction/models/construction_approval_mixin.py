@@ -7,7 +7,12 @@ class ConstructionApprovalMixin(models.AbstractModel):
     Concrete models must also inherit ['mail.thread', 'mail.activity.mixin']
     and may override `_on_final_approval` to trigger side-effects."""
     _name = 'construction.approval.mixin'
+    _inherit = ['construction.workflow.guard', 'construction.locked.after.submit']
     _description = 'Two-level Approval Workflow Mixin'
+
+    _workflow_guarded_fields = (
+        'state', 'approver_l1_id', 'approval_l1_date', 'approver_l2_id', 'approval_l2_date',
+    )
 
     # Subclasses may override these xmlids if they need different approver groups
     _approval_group_l1_xmlid = 'nt_construction.group_construction_approver_l1'
@@ -32,7 +37,7 @@ class ConstructionApprovalMixin(models.AbstractModel):
         for rec in self:
             if rec.state != 'draft':
                 raise UserError(self.env._('Only draft records can be submitted for approval.'))
-        self.write({'state': 'submitted'})
+        self._workflow_write({'state': 'submitted'})
 
     def action_approve_l1(self):
         if not self.env.user.has_group(self._approval_group_l1_xmlid):
@@ -40,7 +45,7 @@ class ConstructionApprovalMixin(models.AbstractModel):
         for rec in self:
             if rec.state != 'submitted':
                 raise UserError(self.env._('Record must be submitted before Level 1 approval.'))
-        self.write({
+        self._workflow_write({
             'state': 'approved_l1',
             'approver_l1_id': self.env.user.id,
             'approval_l1_date': fields.Datetime.now(),
@@ -52,21 +57,32 @@ class ConstructionApprovalMixin(models.AbstractModel):
         for rec in self:
             if rec.state != 'approved_l1':
                 raise UserError(self.env._('Record must have Level 1 approval before final approval.'))
-        self.write({
+        self._workflow_write({
             'state': 'approved',
             'approver_l2_id': self.env.user.id,
             'approval_l2_date': fields.Datetime.now(),
         })
-        self._on_final_approval()
+        # side effects (apply VO to BOQ, link invoice, ...) run with workflow rights
+        self._as_workflow()._on_final_approval()
 
     def action_reject(self):
+        if not self.env.user.has_group(self._approval_group_l1_xmlid):
+            raise UserError(self.env._('Only approvers can reject a record.'))
         for rec in self:
             if rec.state not in ('submitted', 'approved_l1'):
                 raise UserError(self.env._('Only submitted or L1-approved records can be rejected.'))
-        self.write({'state': 'rejected'})
+        self._workflow_write({'state': 'rejected'})
 
     def action_reset_draft(self):
-        self.write({
+        # same rule as the form button (visible on rejected only) + cancelled documents
+        for rec in self:
+            if rec.state not in ('rejected', 'cancelled', 'draft'):
+                raise UserError(self.env._(
+                    '%(doc)s cannot be reset to draft from its current status. '
+                    'Only rejected or cancelled documents can be reset.',
+                    doc=rec.display_name,
+                ))
+        self._workflow_write({
             'state': 'draft',
             'approver_l1_id': False,
             'approval_l1_date': False,
@@ -79,7 +95,7 @@ class ConstructionApprovalMixin(models.AbstractModel):
         for rec in self:
             if rec.state == 'approved':
                 raise UserError(self.env._('An approved record cannot be cancelled directly. Reverse its effects manually first.'))
-        self.write({'state': 'cancelled'})
+        self._workflow_write({'state': 'cancelled'})
 
     def _on_final_approval(self):
         """Hook for subclasses — called once, right after state becomes 'approved'."""

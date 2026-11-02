@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 class SubcontractAgreement(models.Model):
     _name = 'subcontract.agreement'
     _description = 'Subcontract Agreement'
+    _check_company_auto = True
     _inherit = ['construction.approval.mixin', 'mail.thread', 'mail.activity.mixin']
     _order = 'date desc, id desc'
 
@@ -12,11 +13,12 @@ class SubcontractAgreement(models.Model):
     project_id = fields.Many2one(
         'project.project', required=True,
         domain=[('is_construction_project', '=', True)], tracking=True,
+        check_company=True,
     )
     company_id = fields.Many2one(related='project_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one(related='project_id.construction_currency_id', readonly=True)
     date = fields.Date(default=fields.Date.context_today, required=True, tracking=True)
-    partner_id = fields.Many2one('res.partner', string='Subcontractor', required=True, tracking=True)
+    partner_id = fields.Many2one('res.partner', string='Subcontractor', required=True, tracking=True, check_company=True)
     contract_value = fields.Monetary(currency_field='currency_id')
     scope_of_work = fields.Text(string='Scope of Work')
     start_date = fields.Date()
@@ -49,6 +51,8 @@ class SubcontractAgreement(models.Model):
 
 class SubcontractAgreementLine(models.Model):
     _name = 'subcontract.agreement.line'
+    _inherit = ['construction.locked.line']
+    _locked_parent_field = 'agreement_id'
     _description = 'Subcontract Agreement Line'
 
     agreement_id = fields.Many2one(

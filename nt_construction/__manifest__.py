@@ -14,6 +14,7 @@
     'data': [
         'security/construction_security.xml',
         'security/ir.model.access.csv',
+        'security/construction_record_rules.xml',
         'data/tender_sequence.xml',
         'data/construction_sequences.xml',
         'views/boq_line_views.xml',

@@ -5,7 +5,9 @@ from odoo.exceptions import UserError, ValidationError
 class TenderTender(models.Model):
     _name = 'tender.tender'
     _description = 'Construction Tender'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _check_company_auto = True
+    _inherit = ['construction.workflow.guard', 'mail.thread', 'mail.activity.mixin']
+    _workflow_guarded_fields = ('state', 'date_won', 'project_id')
     _order = 'submission_deadline asc, id desc'
 
     # ---------------------------------------------------------------
@@ -28,6 +30,7 @@ class TenderTender(models.Model):
         'res.partner',
         required=True,
         tracking=True,
+        check_company=True,
     )
     description = fields.Text()
     company_id = fields.Many2one(
@@ -92,6 +95,7 @@ class TenderTender(models.Model):
         readonly=True,
         copy=False,
         tracking=True,
+        check_company=True,
     )
     project_count = fields.Integer(compute='_compute_project_count')
 
@@ -144,13 +148,13 @@ class TenderTender(models.Model):
                 raise UserError(self.env._('Only draft tenders can be submitted.'))
             if not rec.submission_deadline:
                 raise ValidationError(self.env._('Please set a submission deadline before submitting.'))
-        self.write({'state': 'submitted'})
+        self._workflow_write({'state': 'submitted'})
 
     def action_under_evaluation(self):
         for rec in self:
             if rec.state != 'submitted':
                 raise UserError(self.env._('Only submitted tenders can move to evaluation.'))
-        self.write({'state': 'under_evaluation'})
+        self._workflow_write({'state': 'under_evaluation'})
 
     def action_set_won(self):
         for rec in self:
@@ -158,22 +162,22 @@ class TenderTender(models.Model):
                 raise UserError(self.env._('Tender must be submitted or under evaluation before it can be won.'))
             if not rec.awarded_value:
                 raise ValidationError(self.env._('Please enter the awarded value before marking the tender as won.'))
-        self.write({'state': 'won', 'date_won': fields.Date.context_today(self)})
+        self._workflow_write({'state': 'won', 'date_won': fields.Date.context_today(self)})
 
     def action_set_lost(self):
         for rec in self:
             if rec.state not in ('submitted', 'under_evaluation'):
                 raise UserError(self.env._('Tender must be submitted or under evaluation before it can be marked as lost.'))
-        self.write({'state': 'lost'})
+        self._workflow_write({'state': 'lost'})
 
     def action_cancel(self):
         for rec in self:
             if rec.state == 'won':
                 raise UserError(self.env._('A won tender cannot be cancelled directly. Please handle the linked project first.'))
-        self.write({'state': 'cancelled'})
+        self._workflow_write({'state': 'cancelled'})
 
     def action_reset_draft(self):
-        self.write({'state': 'draft', 'lost_reason': False, 'cancel_reason': False})
+        self._workflow_write({'state': 'draft', 'lost_reason': False, 'cancel_reason': False})
 
     # ---------------------------------------------------------------
     # Conversion to project (execution phase)
@@ -195,7 +199,7 @@ class TenderTender(models.Model):
             'contract_value': self.awarded_value,
             'construction_currency_id': (self.currency_id or self.company_id.currency_id).id,
         })
-        self.project_id = project.id
+        self._workflow_write({'project_id': project.id})
 
         # Duplicate the tendered BOQ tree onto the project as the contracted baseline
         for root_line in self.boq_line_ids:

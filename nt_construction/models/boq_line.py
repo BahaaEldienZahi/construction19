@@ -6,6 +6,7 @@ from odoo.tools.float_utils import float_compare
 class BoqLine(models.Model):
     _name = 'boq.line'
     _description = 'BOQ Line (Bill of Quantities)'
+    _check_company_auto = True
     _parent_name = 'parent_id'
     _parent_store = True
     _order = 'parent_path, sequence, id'
@@ -18,10 +19,12 @@ class BoqLine(models.Model):
     tender_id = fields.Many2one(
         'tender.tender',
         ondelete='cascade', index=True,
+        check_company=True,
     )
     project_id = fields.Many2one(
         'project.project',
         ondelete='cascade', index=True,
+        check_company=True,
     )
     company_id = fields.Many2one(
         'res.company',
@@ -37,6 +40,7 @@ class BoqLine(models.Model):
     parent_id = fields.Many2one(
         'boq.line', string='Parent Line',
         ondelete='cascade', index=True,
+        check_company=True,
     )
     child_ids = fields.One2many('boq.line', 'parent_id', string='Sub Lines')
     parent_path = fields.Char(index=True)
@@ -83,6 +87,7 @@ class BoqLine(models.Model):
     analytic_account_id = fields.Many2one(
         'account.analytic.account',
         help='لتتبع التكلفة الفعلية (مواد/عمالة/مقاولين باطن) المرتبطة بالبند ده',
+        check_company=True,
     )
     task_id = fields.Many2one('project.task', string='Related Task')
 

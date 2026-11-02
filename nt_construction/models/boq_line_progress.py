@@ -5,10 +5,12 @@ from odoo.exceptions import ValidationError
 class BoqLineProgress(models.Model):
     _name = 'boq.line.progress'
     _description = 'BOQ Line Progress Entry'
+    _check_company_auto = True
     _order = 'date desc, id desc'
 
     boq_line_id = fields.Many2one(
         'boq.line', string='BOQ Line', required=True, ondelete='cascade', index=True,
+        check_company=True,
     )
     project_id = fields.Many2one(
         related='boq_line_id.project_id', string='Project', store=True, readonly=True,
@@ -24,10 +26,12 @@ class BoqLineProgress(models.Model):
     daily_report_id = fields.Many2one(
         'site.daily.report', string='Site Daily Report', ondelete='set null', index=True,
         help='التقرير اليومي (السركي) اللي اتسجلت فيه الكمية دي، لو موجود',
+        check_company=True,
     )
     work_measurement_id = fields.Many2one(
         'work.measurement', ondelete='set null', index=True,
         help='قياس العمل المرتبط بهذه الكمية المنفذة، لو موجود',
+        check_company=True,
     )
 
     @api.constrains('boq_line_id')

@@ -5,13 +5,19 @@ from odoo.exceptions import ValidationError
 class BoqVariationOrder(models.Model):
     _name = 'boq.variation.order'
     _description = 'BOQ Variation Order'
+    _check_company_auto = True
     _inherit = ['construction.approval.mixin', 'mail.thread', 'mail.activity.mixin']
+
+    _workflow_guarded_fields = (
+        'state', 'approver_l1_id', 'approval_l1_date', 'approver_l2_id', 'approval_l2_date', 'applied',
+    )
     _order = 'date desc, id desc'
 
     name = fields.Char(default=lambda self: self.env._('New'), readonly=True, copy=False)
     project_id = fields.Many2one(
         'project.project', required=True,
         domain=[('is_construction_project', '=', True)], tracking=True,
+        check_company=True,
     )
     date = fields.Date(default=fields.Date.context_today, required=True)
     reason = fields.Text(string='Reason / Justification')
@@ -49,6 +55,8 @@ class BoqVariationOrder(models.Model):
 
 class BoqVariationOrderLine(models.Model):
     _name = 'boq.variation.order.line'
+    _inherit = ['construction.locked.line']
+    _locked_parent_field = 'variation_order_id'
     _description = 'BOQ Variation Order Line'
 
     variation_order_id = fields.Many2one(

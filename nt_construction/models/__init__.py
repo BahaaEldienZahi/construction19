@@ -1,5 +1,6 @@
 # ruff: file-ignore[unsorted-imports]
 # Load order matters: the abstract mixin must be registered before the models inheriting it.
+from . import construction_workflow_guard
 from . import construction_approval_mixin
 from . import tender_tender
 from . import project_project

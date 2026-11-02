@@ -11,13 +11,20 @@ class ProjectHandover(models.Model):
 
     _name = 'project.handover'
     _description = 'Project Handover / Delivery Certificate'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _check_company_auto = True
+    _inherit = ['construction.workflow.guard', 'mail.thread', 'mail.activity.mixin']
+    _workflow_guarded_fields = (
+        'state',
+        'retention_release_stage1_amount', 'retention_release_stage1_done', 'retention_release_stage1_date',
+        'retention_release_stage2_amount', 'retention_release_stage2_done', 'retention_release_stage2_date',
+    )
     _order = 'date desc, id desc'
 
     name = fields.Char(default=lambda self: self.env._('New'), readonly=True, copy=False)
     project_id = fields.Many2one(
         'project.project', required=True,
         domain=[('is_construction_project', '=', True)], tracking=True,
+        check_company=True,
     )
     company_id = fields.Many2one(related='project_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one(related='project_id.construction_currency_id', readonly=True)
@@ -123,7 +130,7 @@ class ProjectHandover(models.Model):
                 raise UserError(self.env._('Only draft handovers can be moved to provisional handover.'))
             if not rec.provisional_handover_date:
                 raise UserError(self.env._('Please set the provisional handover date first.'))
-        self.write({'state': 'provisional'})
+        self._workflow_write({'state': 'provisional'})
 
     def action_release_retention_stage1(self):
         for rec in self:
@@ -131,7 +138,7 @@ class ProjectHandover(models.Model):
                 raise UserError(self.env._('Stage 1 retention release requires the handover to be at provisional stage.'))
             if rec.retention_release_stage1_done:
                 raise UserError(self.env._('Stage 1 retention has already been released.'))
-            rec.write({
+            rec._workflow_write({
                 'retention_release_stage1_amount': rec.retention_held_total * (
                         rec.retention_release_stage1_percentage / 100.0),
                 'retention_release_stage1_done': True,
@@ -156,7 +163,7 @@ class ProjectHandover(models.Model):
                 ))
             if not rec.final_handover_date:
                 rec.final_handover_date = fields.Date.context_today(rec)
-        self.write({'state': 'final'})
+        self._workflow_write({'state': 'final'})
 
     def action_release_retention_stage2(self):
         for rec in self:
@@ -164,7 +171,7 @@ class ProjectHandover(models.Model):
                 raise UserError(self.env._('Stage 2 retention release requires final handover to be confirmed.'))
             if rec.retention_release_stage2_done:
                 raise UserError(self.env._('Stage 2 retention has already been released.'))
-            rec.write({
+            rec._workflow_write({
                 'retention_release_stage2_amount': rec.retention_held_total * (
                         rec.retention_release_stage2_percentage / 100.0),
                 'retention_release_stage2_done': True,
@@ -182,13 +189,13 @@ class ProjectHandover(models.Model):
                 raise UserError(self.env._('Only a project at final handover stage can be closed.'))
             if not rec.retention_release_stage2_done:
                 raise UserError(self.env._('Please release Stage 2 retention before closing the handover.'))
-        self.write({'state': 'closed'})
+        self._workflow_write({'state': 'closed'})
         for rec in self:
             if not rec.project_id.actual_completion_date:
                 rec.project_id.actual_completion_date = rec.final_handover_date
 
     def action_reset_draft(self):
-        self.write({
+        self._workflow_write({
             'state': 'draft',
             'retention_release_stage1_done': False,
             'retention_release_stage2_done': False,

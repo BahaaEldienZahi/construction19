@@ -6,13 +6,19 @@ from odoo.tools.float_utils import float_compare
 class BoqPaymentCertificate(models.Model):
     _name = 'boq.payment.certificate'
     _description = 'BOQ Payment Certificate (Progress Billing)'
+    _check_company_auto = True
     _inherit = ['construction.approval.mixin', 'mail.thread', 'mail.activity.mixin']
+
+    _workflow_guarded_fields = (
+        'state', 'approver_l1_id', 'approval_l1_date', 'approver_l2_id', 'approval_l2_date', 'move_id',
+    )
     _order = 'date desc, id desc'
 
     name = fields.Char(default=lambda self: self.env._('New'), readonly=True, copy=False)
     project_id = fields.Many2one(
         'project.project', required=True,
         domain=[('is_construction_project', '=', True)], tracking=True,
+        check_company=True,
     )
     date = fields.Date(default=fields.Date.context_today, required=True)
     period_from = fields.Date()
@@ -41,7 +47,7 @@ class BoqPaymentCertificate(models.Model):
         currency_field='currency_id',
         compute='_compute_amounts', store=True,
     )
-    move_id = fields.Many2one('account.move', string='Customer Invoice', readonly=True, copy=False)
+    move_id = fields.Many2one('account.move', string='Customer Invoice', readonly=True, copy=False, check_company=True)
     move_state = fields.Selection(related='move_id.state', string='Invoice Status')
 
     @api.model_create_multi
@@ -103,7 +109,7 @@ class BoqPaymentCertificate(models.Model):
                 'price_unit': self.net_payable,
             })],
         })
-        self.move_id = move.id
+        self._workflow_write({'move_id': move.id})
         return {
             'type': 'ir.actions.act_window',
             'name': self.env._('Customer Invoice'),
@@ -115,6 +121,8 @@ class BoqPaymentCertificate(models.Model):
 
 class BoqPaymentCertificateLine(models.Model):
     _name = 'boq.payment.certificate.line'
+    _inherit = ['construction.locked.line']
+    _locked_parent_field = 'certificate_id'
     _description = 'BOQ Payment Certificate Line'
 
     certificate_id = fields.Many2one(

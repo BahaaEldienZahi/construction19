@@ -83,8 +83,21 @@ Must stay configurable (no hardcoded coefficients or tax logic). Tracked in `GAP
 | L2 | `models/__init__.py` keeps a hand-written import order (mixin first) with `# ruff: file-ignore[unsorted-imports]` | `ruff --fix` sorted it alphabetically and the registry failed to load (`inherits from non-existing model 'construction.approval.mixin'`) |
 | L3 | Manifest `description` removed; Apps falls back to `README.md` (Odoo `module.py` README lookup). `installable: True` removed (default) | pylint-odoo C8103/C8116 |
 | L4 | `_()` → `self.env._()` everywhere (85 calls); redundant `string=` equal to the auto label removed (62 fields), so labels are unchanged | pylint-odoo prefer-env-translation / attribute-string-redundant |
+| L5 | **Workflow guard** (`construction.workflow.guard`): `state`, approver stamps, `move_id` (certificate), `applied` (VO), `project_id`/`date_won` (tender), retention-release fields (handover), `payment_certificate_id` (measurement) can only change through the action methods. Unlock marker is a Python object in the context, so a JSON-RPC client cannot forge it (tested) | Closes BASELINE §4 bypass `write({'state': 'approved'})` |
+| L6 | **Approval documents frozen once submitted** (certificate, VO, subcontract + their lines): no write/create/unlink of content until rejected → reset to draft. Approved documents cannot be deleted | Approving then editing amounts is the same bypass |
+| L7 | Reset to draft on approval documents only from `rejected`/`cancelled` (the form button already showed it only on `rejected`); approved documents are never reset — corrections go through a new document (VO / credit note) | Server now enforces what the UI intended |
+| L8 | `_check_company_auto = True` + `check_company=True` on cross-company links; global multi-company `ir.rule` on all 15 construction models (lines via their parent); old rules file rewritten (dropped non-existent `subcontract.payment.certificate`) and added to the manifest | Multi-company safety (brief) |
 
 ## 7. Questions raised during steps (R9) — agent default applied unless marked STOP
 
 | # | Step | Question | Default applied | Status |
 |---|---|---|---|---|
+| Q1 | 2 | 11 untracked folders appeared in `custom_addons/` on 2026-11-02 ~12:24 (`accounting_addons/`, `create_bill_from_po/`, `hr-community/`, `hr_payroll_community/`, `muk_web_*` ×7). Track them in this repo? | Left untouched: not committed, not ignored, not installed. Commits name files explicitly | open |
+| Q2 | 2 | Role matrix for the 8 roles (UX/step 2 report §"Role matrix") | Proposal only; not wired | **STOP** |
+| Q3 | 2 | Definition of "own project" for PM (S6) and Site Engineer | PM = `project.user_id`; Site Engineer / QS = new `construction_member_ids` on project | **STOP** |
+| Q4 | 2 | Can the same user give L1 and L2 approval on one document? | Forbidden (segregation of duties) — not yet implemented | **STOP** |
+| Q5 | 2 | Reject restricted to approvers (L1+). Previously any user could reject (button had no group) | Applied (reversible, no data) | **STOP — confirm** |
+| Q6 | 2 | Handover reset to draft after a retention release, and measurement reset after it is linked to a certificate: allowed today (button visible in every non-draft state) | Unchanged for now; proposal: block once a release is recorded / once linked | **STOP** (money) |
+| Q7 | 2 | Site Engineer sees prices and amounts? | Hidden (quantities only) | **STOP** |
+| Q8 | 2 | Read-only Client Viewer (portal) now or with the certificate PDF (golden cycle)? | With the golden cycle | open |
+

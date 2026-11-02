@@ -17,6 +17,18 @@ Each entry lists what changed and the evidence (commands + results). Older statu
 -i nt_construction --with-demo, new DB agent_s2_lint_demo → 0 failed, 0 error(s) of 10 tests; 0 WARNING/ERROR lines
 ```
 
+### Approval bypass closed + multi-company (second commit of step 2)
+- New `construction.workflow.guard`: workflow fields writable only from the buttons (DECISIONS L5).
+- Approval documents and their lines frozen after submit; approved ones cannot be reset or deleted (L6, L7).
+- Reject requires an approver (DECISIONS §7 Q5, pending confirmation).
+- Record rules file fixed and loaded: 15 multi-company rules; `_check_company_auto` / `check_company` (L8).
+- `tests/test_step2_security.py`: 11 tests (direct write/create refused, forged client context refused,
+  frozen approved documents, reset/approve/reject rights, other-company user sees nothing).
+```
+-i nt_construction, new DB agent_s2_sec → 0 failed, 0 error(s) of 21 tests; 0 WARNING/ERROR lines
+mutation check: guard forced open → 10 failed, 5 error(s) of 21 tests (tests detect the bypass); file restored
+```
+
 ## nt_construction 19.0.1.1.0 — Step 1: stabilization (2026-11-02)
 
 ### Fixed
