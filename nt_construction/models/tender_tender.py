@@ -114,9 +114,10 @@ class TenderTender(models.Model):
 
     active = fields.Boolean(default=True)
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name, company_id)', 'Tender reference must be unique per company!'),
-    ]
+    _name_uniq = models.Constraint(
+        'unique(name, company_id)',
+        'Tender reference must be unique per company!',
+    )
 
     # ---------------------------------------------------------------
     # CRUD

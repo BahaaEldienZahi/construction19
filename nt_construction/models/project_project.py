@@ -42,7 +42,7 @@ class ProjectProject(models.Model):
         help='القيمة التعاقدية بعد الترسية (ممكن تتحدث لاحقاً بأوامر التغيير - Variation Orders)',
     )
     construction_currency_id = fields.Many2one(
-        'res.currency', string='Currency',
+        'res.currency', string='Contract Currency',
         default=lambda self: self.env.company.currency_id,
         help='عملة العقد. بتتاخد تلقائياً من عملة المناقصة لو المشروع اتحول من مناقصة، وإلا من عملة الشركة.',
     )
@@ -128,7 +128,7 @@ class ProjectProject(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Tender',
+            'name': _('Tender'),
             'res_model': 'tender.tender',
             'view_mode': 'form',
             'res_id': self.tender_id.id,
@@ -143,7 +143,7 @@ class ProjectProject(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Bill of Quantities',
+            'name': _('Bill of Quantities'),
             'res_model': 'boq.line',
             'view_mode': 'list,form',
             'domain': [('project_id', '=', self.id)],
@@ -153,36 +153,39 @@ class ProjectProject(models.Model):
     # ---------------------------------------------------------------
     # Subcontracting
     # ---------------------------------------------------------------
-    # subcontract_agreement_ids = fields.One2many(
-    #     'subcontract.agreement', 'project_id', string='Subcontract Agreements',
-    # )
+    subcontract_agreement_ids = fields.One2many(
+        'subcontract.agreement', 'project_id', string='Subcontract Agreements',
+    )
     subcontract_agreement_count = fields.Integer(compute='_compute_subcontract_agreement_count')
     total_subcontracted_committed = fields.Monetary(
         string='Total Subcontracted (Approved)', currency_field='construction_currency_id',
         compute='_compute_total_subcontracted_committed',
     )
 
-    # def _compute_subcontract_agreement_count(self):
-    #     for project in self:
-    #         project.subcontract_agreement_count = self.env['subcontract.agreement'].search_count(
-    #             [('project_id', '=', project.id)])
+    @api.depends('subcontract_agreement_ids')
+    def _compute_subcontract_agreement_count(self):
+        counts = dict(self.env['subcontract.agreement']._read_group(
+            [('project_id', 'in', self.ids)], ['project_id'], ['__count'],
+        ))
+        for project in self:
+            project.subcontract_agreement_count = counts.get(project, 0)
 
-    # @api.depends('subcontract_agreement_ids.contract_value', 'subcontract_agreement_ids.state')
-    # def _compute_total_subcontracted_committed(self):
-    #     for project in self:
-    #         approved = project.subcontract_agreement_ids.filtered(lambda a: a.state == 'approved')
-    #         project.total_subcontracted_committed = sum(approved.mapped('contract_value'))
+    @api.depends('subcontract_agreement_ids.total_value', 'subcontract_agreement_ids.state')
+    def _compute_total_subcontracted_committed(self):
+        for project in self:
+            approved = project.subcontract_agreement_ids.filtered(lambda a: a.state == 'approved')
+            project.total_subcontracted_committed = sum(approved.mapped('total_value'))
 
-    # def action_view_subcontract_agreements(self):
-    #     self.ensure_one()
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'name': _('Subcontract Agreements'),
-    #         'res_model': 'subcontract.agreement',
-    #         'view_mode': 'list,form',
-    #         'domain': [('project_id', '=', self.id)],
-    #         'context': {'default_project_id': self.id},
-    #     }
+    def action_view_subcontract_agreements(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Subcontract Agreements'),
+            'res_model': 'subcontract.agreement',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        }
 
     # ---------------------------------------------------------------
     # Site daily reports (Sarky)

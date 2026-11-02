@@ -21,7 +21,7 @@ class ConstructionApprovalMixin(models.AbstractModel):
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
         ('cancelled', 'Cancelled'),
-    ], default='draft', required=True, copy=False, tracking=True)
+    ], string='Status', default='draft', required=True, copy=False, tracking=True)
 
     approver_l1_id = fields.Many2one('res.users', string='Approved By (L1)', readonly=True, copy=False)
     approval_l1_date = fields.Datetime(string='L1 Approval Date', readonly=True, copy=False)

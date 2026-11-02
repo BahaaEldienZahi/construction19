@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -35,9 +35,9 @@ class BoqLineProgress(models.Model):
     def _check_leaf_line_only(self):
         for rec in self:
             if rec.boq_line_id.child_ids:
-                raise ValidationError(
-                    'مينفعش تسجل إنجاز على بند رئيسي (Chapter) - سجل الإنجاز على البنود الفرعية بس.'
-                )
+                raise ValidationError(_(
+                    'Progress cannot be recorded on a chapter (group) line; record it on its sub-lines.'
+                ))
 
     @api.constrains('quantity_executed', 'boq_line_id')
     def _check_cumulative_not_exceeding(self):
@@ -46,8 +46,9 @@ class BoqLineProgress(models.Model):
             other_entries = line.progress_ids - rec
             cumulative = sum(other_entries.mapped('quantity_executed')) + rec.quantity_executed
             if line.quantity_contracted and cumulative > line.quantity_contracted * 1.001:
-                raise ValidationError(
-                    'إجمالي الكمية المنفذة (%.2f) هيتعدى الكمية المتعاقد عليها (%.2f) للبند "%s". '
-                    'راجع الأرقام أو عدّل الكمية المتعاقد عليها لو فيه Variation Order.'
-                    % (cumulative, line.quantity_contracted, line.name)
-                )
+                raise ValidationError(_(
+                    'Total executed quantity (%(executed).2f) would exceed the contracted quantity '
+                    '(%(contracted).2f) for BOQ line "%(line)s". Check the figures, or raise the '
+                    'contracted quantity through a Variation Order.',
+                    executed=cumulative, contracted=line.quantity_contracted, line=line.name,
+                ))

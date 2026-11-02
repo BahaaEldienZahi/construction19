@@ -21,6 +21,12 @@
                         invisible="not is_construction_project">
                     <field name="boq_line_count" widget="statinfo" string="BOQ Lines"/>
                 </button>
+                <button name="action_view_subcontract_agreements" type="object"
+                        class="oe_stat_button" icon="fa-handshake-o"
+                        groups="project.group_project_manager"
+                        invisible="not is_construction_project">
+                    <field name="subcontract_agreement_count" widget="statinfo" string="Subcontracts"/>
+                </button>
             </xpath>
 
             <!-- Flag + type right after project name -->

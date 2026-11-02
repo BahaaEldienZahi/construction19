@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_compare
 
@@ -18,6 +18,7 @@ class BoqPaymentCertificate(models.Model):
     date = fields.Date(default=fields.Date.context_today, required=True)
     period_from = fields.Date(string='Period From')
     period_to = fields.Date(string='Period To')
+    company_id = fields.Many2one(related='project_id.company_id', store=True, index=True)
     currency_id = fields.Many2one(related='project_id.construction_currency_id', readonly=True)
 
     line_ids = fields.One2many('boq.payment.certificate.line', 'certificate_id', string='Lines')
@@ -69,7 +70,7 @@ class BoqPaymentCertificate(models.Model):
                     'date': cert.date,
                     'period_name': cert.name,
                     'quantity_executed': line.quantity_this_period,
-                    'note': _('Auto-created from Payment Certificate %s') % cert.name,
+                    'note': _('Auto-created from Payment Certificate %s', cert.name),
                 })
 
     def action_view_invoice(self):
@@ -96,9 +97,11 @@ class BoqPaymentCertificate(models.Model):
             'partner_id': self.project_id.partner_id.id,
             'invoice_date': self.date,
             'invoice_origin': self.name,
-            'invoice_line_ids': [(0, 0, {
-                'name': _('%s - %s (Net after %.1f%% retention & advance recovery)') % (
-                    self.name, self.project_id.name, self.retention_percentage),
+            'invoice_line_ids': [Command.create({
+                'name': _(
+                    '%(cert)s - %(project)s (Net after %(retention).1f%% retention & advance recovery)',
+                    cert=self.name, project=self.project_id.name, retention=self.retention_percentage,
+                ),
                 'quantity': 1,
                 'price_unit': self.net_payable,
             })],
@@ -164,5 +167,9 @@ class BoqPaymentCertificateLine(models.Model):
             if line.boq_line_id.quantity_contracted and \
                     line.cumulative_qty_after > line.boq_line_id.quantity_contracted * 1.001:
                 raise ValidationError(_(
-                    'الكمية التراكمية بعد المستخلص ده (%.2f) هتتخطى الكمية المتعاقد عليها (%.2f) للبند "%s".'
-                ) % (line.cumulative_qty_after, line.boq_line_id.quantity_contracted, line.boq_line_id.name))
+                    'Cumulative quantity after this certificate (%(after).2f) would exceed the contracted '
+                    'quantity (%(contracted).2f) for BOQ line "%(line)s".',
+                    after=line.cumulative_qty_after,
+                    contracted=line.boq_line_id.quantity_contracted,
+                    line=line.boq_line_id.name,
+                ))

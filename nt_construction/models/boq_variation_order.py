@@ -16,6 +16,7 @@ class BoqVariationOrder(models.Model):
     )
     date = fields.Date(default=fields.Date.context_today, required=True)
     reason = fields.Text(string='Reason / Justification')
+    company_id = fields.Many2one(related='project_id.company_id', store=True, index=True)
     currency_id = fields.Many2one(related='project_id.construction_currency_id', readonly=True)
 
     line_ids = fields.One2many('boq.variation.order.line', 'variation_order_id', string='Lines')
@@ -24,18 +25,6 @@ class BoqVariationOrder(models.Model):
         compute='_compute_total_delta_amount', store=True,
     )
     applied = fields.Boolean(readonly=True, copy=False, default=False)
-    state = fields.Selection(
-        [
-            ('draft', 'Draft'),
-            ('submitted', 'Pending Approval'),
-            ('approved_l1', 'Level 1 Approved'),
-            ('approved', 'Approved'),
-            ('cancelled', 'Cancelled'),
-        ],
-        string='Status',
-        default='draft',
-        tracking=True,
-    )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -105,9 +94,9 @@ class BoqVariationOrderLine(models.Model):
         for line in self:
             project = line.variation_order_id.project_id
             if line.boq_line_id and line.boq_line_id.project_id != project:
-                raise ValidationError(_('البند المختار مش تابع لنفس مشروع أمر التغيير.'))
+                raise ValidationError(_('The selected BOQ line does not belong to the variation order\'s project.'))
             if line.parent_boq_line_id and line.parent_boq_line_id.project_id != project:
-                raise ValidationError(_('البند الأب المختار مش تابع لنفس مشروع أمر التغيير.'))
+                raise ValidationError(_('The selected parent line does not belong to the variation order\'s project.'))
 
     def _apply_to_boq(self):
         self.ensure_one()

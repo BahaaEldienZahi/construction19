@@ -51,11 +51,14 @@ class SiteDailyReport(models.Model):
 
     site_notes = fields.Text(string='Site Notes / Issues')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name, company_id)', 'Daily report reference must be unique per company!'),
-        ('project_date_uniq', 'unique(project_id, date)',
-         'A daily report already exists for this project and date.'),
-    ]
+    _name_uniq = models.Constraint(
+        'unique(name, company_id)',
+        'Daily report reference must be unique per company!',
+    )
+    _project_date_uniq = models.Constraint(
+        'unique(project_id, date)',
+        'A daily report already exists for this project and date.',
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

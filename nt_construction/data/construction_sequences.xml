@@ -15,5 +15,33 @@
             <field name="padding">4</field>
             <field name="company_id" eval="False"/>
         </record>
+        <record id="seq_subcontract_agreement" model="ir.sequence">
+            <field name="name">Subcontract Agreement Reference</field>
+            <field name="code">subcontract.agreement</field>
+            <field name="prefix">SUB/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_site_daily_report" model="ir.sequence">
+            <field name="name">Site Daily Report Reference</field>
+            <field name="code">site.daily.report</field>
+            <field name="prefix">SDR/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_work_measurement" model="ir.sequence">
+            <field name="name">Work Measurement Reference</field>
+            <field name="code">work.measurement</field>
+            <field name="prefix">WM/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_project_handover" model="ir.sequence">
+            <field name="name">Project Handover Reference</field>
+            <field name="code">project.handover</field>
+            <field name="prefix">HO/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
     </data>
 </odoo>

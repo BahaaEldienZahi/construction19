@@ -30,9 +30,10 @@ class SubcontractAgreement(models.Model):
         compute='_compute_total_value', store=True,
     )
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name, company_id)', 'Agreement reference must be unique per company!'),
-    ]
+    _name_uniq = models.Constraint(
+        'unique(name, company_id)',
+        'Agreement reference must be unique per company!',
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -27,6 +27,6 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if line.boq_line_id and line.order_id.project_id and \
                     line.boq_line_id.project_id != line.order_id.project_id:
-                raise ValidationError(
-                    'بند الـ BOQ المختار مش تابع لنفس مشروع أمر الشراء.'
-                )
+                raise ValidationError(_(
+                    'The selected BOQ line does not belong to the purchase order\'s project.'
+                ))

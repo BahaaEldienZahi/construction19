@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_compare
 
@@ -40,7 +40,7 @@ class BoqLine(models.Model):
         ondelete='cascade', index=True,
     )
     child_ids = fields.One2many('boq.line', 'parent_id', string='Sub Lines')
-    parent_path = fields.Char(index=True, unaccent=False)
+    parent_path = fields.Char(index=True)
     level = fields.Integer(compute='_compute_level', store=True)
     is_group = fields.Boolean(compute='_compute_is_group', store=True,
                               help='True لو البند ده Chapter/فصل بيحتوي بنود فرعية')
@@ -91,25 +91,27 @@ class BoqLine(models.Model):
     # Cost control: committed cost from subcontractor / material POs
     # ---------------------------------------------------------------
     po_line_ids = fields.One2many('purchase.order.line', 'boq_line_id', string='Purchase Order Lines')
-    # subcontract_line_ids = fields.One2many(
-    #     'subcontract.agreement.line', 'boq_line_id', string='Subcontract Agreement Lines',
-    # )
+    subcontract_line_ids = fields.One2many(
+        'subcontract.agreement.line', 'boq_line_id', string='Subcontract Agreement Lines',
+    )
     committed_amount = fields.Monetary(
         string='Committed Cost', currency_field='currency_id',
         compute='_compute_committed_amount', store=True,
         help='إجمالي قيمة أوامر الشراء (خامات/معدات) المؤكدة + اتفاقيات المقاولة من الباطن المعتمدة والمرتبطة بالبند ده',
     )
 
-    # @api.depends(
-    #     'po_line_ids.price_subtotal', 'po_line_ids.order_id.state',
-    #     'subcontract_line_ids.subtotal', 'subcontract_line_ids.agreement_id.state',
-    # )
-    # def _compute_committed_amount(self):
-    #     for line in self:
-    #         confirmed_po = line.po_line_ids.filtered(lambda l: l.order_id.state in ('purchase', 'done'))
-    #         confirmed_sub = line.subcontract_line_ids.filtered(lambda l: l.agreement_id.state == 'approved')
-    #         line.committed_amount = sum(confirmed_po.mapped('price_subtotal')) + sum(
-    #             confirmed_sub.mapped('subtotal'))
+    @api.depends(
+        'po_line_ids.price_subtotal', 'po_line_ids.order_id.state',
+        'subcontract_line_ids.subtotal', 'subcontract_line_ids.agreement_id.state',
+    )
+    def _compute_committed_amount(self):
+        # NOTE: amounts are summed without currency conversion; multi-currency
+        # conversion is part of step 3 (accounting core).
+        for line in self:
+            confirmed_po = line.po_line_ids.filtered(lambda pol: pol.order_id.state in ('purchase', 'done'))
+            approved_sub = line.subcontract_line_ids.filtered(lambda sl: sl.agreement_id.state == 'approved')
+            line.committed_amount = sum(confirmed_po.mapped('price_subtotal')) + sum(
+                approved_sub.mapped('subtotal'))
 
     # ---------------------------------------------------------------
     # Compute methods
@@ -169,29 +171,29 @@ class BoqLine(models.Model):
     def _check_not_self_parent(self):
         for line in self:
             if line.parent_id and line.parent_id.id == line.id:
-                raise ValidationError('البند مينفعش يكون أب لنفسه.')
+                raise ValidationError(_('A BOQ line cannot be its own parent.'))
 
     @api.constrains('parent_id')
     def _check_parent_recursion(self):
-        if not self._check_recursion():
-            raise ValidationError('مينفعش تعمل حلقة في هيكل البنود (بند يبقى أب لنفسه بشكل غير مباشر).')
+        if self._has_cycle():
+            raise ValidationError(_('You cannot create a loop in the BOQ hierarchy.'))
 
     @api.constrains('quantity_contracted', 'unit_price')
     def _check_non_negative(self):
         for line in self:
             if float_compare(line.quantity_contracted, 0.0, precision_digits=4) < 0:
-                raise ValidationError('الكمية المتعاقد عليها لازم تكون صفر أو أكبر.')
+                raise ValidationError(_('The contracted quantity must be zero or more.'))
             if float_compare(line.unit_price, 0.0, precision_digits=4) < 0:
-                raise ValidationError('سعر الوحدة لازم يكون صفر أو أكبر.')
+                raise ValidationError(_('The unit price must be zero or more.'))
 
     @api.constrains('parent_id', 'tender_id', 'project_id')
     def _check_parent_same_owner(self):
         for line in self:
             if line.parent_id:
                 if line.tender_id and line.parent_id.tender_id != line.tender_id:
-                    raise ValidationError('البند الفرعي لازم يتبع نفس المناقصة اللي البند الأب تابع لها.')
+                    raise ValidationError(_('A sub-line must belong to the same tender as its parent line.'))
                 if line.project_id and line.parent_id.project_id != line.project_id:
-                    raise ValidationError('البند الفرعي لازم يتبع نفس المشروع اللي البند الأب تابع له.')
+                    raise ValidationError(_('A sub-line must belong to the same project as its parent line.'))
 
     # ---------------------------------------------------------------
     # Helpers

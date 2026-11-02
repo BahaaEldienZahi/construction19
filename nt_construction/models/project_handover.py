@@ -81,9 +81,10 @@ class ProjectHandover(models.Model):
 
     notes = fields.Text(string='Notes')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name, company_id)', 'Handover reference must be unique per company!'),
-    ]
+    _name_uniq = models.Constraint(
+        'unique(name, company_id)',
+        'Handover reference must be unique per company!',
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -138,9 +139,10 @@ class ProjectHandover(models.Model):
                 'retention_release_stage1_date': fields.Date.context_today(rec),
             })
             rec.message_post(body=_(
-                'Stage 1 retention release recorded: %.2f %s. Please coordinate the actual '
-                'payment/credit note with Finance.'
-            ) % (rec.retention_release_stage1_amount, rec.currency_id.symbol or ''))
+                'Stage 1 retention release recorded: %(amount).2f %(currency)s. Please coordinate the actual '
+                'payment/credit note with Finance.',
+                amount=rec.retention_release_stage1_amount, currency=rec.currency_id.symbol or '',
+            ))
 
     def action_final_handover(self):
         for rec in self:
@@ -149,9 +151,10 @@ class ProjectHandover(models.Model):
             open_items = rec.punch_list_ids.filtered(lambda p: p.status == 'open')
             if open_items:
                 raise UserError(_(
-                    'Cannot proceed to final handover: %d punch list item(s) are still open. '
-                    'Close them first or remove items that no longer apply.'
-                ) % len(open_items))
+                    'Cannot proceed to final handover: %s punch list item(s) are still open. '
+                    'Close them first or remove items that no longer apply.',
+                    len(open_items),
+                ))
             if not rec.final_handover_date:
                 rec.final_handover_date = fields.Date.context_today(rec)
         self.write({'state': 'final'})
@@ -169,9 +172,10 @@ class ProjectHandover(models.Model):
                 'retention_release_stage2_date': fields.Date.context_today(rec),
             })
             rec.message_post(body=_(
-                'Stage 2 (final) retention release recorded: %.2f %s. Please coordinate the actual '
-                'payment/credit note with Finance.'
-            ) % (rec.retention_release_stage2_amount, rec.currency_id.symbol or ''))
+                'Stage 2 (final) retention release recorded: %(amount).2f %(currency)s. Please coordinate the actual '
+                'payment/credit note with Finance.',
+                amount=rec.retention_release_stage2_amount, currency=rec.currency_id.symbol or '',
+            ))
 
     def action_close(self):
         for rec in self:
