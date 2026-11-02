@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_project_project_form_construction_inherit" model="ir.ui.view">
+        <field name="name">project.project.form.construction.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+
+            <!-- Smart button: back to tender -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_tender" type="object"
+                        class="oe_stat_button" icon="fa-file-text-o"
+                        invisible="not tender_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Tender</span>
+                    </div>
+                </button>
+                <button name="action_view_boq" type="object"
+                        class="oe_stat_button" icon="fa-list-ol"
+                        invisible="not is_construction_project">
+                    <field name="boq_line_count" widget="statinfo" string="BOQ Lines"/>
+                </button>
+            </xpath>
+
+            <!-- Flag + type right after project name -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_construction_project"/>
+                <field name="construction_type" invisible="not is_construction_project"/>
+            </xpath>
+
+            <!-- New notebook page with full contract/site details -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Construction Details" invisible="not is_construction_project">
+                    <group>
+                        <group string="Contract">
+                            <field name="tender_reference" invisible="not tender_id"/>
+                            <field name="client_po_number"/>
+                            <field name="contract_number"/>
+                            <field name="contract_signing_date"/>
+                            <field name="contract_value"/>
+                        </group>
+                        <group string="Site &amp; Consultant">
+                            <field name="site_start_date"/>
+                            <field name="site_completion_date"/>
+                            <field name="actual_completion_date"/>
+                            <field name="consultant_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Billing Terms">
+                            <field name="retention_percentage"/>
+                            <field name="advance_payment_percentage"/>
+                        </group>
+                        <group string="Progress">
+                            <field name="boq_percentage_complete" widget="progressbar"/>
+                            <field name="task_progress_percentage" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <group string="Site Address">
+                        <field name="site_location" nolabel="1"/>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Filter to quickly find construction projects -->
+    <record id="view_project_project_search_construction_inherit" model="ir.ui.view">
+        <field name="name">project.project.search.construction.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter string="Construction Projects" name="construction_projects"
+                        domain="[('is_construction_project', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
