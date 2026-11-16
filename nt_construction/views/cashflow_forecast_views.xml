@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_cashflow_forecast_tree" model="ir.ui.view">
+        <field name="name">construction.cashflow.forecast.tree</field>
+        <field name="model">construction.cashflow.forecast</field>
+        <field name="arch" type="xml">
+            <tree string="Cash Flow Forecast" default_order="projected_date asc">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="projected_date"/>
+                <field name="projected_amount" sum="Total"/>
+                <field name="actual_receipt_date"/>
+                <field name="actual_amount" sum="Actual"/>
+                <field name="variance" sum="Variance"/>
+                <field name="status" widget="badge"
+                       decoration-success="status=='received'"
+                       decoration-warning="status=='invoiced'"
+                       decoration-danger="status=='overdue'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_cashflow_forecast_form" model="ir.ui.view">
+        <field name="name">construction.cashflow.forecast.form</field>
+        <field name="model">construction.cashflow.forecast</field>
+        <field name="arch" type="xml">
+            <form string="Cash Flow Forecast">
+                <header>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="source_certificate_id"/>
+                        </group>
+                        <group>
+                            <field name="projected_date"/>
+                            <field name="projected_amount"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Actual">
+                            <field name="actual_receipt_date"/>
+                            <field name="actual_amount"/>
+                            <field name="variance"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_cashflow_forecast_search" model="ir.ui.view">
+        <field name="name">construction.cashflow.forecast.search</field>
+        <field name="model">construction.cashflow.forecast</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="project_id"/>
+                <field name="projected_date"/>
+                <filter string="Overdue" name="overdue" domain="[('status','=','overdue')]"/>
+                <filter string="Received" name="received" domain="[('status','=','received')]"/>
+                <filter string="Planned" name="planned" domain="['2status','=','planned')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_project" context="{'group_by':'project_id'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by':'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_cashflow_forecast" model="ir.actions.act_window">
+        <field name="name">Cash Flow Forecast</field>
+        <field name="res_model">construction.cashflow.forecast</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_cashflow_forecast" name="Cash Flow Forecast"
+              parent="nt_construction.menu_commercial" sequence="60"
+              action="action_cashflow_forecast"/>
+
+</odoo>
