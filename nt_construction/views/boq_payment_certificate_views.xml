@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <!-- Step 3 (accounting core): previous / current / total, escalation, deductions, taxes.
-         The full form-standard pass (UX_SPEC 2) is applied after step 3. -->
+    <!-- Client payment certificate (مستخلص): previous / current / total, escalation, deductions, invoice. -->
     <record id="view_boq_payment_certificate_form" model="ir.ui.view">
         <field name="name">boq.payment.certificate.form</field>
         <field name="model">boq.payment.certificate</field>
@@ -10,7 +8,8 @@
             <form string="Payment Certificate">
                 <header>
                     <button name="action_submit_for_approval" string="Submit for Approval" type="object" class="btn-primary"
-                            invisible="state != 'draft'" groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager"/>
+                            invisible="state != 'draft'"
+                            groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager"/>
                     <button name="action_approve_l1" string="Approve (Level 1)" type="object" class="btn-primary"
                             invisible="state != 'submitted'"
                             groups="nt_construction.group_construction_approver_l1,project.group_project_manager"/>
@@ -20,6 +19,8 @@
                     <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-primary"
                             invisible="state != 'approved' or move_id"
                             groups="nt_construction.group_construction_accountant,project.group_project_manager"/>
+                    <button name="action_print_certificate" string="Print" type="object" class="btn-secondary"
+                            invisible="state == 'draft'"/>
                     <button name="action_reject" string="Reject" type="object" class="btn-secondary"
                             invisible="state not in ('submitted', 'approved_l1')" confirm="Reject this certificate?"
                             groups="nt_construction.group_construction_approver_l1,project.group_project_manager"/>
@@ -27,12 +28,32 @@
                             invisible="state != 'approved'"
                             confirm="Cancel this approved certificate? Its posted invoice is reversed by a credit note and its quantities are no longer certified."
                             groups="nt_construction.group_construction_accountant,project.group_project_manager"/>
+                    <button name="action_cancel" string="Cancel" type="object" class="btn-secondary"
+                            invisible="state != 'draft'" confirm="Cancel this draft certificate?"
+                            groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager"/>
                     <button name="action_reset_draft" string="Reset to Draft" type="object" class="btn-secondary"
-                            invisible="state not in ('rejected', 'cancelled') or move_id" groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager"/>
+                            invisible="state not in ('rejected', 'cancelled') or move_id"
+                            groups="nt_construction.group_construction_quantity_surveyor,project.group_project_manager"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved_l1,approved"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_view_project" type="object" class="oe_stat_button" icon="fa-building">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Project</span>
+                            </div>
+                        </button>
+                        <button name="action_view_measurements" type="object" class="oe_stat_button" icon="fa-calculator"
+                                invisible="not measurement_count">
+                            <field name="measurement_count" widget="statinfo" string="Measurements"/>
+                        </button>
+                        <button name="action_view_previous_certificate" type="object" class="oe_stat_button"
+                                icon="fa-step-backward" invisible="not previous_certificate_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Previous</span>
+                                <field name="previous_certificate_id" readonly="1" options="{'no_open': True}"/>
+                            </div>
+                        </button>
                         <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
                                 invisible="not move_id">
                             <div class="o_stat_info">
@@ -40,10 +61,14 @@
                                 <field name="move_state" readonly="1"/>
                             </div>
                         </button>
+                        <button name="action_view_credit_notes" type="object" class="oe_stat_button" icon="fa-undo"
+                                invisible="not credit_note_count">
+                            <field name="credit_note_count" widget="statinfo" string="Credit Notes"/>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger" invisible="state != 'rejected'"/>
                     <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-secondary" invisible="state != 'cancelled'"/>
-                    <widget name="web_ribbon" title="Final" bg_color="text-bg-info" invisible="not is_final or state == 'cancelled'"/>
+                    <widget name="web_ribbon" title="Final" bg_color="text-bg-info" invisible="not is_final or state in ('rejected', 'cancelled')"/>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
                     </div>
@@ -51,16 +76,18 @@
                         <group name="who">
                             <field name="project_id" readonly="state != 'draft'" options="{'no_create': True}"/>
                             <field name="partner_id"/>
+                            <field name="is_final" readonly="state != 'draft'"/>
                         </group>
                         <group name="when_value">
                             <field name="date" readonly="state != 'draft'"/>
-                            <field name="is_final" readonly="state != 'draft'"/>
                             <label for="period_from" string="Period"/>
                             <div class="o_row">
                                 <field name="period_from" readonly="state != 'draft'" class="oe_inline"/>
                                 <i class="fa fa-long-arrow-right mx-2 o_nt_period_arrow" title="to"/>
                                 <field name="period_to" readonly="state != 'draft'" class="oe_inline"/>
                             </div>
+                            <field name="gross_amount"/>
+                            <field name="net_payable" class="fw-bold"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                     </group>
@@ -68,19 +95,25 @@
                         <page string="Items" name="lines">
                             <field name="line_ids" readonly="state != 'draft'">
                                 <list editable="bottom">
+                                    <field name="code" optional="show"/>
                                     <field name="boq_line_id" options="{'no_create': True}"/>
                                     <field name="uom_id" optional="hide"/>
                                     <field name="quantity_contracted" optional="hide"/>
-                                    <field name="unit_price" optional="show"/>
+                                    <field name="unit_price" optional="hide"/>
                                     <field name="quantity_previous" string="Previous"/>
                                     <field name="quantity_this_period" string="Current"/>
                                     <field name="quantity_total" string="Total to Date"/>
                                     <field name="amount_previous" optional="hide" sum="Previous"/>
                                     <field name="amount_this_period" string="Current Amount" sum="Current"/>
-                                    <field name="amount_total" optional="show" sum="Total"/>
+                                    <field name="amount_total" optional="hide" sum="Total"/>
                                     <field name="currency_id" column_invisible="True"/>
                                 </list>
                             </field>
+                            <group class="oe_subtotal_footer" colspan="2" name="work_totals">
+                                <field name="work_amount_previous"/>
+                                <field name="work_amount"/>
+                                <field name="work_amount_total" class="oe_subtotal_footer_separator"/>
+                            </group>
                         </page>
                         <page string="Escalation" name="escalation" invisible="not escalation_line_ids">
                             <field name="escalation_line_ids" readonly="state != 'draft'">
@@ -92,16 +125,16 @@
                                 </list>
                             </field>
                             <group>
-                                <field name="escalation_factor"/>
-                                <field name="escalation_amount"/>
+                                <group>
+                                    <field name="escalation_factor"/>
+                                    <field name="escalation_amount"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Deductions &amp; Taxes" name="totals">
                             <group>
                                 <group string="Work">
-                                    <field name="work_amount_previous"/>
-                                    <field name="work_amount"/>
-                                    <field name="work_amount_total"/>
+                                    <field name="work_amount" string="Current Work"/>
                                     <field name="escalation_amount"/>
                                     <field name="gross_amount" class="fw-bold"/>
                                 </group>
@@ -128,6 +161,13 @@
                             </group>
                             <field name="rejection_reason" invisible="state != 'rejected'" placeholder="Reason for rejection..."/>
                         </page>
+                        <page string="Other Info" name="other_info" groups="base.group_multi_company">
+                            <group>
+                                <group>
+                                    <field name="company_id"/>
+                                </group>
+                            </group>
+                        </page>
                     </notebook>
                 </sheet>
                 <chatter/>
@@ -139,52 +179,60 @@
         <field name="name">boq.payment.certificate.list</field>
         <field name="model">boq.payment.certificate</field>
         <field name="arch" type="xml">
-            <list string="Payment Certificates" decoration-success="state == 'approved'"
-                  decoration-danger="state == 'rejected'">
+            <list string="Payment Certificates" multi_edit="0">
+                <field name="date"/>
                 <field name="name"/>
                 <field name="project_id"/>
-                <field name="date"/>
-                <field name="work_amount" sum="Current Work"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="work_amount" string="Current Work" sum="Current Work"/>
                 <field name="gross_amount" sum="Gross" optional="hide"/>
                 <field name="net_payable" sum="Net"/>
                 <field name="move_state" optional="show"/>
+                <field name="is_final" optional="hide"/>
                 <field name="currency_id" column_invisible="True"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'approved'"
                        decoration-danger="state == 'rejected'"
+                       decoration-muted="state == 'cancelled'"
                        decoration-info="state in ('submitted', 'approved_l1')"/>
             </list>
         </field>
     </record>
 
-<!--    <record id="view_boq_payment_certificate_search" model="ir.ui.view">-->
-<!--        <field name="name">boq.payment.certificate.search</field>-->
-<!--        <field name="model">boq.payment.certificate</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <search string="Search Payment Certificates">-->
-<!--                <field name="name"/>-->
-<!--                <field name="project_id"/>-->
-<!--                <field name="date"/>-->
-<!--                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>-->
-<!--                <filter string="Pending Approval" name="pending"-->
-<!--                        domain="[('state', 'in', ('submitted', 'approved_l1'))]"/>-->
-<!--                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>-->
-<!--                <separator/>-->
-<!--                <filter string="With Invoice" name="with_invoice" domain="[('move_id', '!=', False)]"/>-->
-<!--                <group expand="0" string="Group By">-->
-<!--                    <filter string="Project" name="group_project" context="{&quot;group_by&quot;: &quot;project_id&quot;}"/>-->
-<!--                    <filter string="Status" name="group_state" context="{&quot;group_by&quot;: &quot;state&quot;}"/>-->
-<!--                    <filter string="Date" name="group_date" context="{&quot;group_by&quot;: &quot;date&quot;}"/>-->
-<!--                </group>-->
-<!--            </search>-->
-<!--        </field>-->
-<!--    </record>-->
-
-    <record id="action_boq_payment_certificate" model="ir.actions.act_window">
-        <field name="name">Payment Certificates</field>
-        <field name="res_model">boq.payment.certificate</field>
-        <field name="view_mode">list,form</field>
+    <record id="view_boq_payment_certificate_search" model="ir.ui.view">
+        <field name="name">boq.payment.certificate.search</field>
+        <field name="model">boq.payment.certificate</field>
+        <field name="arch" type="xml">
+            <search string="Search Payment Certificates">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="partner_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Waiting Approval" name="pending" domain="[('state', 'in', ('submitted', 'approved_l1'))]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="To Invoice" name="to_invoice" domain="[('state', '=', 'approved'), ('move_id', '=', False)]"/>
+                <separator/>
+                <filter string="Not Cancelled" name="not_cancelled" domain="[('state', '!=', 'cancelled')]"/>
+                <filter string="Date" name="filter_date" date="date"/>
+                <group>
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Month" name="group_month" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
     </record>
 
-
+    <record id="action_boq_payment_certificate" model="ir.actions.act_window">
+        <field name="name">Client Certificates</field>
+        <field name="res_model">boq.payment.certificate</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_boq_payment_certificate_search"/>
+        <field name="context">{'search_default_not_cancelled': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a client certificate (مستخلص)</p>
+            <p>Usually from a confirmed measurement: Execution › Measurements › Create Certificate.</p>
+        </field>
+    </record>
 </odoo>

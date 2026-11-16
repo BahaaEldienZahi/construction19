@@ -85,6 +85,11 @@ class BoqPaymentCertificate(models.Model):
         help='Closing account of the project (F13): recovers the whole remaining advance, whatever the '
              'recovery %, and no certificate can be submitted after it.')
     measurement_ids = fields.One2many('work.measurement', 'payment_certificate_id', string='Measurements')
+    measurement_count = fields.Integer(compute='_compute_counts')
+    credit_note_count = fields.Integer(compute='_compute_counts')
+    previous_certificate_id = fields.Many2one(
+        'boq.payment.certificate', compute='_compute_previous_certificate', string='Previous Certificate',
+        help='Latest approved certificate of the project before this one.')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -106,6 +111,21 @@ class BoqPaymentCertificate(models.Model):
     # ------------------------------------------------------------------
     # Computes
     # ------------------------------------------------------------------
+    def _compute_counts(self):
+        for cert in self:
+            cert.measurement_count = len(cert.measurement_ids)
+            cert.credit_note_count = len(cert.sudo().move_id.reversal_move_ids)
+
+    def _compute_previous_certificate(self):
+        for cert in self:
+            domain = [('project_id', '=', cert.project_id.id), ('state', '=', 'approved')]
+            if cert.id:
+                domain.append(('id', '!=', cert.id))
+            if cert.state == 'approved' and cert.approval_l2_date:
+                domain.append(('approval_l2_date', '<', cert.approval_l2_date))
+            cert.previous_certificate_id = self.search(domain, order='approval_l2_date desc, id desc', limit=1) \
+                if cert.project_id else False
+
     @api.depends('line_ids.amount_previous', 'line_ids.amount_this_period', 'line_ids.amount_total')
     def _compute_work(self):
         for cert in self:
@@ -267,6 +287,25 @@ class BoqPaymentCertificate(models.Model):
             raise UserError(self.env._(
                 'A cancelled certificate that was invoiced cannot be reopened. Issue a new certificate.'))
         return super().action_reset_draft()
+
+    def action_view_project(self):
+        self.ensure_one()
+        return self.project_id._get_records_action(name=self.env._('Project'))
+
+    def action_view_measurements(self):
+        self.ensure_one()
+        return self.measurement_ids._get_records_action(name=self.env._('Measurements'))
+
+    def action_view_previous_certificate(self):
+        self.ensure_one()
+        return self.previous_certificate_id._get_records_action(name=self.env._('Previous Certificate'))
+
+    def action_view_credit_notes(self):
+        self.ensure_one()
+        return self.move_id.reversal_move_ids._get_records_action(name=self.env._('Credit Notes'))
+
+    def action_print_certificate(self):
+        return self.env.ref('nt_construction.action_report_payment_certificate').report_action(self)
 
     def action_view_invoice(self):
         self.ensure_one()

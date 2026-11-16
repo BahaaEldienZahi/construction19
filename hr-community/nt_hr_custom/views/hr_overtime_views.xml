@@ -1,0 +1,15 @@
+<odoo>
+    <record id="hr_overtime_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.overtime.view.form.inherit</field>
+        <field name="model">hr.overtime</field>
+        <field name="inherit_id" ref="ohrms_overtime.hr_overtime_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='cash_hrs_amount']" position="before">
+                <field name="overtime_att" />
+            </xpath>
+
+
+        </field>
+    </record>
+</odoo>

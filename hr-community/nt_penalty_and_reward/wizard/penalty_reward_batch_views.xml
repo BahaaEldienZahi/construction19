@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="penalty_reward_by_employees_action" model="ir.actions.act_window">
+        <field name="name">Batch</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">penalty.reward.batch</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="view_penalty_reward_by_employees" model="ir.ui.view">
+        <field name="name">view.penalty.reward.by.employees</field>
+        <field name="model">penalty.reward.batch</field>
+        <field name="arch" type="xml">
+            <form string="Penalty and Reward by Employees">
+                <group colspan="2">
+                    <separator string="Department" colspan="2"/>
+                    <newline/>
+                    <span class="text-muted">Set a specific department if you wish to select all the employees from this
+                        department (and subdepartments) at once.</span>
+                    <field name="department_ids" widget="many2many_tags" nolabel="1"/>
+                </group>
+                <group colspan="3">
+                    <separator string="Dates" colspan="2"/>
+                    <newline/>
+<!--                    <span class="text-muted">Date From</span>-->
+                    <field name="start_date" string="From"/>
+<!--                    <span class="text-muted">Date To</span>-->
+                    <field name="end_date" string="To"/>
+                </group>
+                <group colspan="4">
+                    <separator string="Employees" colspan="4"/>
+                    <newline/>
+                    <field name="employee_ids" nolabel="1">
+                        <tree>
+                            <field name="name"/>
+                            <field name="work_email"/>
+                            <field name="department_id"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button string="Generate" name="generate_penalty_reward" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

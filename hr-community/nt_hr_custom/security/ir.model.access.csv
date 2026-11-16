@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_recruitment_planned_user,recruitment.planned.user,model_recruitment_planned,base.group_user,1,1,1,1
+access_employee_category,access.employee.category,model_employee_category,,1,1,1,1
+access_employee_subcategory,access.employee.subcategory,model_employee_subcategory,,1,1,1,1
+access_employee_category_line,access.employee.category.line,model_employee_category_line,,1,1,1,1
+access_policy_custom_line,access.policy.custom.line,model_policy_custom_line,,1,1,1,1

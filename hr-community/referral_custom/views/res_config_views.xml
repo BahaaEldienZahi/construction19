@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inherit Form View to Modify it -->
+    <record id="add_bonus_in_employee_setting" model="ir.ui.view">
+        <field name="name">add_bonus_in_employee_setting</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//block[@name='employee_rights_setting_container']" position="after">
+                <block title="Employee Referral Bonus" name="referral_bonus">
+
+                    <setting help="Amount for Referral Bonus Payment">
+                        <field name="amount" />
+                    </setting>
+
+                    <setting help="Memo for Referral Payment">
+                        <field name="memo"/>
+                    </setting>
+
+                </block>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

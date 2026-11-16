@@ -1,0 +1,24 @@
+<odoo>
+    <record id="add_bank_and_cash_journals" model="ir.ui.view">
+        <field name="name">add_bank_and_cash_journals</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//block[@name='employee_rights_setting_container']" position="after">
+                <block title="Employee Payroll Payment" name="employee_payroll_payment">
+
+                    <setting help="Choose fixed bank journal for all employees">
+                        <field name="bank_journal" domain="[('type', '=', 'bank')]"/>
+                    </setting>
+
+                    <setting help="Choose fixed cash journal for all employees">
+                        <field name="cash_journal" domain="[('type', '=', 'cash')]"/>
+                    </setting>
+
+                </block>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

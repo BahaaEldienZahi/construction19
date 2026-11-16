@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--            this cron is for ticket stage and solve stage-->
+        <!--        <record id="ticket_stage_reminder_cron" model="ir.cron">-->
+        <!--            <field name="name">Ticket Stage 15/30 days Reminder</field>-->
+        <!--            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>-->
+        <!--            <field name="state">code</field>-->
+        <!--            <field name="code">model.ticket_stage_reminder_cron()</field>-->
+        <!--            <field name='interval_number'>1</field>-->
+        <!--            <field name="interval_type">days</field>-->
+        <!--            <field name="numbercall">-1</field>-->
+        <!--            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 10:00:00')"/>-->
+        <!--        </record>-->
+
+        <!--        <record id="ticket_stage_solved_cron" model="ir.cron">-->
+        <!--            <field name="name">Ticket Stage Solved After Month</field>-->
+        <!--            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>-->
+        <!--            <field name="state">code</field>-->
+        <!--            <field name="code">model.ticket_stage_solved_cron()</field>-->
+        <!--            <field name='interval_number'>1</field>-->
+        <!--            <field name="interval_type">days</field>-->
+        <!--            <field name="numbercall">-1</field>-->
+        <!--        </record>-->
+
+
+    </data>
+</odoo>

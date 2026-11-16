@@ -1,0 +1,51 @@
+<odoo>
+
+    <record model="ir.module.category" id="nt_resignation_categ">
+        <field name="name">Resignation</field>
+
+    </record>
+
+    <record model="res.groups" id="group_resignation_user">
+        <field name="name">user</field>
+        <field name="category_id" ref="nt_resignation.nt_resignation_categ"/>
+    </record>
+
+    <record model="res.groups" id="group_resignation_manger">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="nt_resignation.nt_resignation_categ"/>
+        <field name="implied_ids" eval="[Command.link(ref('nt_resignation.group_resignation_user'))]">
+
+        </field>
+    </record>
+
+    <record model="res.groups" id="group_resignation_hr">
+        <field name="name">Hr</field>
+        <field name="category_id" ref="nt_resignation.nt_resignation_categ"/>
+        <field name="implied_ids" eval="[Command.link(ref('nt_resignation.group_resignation_user'))]"/>
+    </record>
+
+    <record model="res.groups" id="group_resignation_admin">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="nt_resignation.nt_resignation_categ"/>
+        <field name="implied_ids" eval="[Command.link(ref('nt_resignation.group_resignation_manger')),Command.link(ref('nt_resignation.group_resignation_hr'))]"/>
+    </record>
+
+    <record model="res.groups" id="group_resignation_create_exit_interview">
+        <field name="name">Create Exit Interview</field>
+        <field name="category_id" ref="nt_resignation.nt_resignation_categ"/>
+    </record>
+
+    <record model="res.groups" id="group_resignation_show_exit_interview">
+        <field name="name">Show Exit Interview</field>
+        <field name="category_id" ref="nt_resignation.nt_resignation_categ"/>
+    </record>
+
+
+
+
+
+
+</odoo>
+
+
+

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_contract_form_view_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.form.view.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+<!--                <xpath expr="//field[@name='date_end']" position="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </xpath>-->
+                <xpath expr="//field[@name='date_end']" position="after">
+                    <field name="probation_date_end"/>
+                </xpath>
+            </field>
+        </record>
+
+<!--        <record id="nt_hr_kanban_view_employees" model="ir.ui.view">-->
+<!--            <field name="name">hr.employee.view.kanban</field>-->
+<!--            <field name="model">hr.employee</field>-->
+<!--            <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>-->
+<!--            &lt;!&ndash;            <field name="groups_id" eval="[(4, ref('hr.group_hr_manager'))]"/>&ndash;&gt;-->
+<!--            &lt;!&ndash;            <field name="mode">primary</field>&ndash;&gt;-->
+<!--            <field name="arch" type="xml">-->
+<!--                <field name="id" position="after">-->
+<!--                    <field name="remain_probation_period"/>-->
+<!--                    <field name="probation_period"/>-->
+<!--                </field>-->
+<!--                <xpath expr="//div[hasclass('oe_kanban_content')]" position="inside">-->
+<!--                    <field name="remain_probation_period"/>-->
+<!--                    <field name="probation_period"/>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+
+<!--        <record id="view_employee_filter" model="ir.ui.view">-->
+<!--            <field name="name">hr.employee.view.search</field>-->
+<!--            <field name="model">hr.employee</field>-->
+<!--            <field name="inherit_id" ref="hr.view_employee_filter"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="." position="inside">-->
+<!--                    <filter string="In Probation Period" name="in_probation_period"-->
+<!--                            domain="[('remain_probation_period', '>', 0)]"/>-->
+<!--                </xpath>-->
+<!--            </field>-->
+
+    </data>
+</odoo>

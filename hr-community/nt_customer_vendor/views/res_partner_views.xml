@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.sales.person.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="foreign_name" placeholder="Foreign Name"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="contact_type" required="1"/>
+<!--                <field name="vendor_type" widget="radio"-->
+<!--                       invisible="contact_type != 'vendor'"-->
+<!--                       required="contact_type == 'vendor'"/>-->
+<!--                       attrs="{'invisible':[('contact_type','!=','vendor')],'required':[('contact_type','=','vendor')]}"/>-->
+            </xpath>
+<!--            <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="attributes">-->
+<!--                <field name="contact_type" invisible="1"/>-->
+<!--                <attribute name="required">contact_type == 'customer'</attribute>-->
+<!--                <attribute name="attrs">{'required': [('contact_type', '=', 'customer')]}</attribute>-->
+<!--            </xpath>-->
+            <xpath expr="//page[@name='sales_purchases']//field[@name='property_payment_term_id']" position="after">
+                <field name="use_excel" invisible="contact_type == 'customer'"/>
+<!--                attrs="{'invisible': [('contact_type', '=', 'customer')]}"/>-->
+            </xpath>
+        </field>
+    </record>
+
+
+    <!--    <record id="sales_team.res_partner_view_team" model="ir.ui.view">-->
+    <!--        <field name="name">res.partner.view.team</field>-->
+    <!--        <field name="model">res.partner</field>-->
+    <!--        <field name="inherit_id" ref="base.view_partner_form" />-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">-->
+    <!--                <field name="team_id" invisible="1" attrs="{'required': [('contact_type', '=', 'customer')]}"/>-->
+    <!--                <field name="team_id" groups="base.group_no_one" attrs="{'required': [('contact_type', '=', 'customer')]}" />-->
+    <!--            </xpath>-->
+    <!--            <field name="parent_id" position="attributes">-->
+    <!--                <attribute name="context">{}</attribute>-->
+    <!--            </field>-->
+    <!--        </field>-->
+    <!--    </record>-->
+</odoo>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hiring_request_form_inherit_nt_hr_custom" model="ir.ui.view">
+        <field name="name">hiring.request.form.inherit.nt.hr.custom</field>
+        <field name="model">hiring.request</field>
+        <field name="inherit_id" ref="hiring_request.hiring_request_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header/field[@name='is_visible_button']" position="before">
+                <button name="action_done"
+                        type="object"
+                        string="Done"
+                        invisible="status != 'in_progress'"
+                        class="oe_highlight"
+                        />
+            </xpath>
+
+            <xpath expr="//label[@for='expected_salary_from']" position="replace"/>
+            <xpath expr="//div[@class='o_row'][field[@name='expected_salary_from']]" position="replace"/>
+
+            <xpath expr="//sheet/group" position="after">
+                <div class="o_stat_buttons d-flex mt-3"
+                     invisible="status not in ['manager_approve', 'hr_approve', 'ceo_approve', 'in_progress', 'done']">
+                    <div class="o_stat_button flex-fill text-center border rounded mx-1"
+                         style="cursor:default; padding:10px;">
+                        <div class="o_stat_value fs-3 fw-bold">
+                            <field name="planned_count" readonly="1"/>
+                        </div>
+                        <div class="o_stat_text text-muted">Planned</div>
+                    </div>
+                    <div class="o_stat_button flex-fill text-center border rounded mx-1"
+                         style="cursor:default; padding:10px; background:#f8f9fa;">
+                        <div class="o_stat_value fs-3 fw-bold">
+                            <field name="current_employees" readonly="1"/>
+                        </div>
+                        <div class="o_stat_text text-muted">Actual</div>
+                    </div>
+                    <div class="o_stat_button flex-fill text-center border rounded mx-1"
+                         style="cursor:default; padding:10px;">
+                        <div class="o_stat_value fs-3 fw-bold">
+                            <field name="deviation" readonly="1"/>
+                        </div>
+                        <div class="o_stat_text text-muted">Deviation</div>
+                    </div>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="hiring_request_list_inherit_nt_hr_custom" model="ir.ui.view">
+        <field name="name">hiring.request.list.inherit.nt.hr.custom</field>
+        <field name="model">hiring.request</field>
+        <field name="inherit_id" ref="hiring_request.hiring_request_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='closed_date']" position="after">
+                <field name="duration" string="Duration (Days)" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="hiring_request_sequence" model="ir.sequence">
+            <field name="name">Hiring Request</field>
+            <field name="code">hiring.request</field>
+            <field name="prefix">HR/</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="hiring_request_form_view" model="ir.ui.view">
+            <field name="name">hiring.request.form.view</field>
+            <field name="model">hiring.request</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="is_visible_button" invisible="1"/>
+                        <field name="is_readonly_fields" invisible="1"/>
+                        <button name="action_submit" type="object" string="Submit" invisible="status != 'draft'"
+                                class="oe_highlight" groups="hiring_request.hiring_request_user_group"/>
+                        <button name="action_manager_approve" type="object" string="Approve"
+                                invisible="status != 'manager_approve'"
+                                class="oe_highlight" groups="hiring_request.hiring_request_manager_group"/>
+                        <button name="action_hr_approve" type="object" string="Approve"
+                                invisible="status != 'hr_approve'"
+                                class="oe_highlight" groups="hiring_request.hiring_request_hr_group"/>
+                        <button name="action_ceo_approve" type="object" string="Approve"
+                                invisible="status != 'ceo_approve'"
+                                class="oe_highlight" groups="hiring_request.hiring_request_ceo_group"/>
+                        <button name="action_reject" type="object" string="Reject" invisible="not is_visible_button"
+                                class="oe_highlight"/>
+                        <field name="status" statusbar_visible="draft,hr_approve,ceo_approve,in_progress,done"
+                               widget="statusbar" editable="bottom"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="active" invisible="1"/>
+                                <field name="job_position_id" readonly="is_readonly_fields"/>
+                                <field name="department_id" readonly="1"/>
+                                <label for="expected_salary_from" string="Expected Salary"/>
+                                <div class="o_row">
+                                    <field name="expected_salary_from" class="oe_inline" readonly="is_readonly_fields"/>
+                                    <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                                    <field name="expected_salary_to" readonly="is_readonly_fields"/>
+                                </div>
+                                <label for="no_of_experience_from" string="Years of Experience"/>
+                                <div class="o_row">
+                                    <field name="no_of_experience_from" class="oe_inline"
+                                           readonly="is_readonly_fields"/>
+                                    <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                                    <field name="no_of_experience_to" readonly="is_readonly_fields"/>
+                                </div>
+
+                                <field name="create_uid" readonly="1" string="Requested By"/>
+                                <!--                                <field name="requested_by"/>-->
+                            </group>
+                            <group>
+                                <!--                                <group name="no_target">-->
+                                <label for="number_of_vacancies"/>
+                                <div class="o_row" name="recruitment_target">
+                                    <field name="number_of_vacancies" class="o_hr_narrow_field"
+                                           readonly="is_readonly_fields"/>
+                                    <span>new Employees</span>
+                                </div>
+                                <!--                                </group>-->
+                                <!--                                <field name="number_of_vacancies" readonly="is_readonly_fields"/>-->
+                                <field name="request_date" readonly="1"/>
+                                <field name="closed_date" readonly="1"/>
+
+                                <field name="hired" invisible="status not in ['in_progress', 'done']"/>
+                                <field name="no_of_applications" invisible="status not in ['in_progress', 'done']"/>
+                                <field name="rejection_reason" invisible="status != 'reject'"/>
+                            </group>
+                        </group>
+
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="hiring_request_tree_view" model="ir.ui.view">
+            <field name="name">Hiring Request</field>
+            <field name="model">hiring.request</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" optional="show"/>
+                    <field name="job_position_id" optional="show"/>
+                    <field name="create_uid" string="Requested By" optional="show"/>
+                    <field name="number_of_vacancies" optional="show"/>
+                    <field name="no_of_applications" optional="show"/>
+                    <field name="hired" optional="show"/>
+                    <field name="request_date" string="Request Date" optional="show"/>
+                    <field name="closed_date" string="Closed Date" optional="show"/>
+                    <field name="status" widget="badge" decoration-warning="status == 'reject'"
+                           decoration-info="status in ['manager_approve', 'hr_approve', 'ceo_approve', 'in_progress']"
+                           decoration-success="status == 'done'" optional="show"/>
+                </tree>
+            </field>
+        </record>
+        <record id="hiring_request_pivot_view" model="ir.ui.view">
+            <field name="name">hiring.request.pivot.view</field>
+            <field name="model">hiring.request</field>
+            <field name="arch" type="xml">
+                <pivot string="Hiring Request Analysis">
+                    <field name="job_position_id" type="row"/>
+                    <field name="department_id" type="row"/>
+
+                    <field name="status" type="col"/>
+
+                    <field name="number_of_vacancies" type="measure"/>
+                    <field name="hired" type="measure"/>
+                    <field name="no_of_applications" type="measure"/>
+                    <field name="expected_salary_from" type="measure"/>
+                    <field name="expected_salary_to" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+        <record id="hiring_request_view_search" model="ir.ui.view">
+            <field name="name">hiring_request_view_search</field>
+            <field name="model">hiring.request</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name='job_position_id'/>
+                    <group expand="0" string="Group By">
+                        <filter string="Job Position" name="job_position_id" domain="[]" context="{'group_by':'job_position_id'}"/>
+                        <filter string="Department" name="department" domain="[]"
+                                context="{'group_by':'department_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="action_hiring_request">
+            <field name="name">Hiring Requests</field>
+            <field name="res_model">hiring.request</field>
+            <field name="view_mode">tree,form,pivot</field>
+        </record>
+
+        <menuitem name="Hiring Requests" id="hiring_request_root_menu"
+                  web_icon="hiring_request,static/description/hire.png"/>
+
+        <menuitem name="Hiring Requests" id="menu_hiring_requests" parent="hiring_request.hiring_request_root_menu"/>
+
+        <menuitem name="Requests" id="menu_requests" parent="hiring_request.menu_hiring_requests"
+                  action="hiring_request.action_hiring_request"/>
+
+    </data>
+</odoo>

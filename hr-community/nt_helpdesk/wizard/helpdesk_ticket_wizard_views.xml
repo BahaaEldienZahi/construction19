@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Wizard view of top_selling product,customer,category-->
+    <record id="helpdesk_ticket_wizard_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.wizard.view.form</field>
+        <field name="model">helpdesk.ticket.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Helpdesk Ticket Wizard">
+                <group>
+                    <group>
+                        <field name="team_id" required="1"/>
+                        <field name="only_previous" invisible="1"/>
+
+
+                    </group>
+                    <group>
+                        <field name="start_date" required="1"/>
+                        <field name="end_date" required="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_generate_xlsx_report" string="Print Xlsx"
+                            type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_wizard_action_all" model="ir.actions.act_window">
+        <field name="name">Tickets Log Report (All)</field>
+        <field name="res_model">helpdesk.ticket.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_only_previous': False}</field>
+    </record>
+
+    <record id="helpdesk_ticket_wizard_action_previous" model="ir.actions.act_window">
+        <field name="name">Tickets Log Report (Previous)</field>
+        <field name="res_model">helpdesk.ticket.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_only_previous': True}</field>
+    </record>
+    <menuitem id="helpdesk_ticket_log_wizard_menu"
+              name="Tickets Log Report"
+              parent="helpdesk_mgmt.helpdesk_ticket_reporting_menu"
+              groups="nt_helpdesk.group_helpdesk_technical_user"
+              sequence="15"/>
+
+    <menuitem id="menu_helpdesk_ticket_wizard_all"
+              name="Tickets Log Report (All)"
+              action="helpdesk_ticket_wizard_action_all"
+              parent="nt_helpdesk.helpdesk_ticket_log_wizard_menu"
+              sequence="15"/>
+
+    <menuitem id="menu_helpdesk_ticket_wizard_previous"
+              name="Tickets Log Report (Previous)"
+              action="helpdesk_ticket_wizard_action_previous"
+              parent="nt_helpdesk.helpdesk_ticket_log_wizard_menu"
+              sequence="16"/>
+
+
+</odoo>

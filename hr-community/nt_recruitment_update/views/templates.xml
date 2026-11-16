@@ -1,0 +1,613 @@
+<odoo>
+
+
+    <template id="portal_thank_you_recruitment" name="Folder Uploader">
+
+        <div class="col-md-offset-5 col-sm-offset-4 col-sm-8 col-md-7" style="margin-top:30px;">
+            Thank You very much
+        </div>
+
+
+    </template>
+
+
+    <template id="portal_upload_files" name="Folder Uploader">
+
+        <t t-call="web.html_container">
+            <style>
+                body {
+                font-family: Arial, Helvetica, sans-serif;
+                }
+
+                .container {
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+                margin-top: 30px;
+                }
+
+                input[type="file"] {
+                display: none;
+                }
+
+                .custom-file-input::before {
+                content: 'Select File(s)';
+                display: inline-block;
+                background: linear-gradient(top, #f9f9f9, #e3e3e3);
+                border: 1px solid #999;
+                border-radius: 3px;
+                padding: 8px 12px;
+                outline: none;
+                white-space: nowrap;
+                -webkit-user-select: none;
+                cursor: pointer;
+                text-shadow: 1px 1px #fff;
+                font-weight: 700;
+                font-size: 12pt;
+                }
+
+                .custom-file-input:hover::before {
+                border-color: black;
+                }
+
+                .custom-file-input:active::before {
+                background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+                }
+
+                button[type="submit"] {
+                background-color: #04AA6D;
+                color: white;
+                padding: 12px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                }
+
+                button[type="submit"]:hover {
+                background-color: #45a049;
+                }
+            </style>
+
+            <div class="container">
+                <form t-attf-action="/recruitment/{{applicant_id}}/attachment/upload" method="post"
+                      class="s_website_form form-horizontal container-fluid mt-3"
+                      enctype="multipart/form-data" id="file_upload_form">
+                    <div class="form-group row">
+                        <div class="col-md-7 col-sm-8">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <label for="fileInputControl" class="custom-file-input"></label>
+                            <input type="file" name="attachments" id="fileInputControl" multiple="multiple"/>
+                            <button type="submit" name="Upload" class="btn btn-primary mt-3">
+                                <i class="fa fa-upload"></i>
+                                Upload
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    <template id="job_offer_decision" name="Job Offer">
+        <!--        <t t-call="website.layout">-->
+        <t t-call="web.html_container">
+            <form class="text-center mt-4" t-att-action="api" method="post">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                <div class="form-row justify-content-center mb-3">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="decision" id="accept_offer" value="accept"/>
+                        <label class="form-check-label" for="accept_offer">
+                            Accept offer
+                        </label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="decision" id="reject_offer" value="reject"/>
+                        <label class="form-check-label" for="reject_offer">
+                            Reject offer
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-row justify-content-center mb-3">
+                    <div class="col-auto">
+                        <input class="form-control" type="date" name="join_date" id="join_date"
+                               required="accept_offer"/>
+                    </div>
+                </div>
+
+                <div class="form-row justify-content-center">
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+
+        </t>
+        <!--        </t>-->
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function () {
+
+            var acceptOffer = document.getElementById('accept_offer');
+            var rejectOffer = document.getElementById('reject_offer');
+            var joinDate = document.getElementById('join_date');
+
+            acceptOffer.addEventListener('change', function () {
+            console.log('____________________acccept_________________________');
+            joinDate.setAttribute('required', 'required');
+            });
+
+            rejectOffer.addEventListener('change', function () {
+            console.log('________________reject_____________________________');
+            joinDate.removeAttribute('required');
+            });
+
+            });
+
+        </script>
+
+    </template>
+    <template id="template_job_offer">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="object">
+                <div class="article" t-att-data-oe-model="object._name" t-att-data-oe-id="object.id">
+                    <div class="header">
+                        <t t-set="company_id" t-value="object.company_id"/>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center">
+                                <img t-if="company_id.logo" t-att-src="image_data_uri(company_id.logo)"
+                                     style="height: 120px;" alt="Logo"/>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center">
+                                <h4>Job Offer Letter</h4>
+                            </div>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col-6">
+                                <span t-esc="datetime.datetime.now().strftime('%Y')"/>
+                            </div>
+                            <div class="col-6 text-center">
+                                <span t-esc="object.offer_date.strftime('%d')"/>th of
+                                <span
+                                        t-esc="datetime.datetime.now().strftime('%Y')"/>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div class="content">
+                        <div>
+                            <strong>Dear
+                                <span t-esc="object.applicant_id.name"/>
+                            </strong>
+                        </div>
+                        <br/>
+                        <div>
+                            <span>
+                                <strong>On behalf of Ansary,</strong>we are delighted to offer you the
+                                position of
+                                <span t-esc="object.applicant_id.job_id.name"/>
+                                with our organization.
+                            </span>
+                        </div>
+                        <br/>
+
+                        <div>
+                            We expect that you will be an added-value member through your personal accountability, your
+                            knowledge and skills.
+                            We are confident you will find this new opportunity both challenging and rewarding.
+                            The following points outline the terms and conditions we are proposing:
+                        </div>
+                        <br/>
+
+                        <div>
+                            <strong>Title:</strong>
+                            <span t-esc="object.applicant_id.job_id.name"/>
+                        </div>
+                        <br/>
+                        <div>
+                            <strong>Department:</strong>
+                            <span t-esc="object.applicant_id.job_id.department_id.name"/>
+                        </div>
+                        <br/>
+                        <div>
+                            <strong>Reporting to:</strong>
+                            <!-- ASSUMPTION: department manager used as "Reporting to".
+                                 Adjust the field path below if the direct manager is tracked
+                                 elsewhere on hr.applicant / hr.job.offer -->
+                            <span
+                                    t-if="object.applicant_id.job_id.department_id.manager_id.name"
+                                    t-esc="object.applicant_id.job_id.department_id.manager_id.name"/>
+                            <span t-else="">-</span>
+                        </div>
+                        <br/>
+
+                        <div>
+                            <strong>Professional Contribution</strong>
+                        </div>
+                        <div>
+                            You agree, to the best of your ability and experience, that you will,
+                            at all times, loyally and conscientiously perform all of the duties and
+                            obligations required for the job and according to the set performance
+                            standards. During the term of your employment, you further agree that
+                            you will devote all your business time and attention, when you accept
+                            employment, you also agree that you will not directly or indirectly
+                            engage or participate in any business that is competitive in any manner
+                            with the business of the Company.
+                        </div>
+                        <br/>
+
+                        <div>
+                            <strong>Start Date</strong>
+                        </div>
+                        <div>
+                            Start date:
+                            <!-- ASSUMPTION: using hr.applicant "availability" field (expected start
+                                 date) as Start Date. Replace with the correct field if stored
+                                 elsewhere (e.g. on hr.job.offer) -->
+                            <span
+                                    t-if="object.applicant_id.availability"
+                                    t-esc="object.applicant_id.availability.strftime('%d-%m-%Y')"/>
+                            <span t-else="">…………….</span>
+                        </div>
+                        <br/>
+
+                        <div>
+                            <strong>Compensation &amp; Benefits:</strong>
+                        </div>
+                        <div>
+                            <strong>Monthly Basic salary:</strong>
+                            <span t-esc="object.applicant_id.salary_proposed"/>
+                            EGP
+                        </div>
+                        <div>
+                            <strong>Medical Insurance:</strong>
+                            Individual Coverage (This benefit is eligible after passing the
+                            probation period successfully).
+                        </div>
+                        <div>
+                            <strong>Bonus:</strong>
+                            20% According to branch investigators.
+                        </div>
+                        <div>
+                            <strong>KPIs:</strong>
+                            10% According to performance in line with company policy.
+                        </div>
+                        <br/>
+
+                        <t t-if="object.applicant_id.date_open">
+                            <div>
+                                <span>
+                                    <strong>Due Date:</strong>
+                                    <span>It is expected to receive your reply by maximum</span>
+                                    <span
+                                            t-esc="object.applicant_id.date_open.strftime('%d')"/>
+                                    th of<span
+                                        t-esc="object.applicant_id.date_open.strftime('%m-%Y')"/>. Your signature below
+                                    will
+                                    confirm the acceptance of this offer letter with all its terms.
+                                </span>
+                            </div>
+                            <br/>
+                        </t>
+
+                        <div>
+                            <strong>Confidential Information and Invention Assignment Agreement</strong>
+                        </div>
+                        <div>
+                            Your acceptance of this offer and commencement of employment with the
+                            company is implying that you will limit the use of and access to the
+                            Proprietary Information to its benefit. Any use or access necessary to
+                            affect the purposes of performing your responsibilities shall be kept in
+                            confidence.
+                        </div>
+                        <br/>
+
+                        <div>
+                            <strong>Confirmation of Agreement</strong>
+                        </div>
+                        <div>
+                            This offer applies upon your approval and signature. I am delighted to
+                            be able to extend this offer of employment to you. Please contact me with
+                            any questions. We look forward to working with you.
+                        </div>
+                        <br/>
+
+                        <div>
+                            <div>
+                                Sincerely,
+                            </div>
+                            <div>
+                                Name of the employee:
+                                <span t-esc="object.applicant_id.name"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <div>
+                            With the signature below, I accept this employment offer.
+                        </div>
+                        <br/>
+                        <div class="row mb-2">
+                            <div class="col-6">Start Date: …………………….</div>
+                            <div class="col-6">Signature: …………………….</div>
+                        </div>
+                        <div>
+                            <div style="background-color: black;width: 20%;height: 1px;border-top: 2px solid black;line-height: 30%;display: inline-block;margin-right: 2%"></div>
+                            <div style="background-color: black;width: 20%;height: 1px;border-top: 2px solid black;line-height: 30%;display: inline-block;margin-right: 2%"></div>
+                            <div style="background-color: black;width: 20%;height: 1px;border-top: 2px solid black;line-height: 30%;display: inline-block;margin-right: 2%"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!--    applicant job offer -->
+
+    <template id="portal_job_offer" name="Job Offer">
+        <t t-call="web.frontend_layout">
+            <div class="container mb-5 mt-4 o_rating_page_submit">
+                <div class="oe_structure" id="oe_structure_rate_submit_header"/>
+                <div class="row text-left justify-content-left">
+                    <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                    <t t-set="title">Job Offer</t>
+                    <t t-foreach="docs" t-as="object">
+                        <div class="article" t-att-data-oe-model="object._name" t-att-data-oe-id="object.id">
+
+                            <div class="content">
+                                <div class="text-center">
+                                    <h3>Job Offer Letter</h3>
+                                    <span t-esc="object.create_date.strftime('%d %B %Y') if object.create_date else ''"/>
+                                </div>
+                                <br/>
+                                <div>
+                                    <strong>Dear
+                                        <span t-esc="object.applicant_id.name"/>
+                                    </strong>
+                                    ,
+                                </div>
+                                <br/>
+                                <div>
+                                    <span>
+                                        <strong>Al-Ansari Labs is pleased to present,&amp;nbsp;</strong>this offer
+                                        of employment
+                                        for the position of
+                                        <span t-esc="object.applicant_id.job_id.name"/>
+                                        .
+                                    </span>
+                                </div>
+                                <br/>
+
+                                <div>
+                                    This is a full-time position carrying substantial
+                                    responsibility and integral to our continued business development
+                                    and success. We are confident that you will be a great value add to our team.
+                                    This Letter of Agreement (Letter)
+                                    formally presents the specifics of our offer of employment, which you will want to consider:
+                                </div>
+                                <br/>
+
+                                <div>
+                                    <strong>Position:&amp;nbsp;</strong>
+                                    <span t-esc="object.applicant_id.job_id.name"/>
+                                </div>
+                                <br/>
+                                <div>
+                                    <strong>Premises:&amp;nbsp;</strong>
+                                    <span
+                                            t-if="object.applicant_id.job_id.department_id.name"
+                                            t-esc="object.applicant_id.job_id.department_id.name"/>
+                                    <span
+                                            t-else=""
+                                            t-esc="object.applicant_id.department_id.name"/>
+                                </div>
+                                <br/>
+                                <div>
+                                    <strong>Reporting to:&amp;nbsp;</strong>
+                                    <!-- ASSUMPTION: using department manager as "Reporting to".
+                                         Adjust the field path below if you track a direct manager
+                                         differently on hr.applicant / hr.job.offer -->
+                                    <span
+                                            t-if="object.applicant_id.job_id.department_id.manager_id.name"
+                                            t-esc="object.applicant_id.job_id.department_id.manager_id.name"/>
+                                    <span t-else="">-</span>
+                                </div>
+                                <br/>
+
+                                <div>
+                                    <strong>Professional Contribution</strong>
+                                </div>
+                                <div>
+                                    You agree, to the best of your ability and experience, that you will,
+                                    at all times, loyally and conscientiously perform all of the duties and
+                                    obligations required for the job and according to the set performance
+                                    standards. During the term of your employment, you further agree that
+                                    you will devote all your business time and attention, when you accept
+                                    employment, you also agree that you will not directly or indirectly
+                                    engage or participate in any business that is competitive in any manner
+                                    with the business of the Company.
+                                </div>
+                                <br/>
+
+                                <div>
+                                    <strong>Start Date</strong>
+                                </div>
+                                <div>
+                                    Start date:&amp;nbsp;
+                                    <!-- ASSUMPTION: using hr.applicant "availability" field (expected start
+                                         date) as Start Date. Replace with the correct field on hr.job.offer
+                                         if you store it there instead -->
+                                    <span
+                                            t-if="object.applicant_id.availability"
+                                            t-esc="object.applicant_id.availability.strftime('%d-%m-%Y')"/>
+                                    <span t-else="">…………….</span>
+                                </div>
+                                <br/>
+
+                                <div>
+                                    <strong>Compensation &amp; Benefits:</strong>
+                                </div>
+                                <div>
+                                    <strong>Monthly Basic salary:&amp;nbsp;</strong>
+                                    <span t-esc="object.applicant_id.salary_proposed"/>&amp;nbsp;EGP
+                                </div>
+                                <div>
+                                    <strong>Medical Insurance:&amp;nbsp;</strong>Individual Coverage
+                                    (This benefit is eligible after passing the probation period successfully).
+                                </div>
+                                <div>
+                                    <strong>Bonus:&amp;nbsp;</strong>20% According to branch investigators.
+                                </div>
+                                <div>
+                                    <strong>KPIs:&amp;nbsp;</strong>10% According to performance in line with
+                                    company policy.
+                                </div>
+                                <br/>
+
+                                <t t-if="object.expire_date">
+                                    <div>
+                                        <span>
+                                            <strong>Due Date:&amp;nbsp;</strong>It is expected to receive your reply by
+                                            maximum
+                                            <span
+                                                    t-esc="object.expire_date.strftime('%d')"/>
+                                            th of&amp;nbsp;<span
+                                                t-esc="object.expire_date.strftime('%m-%Y')"/>.&amp;nbsp; Your
+                                            Action below
+                                            confirm the acceptance of this offer letter with all its terms.
+                                        </span>
+                                    </div>
+                                    <br/>
+                                </t>
+
+                                <div>
+                                    <strong>Confidential Information and Invention Assignment Agreement</strong>
+                                </div>
+                                <div>
+                                    Your acceptance of this offer and commencement of employment with the
+                                    company is implying that you will limit the use of and access to the
+                                    Proprietary Information to its benefit. Any use or access necessary to
+                                    affect the purposes of performing your responsibilities shall be kept in
+                                    confidence.
+                                </div>
+                                <br/>
+
+                                <div>
+                                    <strong>Confirmation of Agreement</strong>
+                                </div>
+                                <div>
+                                    This offer applies upon your approval and signature. I am delighted to
+                                    be able to extend this offer of employment to you. Please contact me with
+                                    any questions. We look forward to working with you.
+                                </div>
+                                <br/>
+
+                                <div>
+                                    <div>
+                                        Sincerely,
+                                    </div>
+                                    <div>
+                                        Name of the employee:&amp;nbsp;
+                                        <span t-esc="object.applicant_id.name"/>
+                                    </div>
+                                    <br/>
+                                    <div>
+                                        Start Date: …………………….
+                                    </div>
+                                    <div>
+                                        Signature: …………………….
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="footer">
+                                <br/>
+                                <div>
+
+                                </div>
+
+                            </div>
+                            <form class="text-center mt-4 oe_portal_job_offer_form" t-att-action="api"
+                                  enctype="multipart/form-data">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div class="form-row justify-content-center mb-3">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="decision" id="accept_offer"
+                                               value="accept"/>
+                                        <label class="form-check-label" for="accept_offer">
+                                            Accept offer
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="decision" id="reject_offer"
+                                               value="reject"/>
+                                        <label class="form-check-label" for="reject_offer">
+                                            Reject offer
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-row justify-content-center mb-3">
+                                    <div class="col-auto">
+                                        <input class="form-control" type="date" name="join_date" id="join_date"
+                                               hidden="hidden"/>
+                                    </div>
+                                </div>
+                                <div class="form-row justify-content-center mb-3">
+                                    <div class="col-auto">
+                                        <input class="form-control" type="text" name="reject_reason" id="reject_reason"
+                                               hidden="hidden" placeholder="reject reason .. "/>
+                                    </div>
+                                </div>
+
+                                <div class="form-row justify-content-center">
+                                    <div class="o_job_offer_portal_error alert alert-danger d-none" role="alert"
+                                         style="margin-bottom: 10px; text-align: center;">
+                                        <p class="p_job_offer_portal_error">There is something went wrong.</p>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <script type="text/javascript">
+                                document.addEventListener('DOMContentLoaded', function () {
+
+                                var acceptOffer = document.getElementById('accept_offer');
+                                var rejectOffer = document.getElementById('reject_offer');
+                                var joinDate = document.getElementById('join_date');
+                                var reject_reason = document.getElementById('reject_reason');
+
+
+                                acceptOffer.addEventListener('change', function () {
+                                console.log('____________________acccept_________________________');
+                                joinDate.removeAttribute('hidden');
+                                reject_reason.setAttribute('hidden', 'hidden');
+                                });
+
+                                rejectOffer.addEventListener('change', function () {
+                                console.log('________________reject_____________________________');
+                                joinDate.setAttribute('hidden', 'hidden');
+                                reject_reason.removeAttribute('hidden');
+                                });
+
+
+                                });
+
+                            </script>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

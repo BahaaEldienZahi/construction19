@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_helpdesk_ticket_form" model="ir.ui.view">
+        <field name="name">inherit.helpdesk.ticket.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_mgmt.ticket_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Replace base assign_to_me button with our custom one -->
+            <xpath expr="//button[@name='assign_to_me']" position="replace">
+                <button class="btn-primary"
+                        name="action_assign_to_me"
+                        type="object" string="Assign To Me" data-hotkey="z"
+                        invisible="not id"/>
+            </xpath>
+
+            <!-- Modify team_id -->
+            <xpath expr="//field[@name='team_id']" position="attributes">
+                <attribute name="required">1</attribute>
+                <attribute name="domain">[('active', '=', True), ('id', 'in', domain_team_ids)]</attribute>
+                <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+            </xpath>
+
+            <!-- After team_id: add area/sub_area/category and invisible control fields -->
+            <xpath expr="//field[@name='team_id']" position="after">
+                <field name="last_team_id" invisible="1"/>
+                <field name="to_check_date" invisible="1"/>
+                <field name="close_date" invisible="1"/>
+                <field name="helpdesk_area_id" required="'helpdesk_area_id' in required_fields"
+                       invisible="not area" domain="[('id', 'in', area_ids)]"
+                       options="{'no_open': True, 'no_create': True}"/>
+                <field name="sub_area_id" invisible="not helpdesk_area_id" domain="[('id','in',domain_sub_area_ids)]"
+                       options="{'no_open': True, 'no_create': True}"/>
+                <field name="category_id" options="{'no_open': True, 'no_create': True}"
+                       required="'category_id' in required_fields" invisible="'category_id' in invisible_fields"/>
+            </xpath>
+
+            <!-- Add invisible control fields before user_id -->
+            <xpath expr="//field[@name='user_id']" position="before">
+                <field invisible="1" name="sequence"/>
+                <field invisible="1" name="to_check_team_id"/>
+                <field invisible="1" name="to_check_user_id"/>
+                <field invisible="1" name="department_is_set"/>
+                <field invisible="1" name="area_ids"/>
+                <field invisible="1" name="ticket_type_ids"/>
+                <field invisible="1" name="product_ids"/>
+                <field invisible="1" name="invisible_fields"/>
+                <field invisible="1" name="required_fields"/>
+                <field invisible="1" name="required_project_team_id"/>
+                <field invisible="1" name="required_stage_id"/>
+                <field invisible="1" name="area"/>
+                <field invisible="1" name="external"/>
+                <field name="domain_team_ids" invisible="1" widget="many2many_tags"/>
+                <field name="domain_sub_area_ids" invisible="1" widget="many2many_tags"/>
+                <field invisible="0" name="change_stage_date"/>
+                <field invisible="1" name="department_id"/>
+                <field invisible="1" name="categ_ids"/>
+            </xpath>
+
+            <!-- Modify user_id -->
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="required">'user_id' in required_fields</attribute>
+                <attribute name="invisible">'user_id' in invisible_fields</attribute>
+                <attribute name="readonly">readonly_assign</attribute>
+                <attribute name="options">{'no_quick_create': 1, 'no_create_edit': True, 'no_create': True, 'no_open': True}</attribute>
+            </xpath>
+
+            <!-- After user_id: employee info -->
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="readonly_assign" invisible="1"/>
+                <field name="employee_id" readonly="1"/>
+                <field name="employee_work_phone" string="Employee Phone" readonly="1"/>
+                <field name="any_desk_id" string="AnyDesk" required="'any_desk_id' in required_fields"
+                       invisible="'any_desk_id' in invisible_fields"/>
+            </xpath>
+
+            <!-- Modify priority -->
+            <xpath expr="//field[@name='priority']" position="attributes">
+                <attribute name="invisible">'priority' in invisible_fields</attribute>
+                <attribute name="required">'priority' in required_fields</attribute>
+                <attribute name="readonly">sequence > 0</attribute>
+            </xpath>
+
+            <!-- Modify partner_id -->
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="invisible">'partner_id' in invisible_fields</attribute>
+                <attribute name="required">'partner_id' in required_fields</attribute>
+                <attribute name="readonly">sequence > 0</attribute>
+                <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+            </xpath>
+
+            <!-- After partner_id: customer_code -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="customer_code"
+                       required="'customer_code' in required_fields" invisible="'customer_code' in invisible_fields"/>
+            </xpath>
+
+            <!-- After partner_email: email_cc, partner_phone, sla_deadline -->
+            <xpath expr="//field[@name='partner_email']" position="after">
+                <field name="email_cc" invisible="'email_cc' in invisible_fields"
+                       required="'email_cc' in required_fields"/>
+                <field name="partner_phone" invisible="'partner_phone' in invisible_fields"
+                       required="'partner_phone' in required_fields"/>
+                <field name="sla_deadline" invisible="'sla_deadline' in invisible_fields"
+                       required="'sla_deadline' in required_fields"
+                       readonly="sequence > 0"/>
+            </xpath>
+
+            <!-- After category_id: ticket_type_id and team_project -->
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="team_project_required" invisible="1"/>
+                <field name="team_project" invisible="not team_project_required" required="team_project_required"/>
+                <field name="ticket_type_id" tracking="1"
+                       invisible="'ticket_type_id' in invisible_fields"
+                       required="'ticket_type_id' in required_fields"
+                       options="{'no_open': True, 'no_create': True}"
+                       domain="[('id', 'in', ticket_type_ids)]"/>
+            </xpath>
+
+            <!-- Modify tag_ids -->
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="invisible">'tag_ids' in invisible_fields</attribute>
+                <attribute name="required">'tag_ids' in required_fields</attribute>
+                <attribute name="readonly">sequence > 0</attribute>
+            </xpath>
+
+            <!-- After tag_ids: product, ticket_tag, support_log, recurred -->
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="helpdesk_product_id" required="'helpdesk_product_id' in required_fields"
+                       invisible="'helpdesk_product_id' in invisible_fields" domain="[('id', 'in', product_ids)]"
+                       options="{'no_open': True, 'no_create': True}"/>
+                <field name="ticket_tag" invisible="1" readonly="1" widget="badge"/>
+                <field name="support_log" invisible="'support_log' in invisible_fields"/>
+                <field name="recurred_issue"/>
+                <field name="recurred_issue_ref" invisible="recurred_issue != True" placeholder="Old Ticket Ref..."/>
+            </xpath>
+
+            <!-- Modify name -->
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="required">1</attribute>
+                <attribute name="readonly">sequence > 0</attribute>
+            </xpath>
+
+            <!-- Add project_id, cr, work_items in group[2] (right group) -->
+            <xpath expr="//sheet/group/group[2]" position="inside">
+                <field name="helpdesk_cr_ids"
+                       context="{'default_ticket_id': id, 'default_partner_id': partner_id, 'default_project_id': project_id}"
+                       required="required_stage_id == stage_id and 'helpdesk_cr_ids' in required_fields" widget="many2many_tags"/>
+                <field invisible="partner_id == False or 'project_id' in invisible_fields" name="project_id"
+                       options="{'no_edit': True, 'no_create': True}" readonly="sequence > 0"
+                       required="required_stage_id == stage_id and 'project_id' in required_fields"/>
+                <field name="project_code"
+                       required="'project_code' in required_fields" invisible="'project_code' in invisible_fields"/>
+                <field name="work_item_ids"
+                       widget="many2many_tags"
+                       context="{'default_ticket_id': id, 'default_partner_id': partner_id, 'default_project_id': project_id}"
+                       required="required_stage_id == stage_id and 'work_item_ids' in required_fields"/>
+            </xpath>
+
+            <!-- Replace description with description_html -->
+            <xpath expr="//field[@name='description']" position="replace">
+                <field name="description_html" required="'description_html' in required_fields"
+                       invisible="'description_html' in invisible_fields"/>
+            </xpath>
+
+            <!-- Add Log page -->
+            <xpath expr="//page[@name='description']" position="after">
+                <page string="Log" groups="nt_helpdesk.group_helpdesk_ticket_log">
+                    <sheet>
+                        <field name="ticket_log_ids">
+                            <tree string="Logs" multi_edit="1" create="0" delete="false"
+                                  default_order="create_date desc, id desc">
+                                <field name="stage_id" readonly="1"/>
+                                <field name="team_id" readonly="1"/>
+                                <field name="helpdesk_area_id" readonly="1"/>
+                                <field name="category_id" readonly="1"/>
+                                <field name="ticket_type_id" readonly="1"/>
+                                <field name="tag_ids" readonly="1" widget="many2many_tags"/>
+                                <field name="priority" widget="priority" readonly="1"/>
+                                <field name="user_id" readonly="1"/>
+                                <field name="create_date" readonly="1" string="Time"/>
+                                <field name="create_uid" readonly="1" string="User"/>
+                                <field name="change" widget="selection" readonly="1"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="inherit_helpdesk_ticket_tree" model="ir.ui.view">
+        <field name="name">inherit.helpdesk.ticket.tree</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_mgmt.ticket_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="replace">
+                <tree default_order="id desc" multi_edit="1" sample="1" string="Tickets">
+                    <field name="display_name" readonly="1" string="Ticket Name"/>
+                    <field name="partner_id" optional="show" readonly="1"/>
+                    <field name="create_date" optional="show"/>
+                    <field name="user_ids" invisible="1" widget="many2many_tags"/>
+                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                    <field name="activity_ids" optional="show" widget="list_activity"/>
+                    <field name="stage_id" optional="show" readonly="0" groups="nt_helpdesk.group_mass_edit_ticket_stage"/>
+                    <field name="stage_id" optional="show" readonly="1" groups="!nt_helpdesk.group_mass_edit_ticket_stage"/>
+                    <field name="team_id" optional="show"/>
+                    <field name="ticket_type_id" optional="hide"/>
+                    <field name="priority" optional="hide"/>
+                    <field name="tag_ids" optional="hide" options="{'color_field': 'color'}" widget="many2many_tags"/>
+                    <field name="company_id" optional="show" readonly="1"/>
+                </tree>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_tickets_view_search_inherit" model="ir.ui.view">
+        <field name="name">helpdesk_tickets_view_search_inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_mgmt.helpdesk_ticket_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_email']" position="after">
+                <field name="department_id"/>
+                <field name="recurred_issue"/>
+                <field name="work_item_ids"/>
+                <field name="helpdesk_cr_ids"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Department" name="group_departments" context="{'group_by': 'department_id'}"/>
+                <filter string="Recurred Issue" name="group_recurred_issue" context="{'group_by': 'recurred_issue'}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="server_action_recompute_team_members" model="ir.actions.server">
+        <field name="name">Recompute Team members</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="nt_helpdesk.model_helpdesk_ticket"/>
+        <field name="binding_model_id" ref="nt_helpdesk.model_helpdesk_ticket"/>
+        <field name="state">code</field>
+        <field name="code">model.action_recompute_team_members()</field>
+    </record>
+
+
+    <data noupdate="1">
+        <record id="helpdesk_change_fields" model="mail.message.subtype">
+            <field name="name">Helpdesk Fields Changed</field>
+            <field name="res_model">helpdesk.ticket</field>
+            <field name="description">Helpdesk Fields Changed.</field>
+            <field name="sequence">100</field>
+            <field eval="True" name="default"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="model_hr_employee_action_export_employee" model="ir.actions.server">
+        <field name="name">Export Employee to address book </field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_export_emps_to_address_book()</field>
+    </record>
+
+
+    <!--                    hr employee                      -->
+    <record id="employee_barcode_sequence" model="ir.sequence">
+        <field name="name">Employee Barcode</field>
+        <field name="code">employee.barcode</field>
+        <field name="prefix"></field>
+        <field name="padding">3</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record id="inherit_hr_employee_form" model="ir.ui.view">
+        <field name="name">inherit.hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='visa_expire']" position="attributes">
+                <attribute name="string">National Id Expiry Date</attribute>
+            </xpath>
+            <xpath expr="//sheet/div[2]/div[1]/h1" position="after">
+                <h1>
+                    <field name="name_in_arabic" placeholder=" Name In Arabic"/>
+                </h1>
+            </xpath>
+            <xpath expr="//field[@name='coach_id']" position="after">
+                <field name="ref_employee_id" readonly="1"/>
+                <field name="address_book_id" invisible="1"/>
+                <field name="referral_by_email" widget="email"/>
+                <field name="signature"/>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']/group" position="inside">
+                <group string="Hr Details">
+                    <field name="hiring_date"/>
+                    <field name="social_insurance_number"/>
+                    <field name="medical_insurance_id"/>
+                    <field name="medical_staff_id"/>
+                    <field name="identification_id_expiry_date"/>
+                    <field name="military_certificate_expiry_date"/>
+                </group>
+            </xpath>
+            <xpath expr="//page[@name='hr_settings']/group" position="after">
+                <group>
+                    <field name="bank_cash_journal"/>
+                    <field name="journal_id"/>
+                    <field name="branch" required="bank_cash_journal == 'bank'"
+                           invisible="bank_cash_journal != 'bank'"/>
+                    <field name="bank" required="bank_cash_journal == 'bank'" invisible="bank_cash_journal != 'bank'"/>
+                    <field name="bank_account" required="bank_cash_journal == 'bank'"
+                           invisible="bank_cash_journal != 'bank'"/>
+                </group>
+            </xpath>
+            <group name="payroll_group" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </group>
+            <group name="identification_group" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </group>
+
+            <xpath expr="//field[@name='bank_account_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!--            <xpath expr="//page[@name='hr_settings']//field[@name='registration_number']" position="attributes">-->
+            <!--                <attribute name="invisible">1</attribute>-->
+            <!--            </xpath>-->
+            <xpath expr="//field[@name='mobile_phone']" position="before">
+                <field name="gender" required="1"/>
+                <!-- Add your fields or attributes here -->
+            </xpath>
+
+            <xpath expr="//page[@name='personal_information']//field[@name='gender']" position="attributes">
+                <attribute name="invisible">1</attribute>
+                <!-- Add your fields or attributes here -->
+            </xpath>
+            <xpath expr="//page[@name='hr_settings']" position="attributes">
+                <attribute name="groups">hr.group_hr_manager,hr.group_hr_user</attribute>
+            </xpath>
+            <xpath expr="//field[@name='barcode']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='pin']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="inherit_hr_employee_kanban" model="ir.ui.view">
+        <field name="name">inherit.hr.employee.kanban</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates/t/div/div/ul" position="inside">
+                <li t-if="record.mobile_phone.raw_value" class="o_force_ltr">
+                    <field name="mobile_phone"/>
+                </li>
+            </xpath>
+        </field>
+    </record>
+    <!--                        hr employee public                              -->
+    <record id="inherit_hr_employee_public_form" model="ir.ui.view">
+        <field name="name">inherit.hr.employee.public.form</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
+        <field name="arch" type="xml">
+
+
+            <xpath expr="//sheet/div[2]/div[1]/h1" position="after">
+                <h1>
+                    <field name="name_in_arabic" placeholder=" Name In Arabic"/>
+                </h1>
+            </xpath>
+            <xpath expr="//sheet/group" position="inside">
+                <group>
+                    <field name="ref_employee_id"/>
+                    <field name="referral_by_email" widget="email"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="hiring_date" invisible="1"/>
+                <field name="social_insurance_number" invisible="1"/>
+                <field name="medical_insurance_id" invisible="1"/>
+                <field name="medical_staff_id" invisible="1"/>
+                <field name="identification_id_expiry_date" invisible="1"/>
+                <field name="military_certificate_expiry_date" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+    <!--                          hr.department                              -->
+    <record id="inherit_hr_department_form" model="ir.ui.view">
+        <field name="name">inherit.hr.department.form</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='manager_id']" position="after">
+                <field name="apply_flexible_hour"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hide_receive_badge_page" model="ir.ui.view">
+        <field name="name">hide_receive_badge_page</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_gamification.hr_hr_employee_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='received_badges']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="hr.menu_hr_root" model="ir.ui.menu">
+        <field name="groups_id"
+               eval="[(6,0,[ref('hr.group_hr_user'),ref('hr.group_hr_manager'),ref('national_employee.employee_user_group')])]"/>
+    </record>
+
+    <record model="ir.ui.menu" id="hr_timesheet.menu_hr_time_tracking">
+        <field name="groups_id" eval="[(4, ref('team_leader_for_timesheet_group'))]"/>
+    </record>
+
+    <record model="ir.ui.menu" id="hr_timesheet.timesheet_menu_activity_all">
+        <field name="groups_id" eval="[(4, ref('team_leader_for_timesheet_group'))]"/>
+    </record>
+
+</odoo>

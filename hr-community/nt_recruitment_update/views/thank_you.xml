@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="submit_thank_you_page" name="Job Offer">
+        <t t-call="web.frontend_layout">
+            <div class="container mb-5 mt-4 o_rating_page_submit">
+                <div class="oe_structure" id="oe_structure_rate_submit_header"/>
+                <div class="row text-left justify-content-center">
+                    <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                    <t t-set="title">Thank You</t>
+                    <div class="col-12 col-md-8 col-lg-6">
+                        <div class="card shadow-sm mt-4">
+                            <div class="card-body text-center">
+                                <h1 class="card-title">Thank You</h1>
+                                <p class="card-text">Thank you for submitting . We appreciate your
+                                    response.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="employee_user_group" model="res.groups">
+        <field name="name">Employee: User</field>
+        <field name="category_id" ref="base.module_category_human_resources_employees"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+
+    <record id="team_leader_for_timesheet_group" model="res.groups">
+        <field name="name">Timesheet User: TeamLeader</field>
+        <field name="category_id" ref="base.module_category_services_timesheets"/>
+        <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))]"/>
+    </record>
+
+    <record id="teamleader_for_timesheet_rule" model="ir.rule">
+        <field name="name">See his/her own time sheets and what he manages</field>
+        <field name="model_id" ref="analytic.model_account_analytic_line"/>
+        <field name="domain_force">['|', ('employee_id.timesheet_manager_id', '=', user.id), ('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('team_leader_for_timesheet_group'))]"/>
+    </record>
+
+    <record id="address_book_category" model="ir.module.category">
+        <field name="name">Address Book</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="address_book_admin_group" model="res.groups">
+        <field name="name">Address Book: Admin</field>
+        <field name="category_id" ref="national_employee.address_book_category"/>
+    </record>
+
+</odoo>

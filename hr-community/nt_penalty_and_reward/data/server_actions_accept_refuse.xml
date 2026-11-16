@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_server_approve_all" model="ir.actions.server">
+            <field name="name">Approve All</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="nt_penalty_and_reward.model_employee_penalty_reward" />
+            <field name="binding_model_id" ref="nt_penalty_and_reward.model_employee_penalty_reward" />
+            <field name="state">code</field>
+            <field name="code">action = records.approve_all()</field>
+        </record>
+        <record id="action_server_refuse_all" model="ir.actions.server">
+            <field name="name">Refuse All</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="nt_penalty_and_reward.model_employee_penalty_reward" />
+            <field name="binding_model_id" ref="nt_penalty_and_reward.model_employee_penalty_reward" />
+            <field name="state">code</field>
+            <field name="code">action = records.refuse_all()</field>
+        </record>
+    </data>
+</odoo>

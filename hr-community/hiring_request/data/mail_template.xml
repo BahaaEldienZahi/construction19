@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="email_template_hiring_request_created" model="mail.template">
+            <field name="name">HR: New Hiring Request Created</field>
+            <field name="model_id" ref="hiring_request.model_hiring_request"/>
+            <field name="subject">New Hiring Request Created</field>
+            <field name="email_from">{{object.company_id.email}}</field>
+            <field name="email_to">{{ object.send_to.work_email}}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                       style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+                    <tr>
+                        <td valign="top" style="padding: 0px 10px;">
+                            <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                                Dear Hr: <span><t t-out="object.send_to.name or ''"/>
+
+                            </span>
+                                <br/>
+                                I Inform you That a Hiring Request is Created Successfully
+
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+    </data>
+</odoo>

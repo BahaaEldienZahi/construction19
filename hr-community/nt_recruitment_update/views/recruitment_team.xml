@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="recruitment_team_form" model="ir.ui.view">
+        <field name="name">recruitment.team.form</field>
+        <field name="model">recruitment.team</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="senior_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="team_leader_ids" widget="many2many_tags" options="{'color_field': 'id','no_open': True, 'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="recruitment_team_tree" model="ir.ui.view">
+        <field name="name">recruitment.team.tree</field>
+        <field name="model">recruitment.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="senior_id"/>
+                <field name="team_leader_ids" widget="many2many_tags" options="{'color_field': 'id'}"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+    <record id="recruitment_team_kanban" model="ir.ui.view">
+        <field name="name">recruitment.team.kanban</field>
+        <field name="model">recruitment.team</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="senior_id" class="o_kanban_small_column"> <!--Optional:  quick_create="false" group_[create,edit,delete]='false' -->
+                <field name="name"/>
+                <field name="senior_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.senior_id.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_body">
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="name"/>
+                                    <field name="senior_id" widget="many2one_avatar_user"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="recruitment_team_action" model="ir.actions.act_window">
+        <field name="name">Recruitment Team</field>
+        <field name="res_model">recruitment.team</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Team
+            </p>
+        </field>
+    </record>
+    <menuitem id="recruitment_team_menu"
+              name="Recruitment Team"
+              action="recruitment_team_action"
+              parent="hr_recruitment.menu_hr_recruitment_configuration"
+              sequence="11"/>
+
+</odoo>

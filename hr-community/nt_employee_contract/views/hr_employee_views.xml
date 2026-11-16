@@ -1,0 +1,145 @@
+<odoo>
+    <data>
+        <record id="view_employee_form" model="ir.ui.view">
+            <field name="name">hr.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <!--  private group-->
+                <!--                <xpath expr="//notebook//page[@name='personal_information']//group[1]" position="attributes">-->
+                <!--                    <attribute name="invisible">1</attribute>-->
+                <!--                </xpath>-->
+
+
+                <!--                <xpath expr="//notebook//page[@name='personal_information']//group[3]/field[@name='emergency_contact']"-->
+                <!--                       position="attributes">-->
+                <!--                    <attribute name="invisible">1</attribute>-->
+                <!--                </xpath>-->
+                <!--                <xpath expr="//notebook//page[@name='personal_information']//group[3]/field[@name='emergency_phone']"-->
+                <!--                       position="attributes">-->
+                <!--                    <attribute name="invisible">1</attribute>-->
+                <!--                </xpath>-->
+
+                <!--                &lt;!&ndash;  has_work_permit group&ndash;&gt;-->
+                <!--                <xpath expr="//notebook//page[@name='personal_information']//group[4]/separator[@name='has_work_permit']"-->
+                <!--                       position="attributes">-->
+                <!--                    <attribute name="invisible">1</attribute>-->
+                <!--                </xpath>-->
+                <!--                <xpath expr="//notebook//page[@name='personal_information']//group[4]/field[@name='visa_no']"-->
+                <!--                       position="attributes">-->
+                <!--                    <attribute name="invisible">1</attribute>-->
+                <!--                </xpath>-->
+                <!--                <xpath expr="//notebook//page[@name='personal_information']//group[4]/field[@name='permit_no']"-->
+                <!--                       position="attributes">-->
+                <!--                    <attribute name="invisible">1</attribute>-->
+                <!--                </xpath>-->
+                <!--                <xpath expr="//notebook//page[@name='personal_information']//group[4]/field[@name='visa_expire']"-->
+                <!--                       position="attributes">-->
+                <!--                    <attribute name="invisible">1</attribute>-->
+                <!--                </xpath>-->
+                <!--                <xpath expr="//notebook//page[@name='personal_information']//group[4]/field[@name='work_permit_expiration_date']"-->
+                <!--                       position="attributes">-->
+                <!--                    <attribute name="invisible">1</attribute>-->
+                <!--                </xpath>-->
+                <!--                <xpath expr="//notebook//page[@name='personal_information']//group[4]/field[@name='has_work_permit']"-->
+                <!--                       position="attributes">-->
+                <!--                    <attribute name="invisible">1</attribute>-->
+                <!--                </xpath>-->
+
+                <!-- fields on form -->
+                <!--                <xpath expr="//field[@name='coach_id']" position="after">-->
+                <!--                    <field name="date_start"/>-->
+                <!--                    <field name="date_end" readonly="0" invisible="1"/>-->
+                <!--                    <field name="contract_end_date"/>-->
+                <!--                    <field name="today_date"/>-->
+                <!--                </xpath>-->
+                <xpath expr="//group[1]//group[1]//field[@name='company_id']" position="after">
+                    <field name="probation_period_end_date"/>
+                    <field name="date_start"/>
+                    <field name="date_end" readonly="0" invisible="1"/>
+                    <field name="contract_end_date"/>
+                    <field name="today_date" invisible="1"/>
+                </xpath>
+
+                <!-- fields on tabs attributes-->
+                <xpath expr="//field[@name='children']" position="attributes">
+                    <attribute name="invisible">marital not in ('married')</attribute>
+                    <!--                    <attribute name="attrs">{-->
+                    <!--                        'invisible': [('marital', 'not in', ['married'])]}</attribute>-->
+                </xpath>
+
+                <!-- fields on tabs adding -->
+                <xpath expr="//field[@name='children']" position="after">
+                    <field name="is_insurance_for_children" invisible="marital not in ['married', 'cohabitant'] "/>
+                    <!--                           attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>-->
+                </xpath>
+                <xpath expr="//field[@name='spouse_complete_name']" position="after">
+                    <field name="is_insurance_for_wife" invisible="marital not in ['married', 'cohabitant'] "/>
+                    <!--                           attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>-->
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="70"/>
+            <field name="inherit_id" ref="hr_payroll_community.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <!--                <xpath expr="//div[hasclass('settings')]//div[@data-key='hr']" position="inside">-->
+                <xpath expr="//form//app[@name='hr_payroll_community']" position="inside">
+                    <!--                    <div class="app_settings_block" data-string="Employees" string="Employees"-->
+                    <!--                         groups="hr.group_hr_manager">-->
+                    <block title="Archiving" id="hr_payroll_archiving">
+                        <setting id="payslip_archiving_2" string="Archiving">
+<!--                            <h2>Archiving</h2>-->
+                            <div class="row mt16 o_settings_container" name="archiving_setting_container">
+                                <div class="col-12 col-lg-6 o_setting_box"
+                                     title="Archive End Date">
+                                    <div class="o_setting_left_pane">
+                                        <field name="archive_end_date"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="archive_end_date"/>
+                                        <div class="text-muted">
+                                            cron job to archive outdated contract on that day
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 o_setting_box"
+                                     title="Day Of Previous Month">
+                                    <div class="o_setting_left_pane">
+                                        <field name="day_of_previous_month"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="day_of_previous_month"/>
+                                        <div class="text-muted">
+                                            The day of previous month
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--                    </div>-->
+                        </setting>
+                    </block>
+                </xpath>
+            </field>
+        </record>
+
+
+        <!--         <record id="view_employee_form" model="ir.ui.view">-->
+        <!--            <field name="name">hr.employee.form</field>-->
+        <!--            <field name="model">hr.employee</field>-->
+        <!--            <field name="inherit_id" ref="hr.view_employee_form"/>-->
+        <!--            <field name="arch" type="xml">-->
+
+        <!--                <xpath expr="//field[@name='date_start']" position="after">-->
+        <!--                    <field name="contract_end_date"/>-->
+        <!--                </xpath>-->
+
+
+        <!--            </field>-->
+        <!--        </record>-->
+
+    </data>
+</odoo>

@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+
+        <record id="survey_survey_form_view_inherit" model="ir.ui.view">
+            <field name="name">survey form view inherit</field>
+            <field name="model">survey.survey</field>
+            <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <group>
+                        <group>
+                            <field name="is_emp_survey"/>
+                            <field name="department_ids" widget="many2many_tags" required="is_emp_survey"/>
+<!--                            attrs="{'required':[('is_emp_survey','=',True)]}"/>-->
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

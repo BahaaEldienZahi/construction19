@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="attendance_sheet_form_view_penalty" model="ir.ui.view">
+            <field name="name">attendance_sheet_form_view_penalty</field>
+            <field name="model">attendance.sheet</field>
+            <field name="inherit_id" ref="rm_hr_attendance_sheet.attendance_sheet_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='att_policy_id']" position="after">
+                    <field name="late_penalty_days" readonly="1"/>
+                </xpath>
+                <xpath expr="//button[@name='action_draft']" position="after">
+                    <button invisible="state != 'confirm' or penalty_reward_id != False" name="create_penalty_reward" string="Create Penalty And Reward" type="object"/>
+                    <field invisible="1" name="penalty_reward_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

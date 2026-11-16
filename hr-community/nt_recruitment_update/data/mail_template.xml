@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="email_template_new_employee_check" model="mail.template">
+            <field name="name">Recruitment: New Employment Check</field>
+            <field name="model_id" ref="nt_recruitment_update.model_hr_employee"/>
+            <field name="subject">New Employee Check Reminder</field>
+            <field name="email_from">{{user.email_formatted or object.company_id.email}}</field>
+            <field name="email_to">{{ object.send_to.work_email or object.user_id.email}}</field>
+            <field name="body_html" type="html">
+                <p valign="top" style="padding: 0px 10px;">
+                    <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                        Dear Hr:
+                        <span>
+                            <t t-out="object.send_to.name or ''"/>
+
+                        </span>
+                        <br/>
+                        Please check your new Employee.
+
+                    </div>
+                </p>
+
+            </field>
+        </record>
+
+        <record id="email_template_new_employee_reminder" model="mail.template">
+            <field name="name">Recruitment: New Employment</field>
+            <field name="model_id" ref="nt_recruitment_update.model_boarding_boarding"/>
+            <field name="subject">New Employee Reminder</field>
+            <field name="email_from">{{ object.responsible_id.work_email}}</field>
+            <field name="email_to">{{ object.new_responsible_id.work_email}}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                       style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+                    <tr>
+                        <td valign="top" style="padding: 0px 10px;">
+                            <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                                Dear
+                                <span>
+                                    <t t-out="object.new_responsible_id.name or ''"/>
+
+                                </span>
+                                <br/>
+                                You have New Employee
+
+
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+        </record>
+
+        <!--        # Fixing the email from field at the later templates-->
+        <record id="email_template_attahcment_reminder" model="mail.template">
+            <field name="name">Recruitment: Employment documents</field>
+            <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+            <field name="subject">Required Employment documents</field>
+<!--            <field name="email_from">{{user.email_formatted or object.company_id.email or object.user_id.email}}</field>-->
+            <field name="email_from">{{object.company_id.email}}</field>
+            <field name="email_to">{{object.email_from}}</field>
+            <field name="body_html" type="html">
+                <p valign="top" style="padding: 0px 10px;">
+                    <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                        Dear
+                        <span>
+                            <t t-out="object.partner_name or ''"></t>
+                        </span>
+                        ,
+                        <p>Please find below the required employment documents for your first day at National
+                            Technology:
+                        </p>
+
+                        <ul>
+                            <li>أصل و صورة شهادة التخرج - Original and copy of graduation certificate</li>
+                            <li>أصل و صورة شهادة الميلاد - Original and copy of birth certificate</li>
+                            <li>أصل و صورة شهادة التجنيد للذكور فقط - Original and copy of military service
+                                (Males only)
+                            </li>
+                            <li>٢ صورة من البطاقة الشخصية - 2 copies of the ID card</li>
+                            <li>Original of the finger print record (الفيش و التشبيه باسم شركة ناشونال
+                                تكنولوجى)
+                            </li>
+                            <li>Original of work Permit (from Labor Office) - كعب العمل</li>
+                            <li>Copy of Form 6 Social Insurance or print out with social insurance number -
+                                إستمارة ٦ تأمينات إجتماعية
+                            </li>
+                            <li>Medical insurance form 111 (Governmental) - إستمارة ١١١ تأمين صحي</li>
+                            <li>٤ صور شخصية - 4 personal photos</li>
+                        </ul>
+
+                        <p>Please upload these documents <a t-attf-href="/recruitment/{{object.id}}/attachment"
+                                                            class="btn btn-primary btn-sm">here</a>.
+                        </p>
+                    </div>
+                </p>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
+
+   

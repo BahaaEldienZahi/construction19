@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="mail.menu_root_discuss" model="ir.ui.menu">
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="calendar.mail_menu_calendar" model="ir.ui.menu">
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="project_todo.menu_todo_todos" model="ir.ui.menu">
+            <field name="sequence">3</field>
+        </record>
+
+
+        <record id="referral_custom.menu_root" model="ir.ui.menu">
+            <field name="sequence">4</field>
+        </record>
+
+
+        <record id="hiring_request.hiring_request_root_menu" model="ir.ui.menu">
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="hr_recruitment.menu_hr_recruitment_root" model="ir.ui.menu">
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="nt_recruitment_update.menu_root_offer" model="ir.ui.menu">
+            <field name="sequence">7</field>
+            <field name="web_icon">nt_hr_custom,static/description/icon.png</field>
+        </record>
+
+        <record id="hr.menu_hr_root" model="ir.ui.menu">
+            <field name="sequence">8</field>
+        </record>
+        <record id="national_probation_period.employee_probation_period_menu_root" model="ir.ui.menu">
+            <field name="sequence">9</field>
+        </record>
+        <record id="hr_attendance.menu_hr_attendance_root" model="ir.ui.menu">
+            <field name="sequence">10</field>
+        </record>
+        <record id="hr_holidays.menu_hr_holidays_root" model="ir.ui.menu">
+            <field name="sequence">11</field>
+        </record>
+
+
+
+        <record id="nt_penalty_and_reward.penalty_reward_employee_menu_root" model="ir.ui.menu">
+            <field name="sequence">12</field>
+        </record>
+
+        <record id="ohrms_overtime.hr_overtime_menu_root" model="ir.ui.menu">
+            <field name="sequence">13</field>
+        </record>
+
+        <record id="nt_resignation.hr_resignation_menu_root" model="ir.ui.menu">
+            <field name="sequence">14</field>
+        </record>
+        <record id="planning.planning_menu_root" model="ir.ui.menu">
+            <field name="sequence">15</field>
+        </record>
+
+        <record id="survey.menu_surveys" model="ir.ui.menu">
+            <field name="sequence">16</field>
+        </record>
+        <record id="hr_payroll_community.menu_hr_payroll_community_root" model="ir.ui.menu">
+            <field name="sequence">17</field>
+        </record>
+
+
+
+
+        <record id="contacts.menu_contacts" model="ir.ui.menu">
+            <field name="sequence">18</field>
+        </record>
+
+        <record id="crm.crm_menu_root" model="ir.ui.menu">
+            <field name="sequence">19</field>
+        </record>
+
+        <record id="sale.sale_menu_root" model="ir.ui.menu">
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="spreadsheet_dashboard.spreadsheet_dashboard_menu_root" model="ir.ui.menu">
+            <field name="sequence">21</field>
+        </record>
+
+
+
+    </data>
+</odoo>

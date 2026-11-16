@@ -180,3 +180,84 @@ class ProjectProject(models.Model):  # pylint: disable=consider-merging-classes-
                 'collected_pct': pct(collected, receivable_total),
             }
         return result
+
+    # ------------------------------------------------------------------
+    # Project form: shared figures (UX_SPEC 3.0) and smart buttons
+    # ------------------------------------------------------------------
+    construction_executed_amount = fields.Monetary(
+        string='Executed', currency_field='construction_currency_id', compute='_compute_construction_figures',
+        groups=AMOUNT_GROUPS, help='Measured quantities x contract prices (confirmed measurements).')
+    construction_certified_amount = fields.Monetary(
+        string='Certified', currency_field='construction_currency_id', compute='_compute_construction_figures',
+        groups=AMOUNT_GROUPS, help='Approved client certificates: work + escalation, excluding VAT.')
+    construction_invoiced_amount = fields.Monetary(
+        string='Invoiced', currency_field='construction_currency_id', compute='_compute_construction_figures',
+        groups=AMOUNT_GROUPS, help='Posted certificate invoices net of credit notes: work + escalation, excluding VAT.')
+    construction_collected_amount = fields.Monetary(
+        string='Collected', currency_field='construction_currency_id', compute='_compute_construction_figures',
+        groups=AMOUNT_GROUPS, help='Payments received on certificate invoices (amounts including VAT).')
+    construction_not_certified_amount = fields.Monetary(
+        string='Executed not yet Certified', currency_field='construction_currency_id',
+        compute='_compute_construction_figures', groups=AMOUNT_GROUPS)
+    measurement_count = fields.Integer(compute='_compute_construction_counts')
+    variation_order_count = fields.Integer(compute='_compute_construction_counts')
+    certificate_count = fields.Integer(compute='_compute_construction_counts')
+    construction_invoice_count = fields.Integer(compute='_compute_construction_counts')
+
+    def _compute_construction_figures(self):
+        construction = self.filtered(lambda p: p.is_construction_project and p.id)
+        figures = construction._get_construction_financials() if construction else {}
+        for project in self:
+            data = figures.get(project.id, {})
+            project.construction_executed_amount = data.get('executed', 0.0)
+            project.construction_certified_amount = data.get('certified', 0.0)
+            project.construction_invoiced_amount = data.get('invoiced', 0.0)
+            project.construction_collected_amount = data.get('collected', 0.0)
+            project.construction_not_certified_amount = data.get('executed_not_certified', 0.0)
+
+    def _compute_construction_counts(self):
+        def counts(model, domain=()):
+            groups = self.env[model]._read_group([('project_id', 'in', self.ids), *domain], ['project_id'], ['__count'])
+            return {project.id: count for project, count in groups}
+        measurements = counts('work.measurement')
+        vos = counts('boq.variation.order')
+        certs = counts('boq.payment.certificate')
+        moves = self.env['account.move']._read_group(
+            [('construction_project_id', 'in', self.ids)], ['construction_project_id'], ['__count'])
+        moves = {project.id: count for project, count in moves}
+        for project in self:
+            project.measurement_count = measurements.get(project.id, 0)
+            project.variation_order_count = vos.get(project.id, 0)
+            project.certificate_count = certs.get(project.id, 0)
+            project.construction_invoice_count = moves.get(project.id, 0)
+
+    def _construction_action(self, xmlid, name):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id(xmlid)
+        action.update({
+            'name': name,
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        })
+        return action
+
+    def action_view_measurements(self):
+        return self._construction_action('nt_construction.action_work_measurement', self.env._('Measurements'))
+
+    def action_view_variation_orders(self):
+        return self._construction_action('nt_construction.action_boq_variation_order', self.env._('Variation Orders'))
+
+    def action_view_certificates(self):
+        return self._construction_action('nt_construction.action_boq_payment_certificate', self.env._('Client Certificates'))
+
+    def action_view_construction_invoices(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._('Invoices'),
+            'res_model': 'account.move',
+            'view_mode': 'list,form',
+            'views': [(False, 'list'), (False, 'form')],
+            'domain': [('construction_project_id', '=', self.id)],
+            'context': {'create': False},
+        }

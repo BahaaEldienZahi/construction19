@@ -1,0 +1,33 @@
+{
+    'name': 'NT HR Custom',
+    'version': '17.0.1.0.0',
+    'summary': 'Custom HR enhancements: hiring request stats, contract state control, recruitment planning',
+    'author': 'National Technology',
+    'website': 'https://nt-me.com/',
+    'category': 'Human Resources',
+    'license': 'LGPL-3',
+    'depends': [
+        'hiring_request',
+        'nt_employee_contract',
+        'nt_recruitment_update',
+        'ohrms_overtime',
+        'nt_penalty_and_reward',
+    ],
+    'data': [
+        'data/menu_items.xml',
+        'security/groups.xml',
+        'security/ir.model.access.csv',
+        'views/hr_job_views.xml',
+        'views/hiring_request_views.xml',
+        'views/hr_contract_views.xml',
+        'views/hr_applicant.xml',
+        'views/applicant_get_refuse_reason_form.xml',
+        'views/hr_overtime_views.xml',
+        'views/employee_penalty_reward.xml',
+        'views/policy_view.xml',
+
+    ],
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

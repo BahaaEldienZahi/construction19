@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="job_offer_view_form" model="ir.ui.view">
+            <field name="name">job_offer_view_form</field>
+            <field name="model">hr.job.offer</field>
+            <field name="arch" type="xml">
+                <form string="job_offer_form">
+                    <header>
+
+                        <button name="action_request_hr_approve" string="Submit" type="object"
+                                class="oe_highlight" invisible="state != 'new'"/>
+                        <button
+                                name="action_hr_approve" string="Approve" type="object"
+                                groups="hr_recruitment.group_hr_recruitment_user"
+
+                                class="oe_highlight" invisible="state != 'req_hr_approve'"/>
+
+                        <button name="hr_reject" string="Reject" type="object"
+                                groups="hr_recruitment.group_hr_recruitment_user"
+                                class="oe_highlight"
+                                invisible="state !='req_hr_approve' "/>
+                        <button name="action_employed_applicant" string="Done" type="object"
+                                groups="hr_recruitment.group_hr_recruitment_user"
+                                class="oe_highlight"
+                                invisible="state !='done' "/>
+
+
+                        <button name="action_request_ceo_approve" string="Request Team leader approve" type="object"
+                                class="oe_highlight" invisible="state != 'req_hr_approved'"/>
+                        <!--                        states="new"-->
+                        <button name="action_ceo_approve" string="Approve" type="object" class="oe_highlight"
+                                invisible="state != 'req_ceo_app'"
+                                groups="nt_recruitment_update.group_ceo_approve_job_offer"/>
+
+                        <button name="action_give_to_employee" string="Send" type="object"
+                                groups="hr_recruitment.group_hr_recruitment_user"
+                                class="oe_highlight"
+                                invisible="state != 'ceo_app'"/>
+
+
+                        <button name="action_done" string="Done" type="object" class="oe_highlight"
+                                groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"
+                                invisible="state != 'give_to_employee'"/>
+                        <!--                                states="give_to_employee"/>-->
+                        <button name="action_cancel" string="Cancel" type="object" class="oe_highlight"
+                                invisible="state != 'done'"
+                                groups="nt_recruitment_update.group_create_job_offer,hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager,nt_recruitment_update.group_interviewer"/>
+
+
+                        <button name="team_lader_reject" string="Reject"
+                                type="object"
+                                groups="nt_recruitment_update.group_ceo_approve_job_offer"
+                                class="oe_highlight"
+                                invisible="state !='req_ceo_app' "/>
+
+                        <field name="expired" invisible="1"/>
+
+                        <button name="reactive_offer" string="Reactivate Offer"
+                                type="object"
+                                groups="nt_recruitment_update.group_ceo_approve_job_offer"
+                                class="oe_highlight"
+                                invisible="not expired"/>
+
+                        <button name="action_review_offer" string="Preview" type="object"
+                                groups="hr_recruitment.group_hr_recruitment_user"
+                                class="oe_action"/>
+
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="new,in_progress,req_hr_approved,ceo_app,give_to_employee"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="number" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="applicant_id"
+                                       readonly="state not in ['new']"/>
+                                <field name="department_id" readonly="1"/>
+                                <field name="monthly_salary" readonly="state not in ['new']"/>
+                                <field name="expire_date" required="1"
+                                       readonly="state in ['cancel','ceo_app','reject']"
+                                       help="Default expiration is set to 5 working days from now. You can edit this date if needed."/>
+
+                                <field name="company_id"
+                                       options="{'clickable':0}"
+                                       readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="offer_date"
+                                       readonly="state in['cancel','ceo_app','done','req_hr_approved','give_to_employee','reject']"/>
+                                <field name="availability_date" string="Joining date"
+                                       readonly="state in ['cancel','ceo_app','done','req_hr_approved','give_to_employee','reject']"/>
+                                <field name="days_before_availability" string="10 Days before Joining date"
+                                       invisible="1"/>
+
+                                <field name="days_before_availability" string="10 Days before Joining date"
+                                       invisible="1"/>
+                                <field name="applicant_decision"
+                                       readonly="state  in ['cancel','new','done','reject','req_hr_approved','req_ceo_app']"/>
+                                <field name="reject_resason" readonly="1"
+                                       invisible=" state not in ['cancel','reject','done'] or reject_type !='applicant' "
+                                />
+                                <field name="cancel_reason" readonly="1"
+                                       invisible=" state not in ['cancel']"
+
+                                />
+                                <field name="reject_type" invisible=" state not in ['reject']" readonly="True"/>
+                                <field name="reject_user" invisible=" reject_type !=  'user' " readonly="1"
+                                       options="{'clickable':0}"/>
+                                <field name="reject_employee_reason" invisible=" reject_type !=  'user' " readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"
+                               options="{'post_refresh': 'recipients'}"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="job_offer_view_tree" model="ir.ui.view">
+            <field name="name">job_offer_view_tree</field>
+            <field name="model">hr.job.offer</field>
+            <field name="arch" type="xml">
+                <tree string="job_offer_tree">
+                    <field name="number"/>
+                    <field name="applicant_id"/>
+                    <field name="user_id"/>
+                    <field name="offer_date"/>
+                    <field name="company_id"/>
+                    <field name="monthly_salary"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <record id="job_offer_view_search" model="ir.ui.view">
+            <field name="name">job_offer_view_search</field>
+            <field name="model">hr.job.offer</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="number"/>
+                    <field name="applicant_id"/>
+                    <field name="state"/>
+                    <group string="Group By">
+                        <filter string="Applicant" name="applicant_name" domain="[]"
+                                context="{'group_by': 'applicant_id'}"/>
+                        <filter string="State" name="state" domain="[]"
+                                context="{'group_by': 'state'}"/>
+                        <filter string="Department" name="department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Reject Reason" name="reject_employee_reason" domain="[]" context="{'group_by': 'reject_employee_reason'}"/>
+
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="job_offer_action" model="ir.actions.act_window">
+            <field name="name">Job Offer Action</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.job.offer</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem name="Job Offer"
+                  id="menu_root_offer"
+                  groups="nt_recruitment_update.group_create_job_offer,nt_recruitment_update.expected_and_proposed_salary,nt_recruitment_update.group_hr_recruitment_ceo"
+
+        />
+        <menuitem
+                name="All Job Offer"
+                parent="nt_recruitment_update.menu_root_offer"
+                groups="nt_recruitment_update.group_create_job_offer,nt_recruitment_update.expected_and_proposed_salary,nt_recruitment_update.group_hr_recruitment_ceo"
+                id="menu_crm_case_categ_all_offer" action="job_offer_action"/>
+    </data>
+</odoo>

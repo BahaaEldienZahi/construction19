@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="nt_penalty_and_reward_modulo_assets_backend" name="penalty and reward modulo assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/nt_penalty_and_reward/static/src/js/basic_view.js"/>
+        </xpath>
+    </template>
+
+</odoo>

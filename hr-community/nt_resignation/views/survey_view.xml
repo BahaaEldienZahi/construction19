@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+
+        <record id="survey_survey_form_view_inherit_resignation" model="ir.ui.view">
+            <field name="name">survey form view inherit resignation</field>
+            <field name="model">survey.survey</field>
+            <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <group>
+                        <group>
+                            <field name="is_resignation"/>
+                            <field name="is_resignation_exit"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

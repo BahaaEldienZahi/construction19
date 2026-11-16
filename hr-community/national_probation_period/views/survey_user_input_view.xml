@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+
+        <record id="survey_user_input_view_tree_inherit" model="ir.ui.view">
+            <field name="name">survey user input tree view inherit</field>
+            <field name="model">survey.user_input</field>
+            <field name="inherit_id" ref="survey.survey_user_input_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='email']" position="after">
+                    <field name="employee_id"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

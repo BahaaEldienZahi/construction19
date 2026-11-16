@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+
+
+        <record id="biometric_machine_form_view_inherit" model="ir.ui.view">
+            <field name="name">biometric.machine.form.view.inherit</field>
+            <field name="model">biometric.machine</field>
+            <field name="inherit_id" ref="cds_bio_attendance.view_biometric_machine_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='download_attendancenew']" position="after">
+                    <button name="action_download_from_log"
+                            string="POST ALL ATTENDANCES"
+                            class="btn btn-danger" type="object"
+                            groups="hr_attendance.group_hr_attendance_manager"
+                    />
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

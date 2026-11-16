@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="view_move_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="replace">
+                <field name="partner_id" widget="res_partner_many2one" nolabel="1"
+                       context="{'res_partner_search_mode': (context.get('default_move_type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or (context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False, 'show_address': 1, 'default_is_company': True, 'show_vat': True}"
+                       options="{&quot;always_reload&quot;: True, &quot;no_quick_create&quot;: True}"
+                       readonly="state != 'draft'"
+                       invisible="move_type not in ['out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt']"/>
+<!--                       attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>-->
+                <field name="child_ids" invisible="1"/>
+
+            </field>
+            <field name="partner_shipping_id" position="replace">
+                <field name="child_ids" invisible="1"/>
+                <field name="partner_shipping_id"
+                       context="{'default_type':'invoice'}"
+                       domain="['|',('id', '=', partner_id),'&amp;',('id', 'in', child_ids), ('type', '=', 'invoice')]"
+                       groups="account.group_delivery_invoice_address"
+                       invisible="move_type not in ['out_invoice', 'out_refund', 'out_receipt']"
+                       readonly="state not in ['draft','sent','sale']"/>
+<!--                       attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))], 'readonly': [('state', '!=', 'draft')]}"/>-->
+            </field>
+        </field>
+    </record>
+    <record id="account.res_partner_action_customer" model="ir.actions.act_window">
+        <field name="name">Customers</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('contact_type', '=', 'customer')]</field>
+        <field name="context">{'search_default_customer': 1, 'res_partner_search_mode': 'customer',
+                               'default_is_company':
+                                   True, 'default_customer_rank': 1}
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new customer in your address book
+            </p>
+            <p>
+                Odoo helps you easily track all activities related to a customer.
+            </p>
+        </field>
+    </record>
+    <record id="base.action_partner_form" model="ir.actions.act_window">
+        <field name="name">Customers</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('contact_type', '=', 'customer')]</field>
+        <field name="context">{'res_partner_search_mode': 'customer'}</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Contact in your address book
+            </p>
+            <p>
+                Odoo helps you track all activities related to your contacts.
+            </p>
+        </field>
+    </record>
+
+</odoo>
+
+
+
+

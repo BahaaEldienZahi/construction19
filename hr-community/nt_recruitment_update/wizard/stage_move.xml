@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stage_move_form" model="ir.ui.view">
+        <field name="name">stage.move.form</field>
+        <field name="model">stage.move</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="stage_id" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="hr_applicant_id" invisible="1"/>
+                        <field name="feedback_required" invisible="1"/>
+                        <field name="required_activity" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="current_stage_id" readonly="1"/>
+                    </group>
+                    <group>
+                        <label for="feedback" string="Feedback" invisible="not feedback_required"/>
+<!--                               attrs="{'invisible':[('feedback_required','=',False)]}"/>-->
+                        <field name="feedback" nolabel="1"
+                               invisible="not feedback_required"
+                               required="feedback_required"/>
+<!--                               attrs="{'invisible':[('feedback_required','=',False)],'required':[('feedback_required','=',True)]}"/>-->
+                    </group>
+
+                    <group>
+                        <field name="interview_details_required" invisible="1"/>
+                        <field name="interview_details_required2" invisible="1"/>
+                        <field name="meeting_type" invisible="not interview_details_required2"
+                               required="interview_details_required2"/>
+<!--                               attrs="{'invisible':[('interview_details_required2','=',False)],'required':[('interview_details_required2','=',True)]}"/>-->
+                        <field name="meeting_link"
+                               invisible="not interview_details_required2"
+                               required="meeting_type == 'a'"/>
+<!--                               attrs="{'invisible':[('interview_details_required2','=',False)],'required':[('meeting_type','=','a')]}"/>-->
+                        <field name="meeting_note" string="Note"
+                               invisible="not interview_details_required2"
+                               required="meeting_type == 'a'"/>
+<!--                               attrs="{'invisible':[('interview_details_required2','=',False)],'required':[('meeting_type','=','a')]}"/>-->
+                        <field name="interview_date"
+                               invisible="not interview_details_required2"
+                               required="interview_details_required2"/>
+<!--                               attrs="{'invisible':[('interview_details_required2','=',False)],'required':[('interview_details_required2','=',True)]}"/>-->
+                    </group>
+                </group>
+                <footer>
+                    <button name="stage_move" string="Submit" type="object" class="btn btn-sm btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="stage_move_action" model="ir.actions.act_window">
+        <field name="name">Stage Move</field>
+        <field name="res_model">stage.move</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

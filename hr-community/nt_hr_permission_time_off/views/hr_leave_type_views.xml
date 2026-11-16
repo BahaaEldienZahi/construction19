@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="edit_holiday_status_form" model="ir.ui.view">
+            <field name="name">hr.leave.type.form.inherit</field>
+            <field name="model">hr.leave.type</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <group name="mission_and_permission" style="margin-top:20px;">
+                        <label for="mission" string="Is a mission"/>
+                        <div>
+                            <field class="oe_inline" name="mission"/>
+                        </div>
+                        <label for="is_permission" string="Is a permission"/>
+                        <div>
+                            <field class="oe_inline" name="is_permission"/>
+                        </div>
+                        <label for="permission_hours" invisible="is_permission == False" string="Permission hours"/>
+                        <div>
+                            <field class="oe_inline" invisible="is_permission == False" name="permission_hours" required="is_permission == True"/>
+                            <!--                            invisible=" is_permission == False" required="is_permission"-->
+                        </div>
+                    </group>
+                </xpath>
+                <!--                <xpath expr="//field[@name='allocation_validation_type']" position="after">-->
+                <!--                    <field name="is_permission"/>-->
+                <!--                    <field name="permission_hours"  invisible=" is_permission == False" required = "is_permission"/>-->
+                <!--                    <field name="mission" string="Is A Mission"/>-->
+                <!--                </xpath>--></field>
+        </record>
+    </data>
+</odoo>

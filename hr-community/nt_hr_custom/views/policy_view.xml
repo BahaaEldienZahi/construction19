@@ -1,0 +1,35 @@
+<odoo>
+
+
+    <record id="policy_custom_view_tree" model="ir.ui.view">
+        <field name="name">policy.custom.view.tree</field>
+        <field name="model">policy.custom.line</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" string="Policy">
+                <field name="category_id"/>
+                <field name="subcategory_id"/>
+                <field name="first"/>
+                <field name="second"/>
+                <field name="third"/>
+                <field name="fourth"/>
+                <field name="fifth"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+    <record id="action_policy_custom" model="ir.actions.act_window">
+        <field name="name">Policies</field>
+        <field name="res_model">policy.custom.line</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem
+        id="policy_custom_configurations"
+        name="Policies"
+        sequence="10"
+        parent="nt_penalty_and_reward.penalty_reward_configurations"
+        action="action_policy_custom"
+    />
+</odoo>

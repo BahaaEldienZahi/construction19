@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- تبويب Planning في hr.job form -->
+    <record id="hr_job_form_inherit_nt_hr_custom" model="ir.ui.view">
+        <field name="name">hr.job.form.inherit.nt.hr.custom</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="nt_recruitment_update.inherit_hr_job_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="planned" string="Planning">
+                    <field name="planning_ids">
+                        <tree editable="bottom">
+                            <field name="date_from"/>
+                            <field name="number_of_recruitment"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

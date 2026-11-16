@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -59,14 +59,18 @@ class WorkMeasurement(models.Model):
                 vals['name'] = self.env['ir.sequence'].next_by_code('work.measurement') or self.env._('New')
         return super().create(vals_list)
 
-    @api.depends('daily_report_ids', 'daily_report_ids.progress_ids')
+    daily_report_count = fields.Integer(compute='_compute_daily_report_count')
+
+    @api.depends('progress_ids.quantity_executed', 'progress_ids.boq_line_id.unit_price')
     def _compute_total_executed(self):
+        # value of the quantities measured here (executed = measured, DECISIONS F1)
         for wm in self:
-            total = 0.0
-            for report in wm.daily_report_ids:
-                for prog in report.progress_ids:
-                    total += prog.quantity_executed * prog.boq_line_id.unit_price
-            wm.total_executed_value = total
+            wm.total_executed_value = sum(
+                prog.quantity_executed * prog.boq_line_id.unit_price for prog in wm.sudo().progress_ids)
+
+    def _compute_daily_report_count(self):
+        for wm in self:
+            wm.daily_report_count = len(wm.daily_report_ids)
 
     def action_confirm(self):
         self._check_construction_role('nt_construction.group_construction_quantity_surveyor')
@@ -81,3 +85,56 @@ class WorkMeasurement(models.Model):
             # DECISIONS Q6: a measurement already billed cannot be reopened
             raise UserError(self.env._('A measurement linked to a payment certificate cannot be reset to draft.'))
         self._workflow_write({'state': 'draft'})
+
+    # ------------------------------------------------------------------
+    # Golden cycle: measurement -> client certificate
+    # ------------------------------------------------------------------
+    def action_create_certificate(self):
+        """Draft client certificate whose total to date per item is the quantity measured to date
+        (confirmed measurements, capped at the contracted quantity). The confirmed measurements of the
+        project not yet billed are attached to it and become *linked* when it is approved."""
+        self._check_construction_role('nt_construction.group_construction_quantity_surveyor')
+        project = self.project_id
+        if len(project) != 1:
+            raise UserError(self.env._('Select measurements of a single project.'))
+        if any(wm.state != 'confirmed' or wm.payment_certificate_id for wm in self):
+            raise UserError(self.env._('Only confirmed measurements not yet on a certificate can be certified.'))
+        Certificate = self.env['boq.payment.certificate']
+        open_cert = Certificate.search([('project_id', '=', project.id),
+                                        ('state', 'in', ('draft', 'submitted', 'approved_l1'))], limit=1)
+        if open_cert:
+            raise UserError(self.env._(
+                '%(cert)s is still open on this project. Approve, reject or cancel it first.', cert=open_cert.name))
+        measurements = self.search([('project_id', '=', project.id), ('state', '=', 'confirmed'),
+                                    ('payment_certificate_id', '=', False)])
+        items = self.env['boq.line'].sudo().search(
+            [('project_id', '=', project.id), ('is_group', '=', False)], order='sequence, id')
+        lines = []
+        for item in items:
+            total = min(item.quantity_executed_cumulative, item.quantity_contracted or item.quantity_executed_cumulative)
+            if total > item.quantity_certified_cumulative:
+                lines.append(Command.create({'boq_line_id': item.id, 'quantity_total': total}))
+        if not lines:
+            raise UserError(self.env._('Nothing to certify: every measured quantity is already certified.'))
+        dates = measurements.mapped('period_from') + measurements.mapped('period_to') + measurements.mapped('date')
+        dates = [d for d in dates if d]
+        certificate = Certificate.create({
+            'project_id': project.id,
+            'period_from': min(dates) if dates else False,
+            'period_to': max(dates) if dates else False,
+            'line_ids': lines,
+        })
+        measurements.sudo()._workflow_write({'payment_certificate_id': certificate.id})
+        return certificate._get_records_action(name=self.env._('Payment Certificate'))
+
+    def action_view_certificate(self):
+        self.ensure_one()
+        return self.payment_certificate_id._get_records_action(name=self.env._('Payment Certificate'))
+
+    def action_view_daily_reports(self):
+        self.ensure_one()
+        return self.daily_report_ids._get_records_action(name=self.env._('Daily Reports'))
+
+    def action_view_project(self):
+        self.ensure_one()
+        return self.project_id._get_records_action(name=self.env._('Project'))

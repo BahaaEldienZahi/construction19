@@ -1,0 +1,51 @@
+<odoo>
+    <data>
+
+        <record model="ir.rule" id="manage_multi_companies_in_resignation">
+            <field name="name">Resignation: multi companies</field>
+            <field name="model_id" ref="model_hr_resignation"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('employee_id.company_id', 'in', company_ids)]</field>
+        </record>
+
+        <!-- Rule for Users to see their own resignations -->
+        <record id="hr_resignation_user_rule" model="ir.rule">
+            <field name="name">Resignation: User: See Own</field>
+            <field name="model_id" ref="model_hr_resignation"/>
+            <field name="groups" eval="[(4, ref('nt_resignation.group_resignation_user'))]"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Rule for admin and HR to see all employees' resignations -->
+        <record id="hr_resignation_hr_admin_rule" model="ir.rule">
+            <field name="name">Resignation: HR_ Admin: See Employees</field>
+            <field name="model_id" ref="model_hr_resignation"/>
+            <field name="groups"
+                   eval="[(4, ref('nt_resignation.group_resignation_admin')),(4, ref('nt_resignation.group_resignation_hr'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+
+ <!-- Rule for Mnager to see own employees' resignations -->
+           <record id="hr_resignation_manager_rule" model="ir.rule">
+            <field name="name">Resignation: Manager: See Employees</field>
+            <field name="model_id" ref="model_hr_resignation"/>
+            <field name="groups" eval="[(4, ref('nt_resignation.group_resignation_manger'))]"/>
+            <field name="domain_force">['|', ('create_uid.employee_id', 'in', user.employee_id.child_ids.ids), ('employee_id.parent_id.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+    </data>
+</odoo>
+
+

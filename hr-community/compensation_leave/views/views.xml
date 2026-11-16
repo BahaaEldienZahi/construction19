@@ -1,0 +1,113 @@
+<odoo>
+
+
+    <record id="hr_leave_view_tree" model="ir.ui.view">
+        <field name="name">hr.leave.form.custom</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="replace">
+                <tree string="Time Off Requests" multi_edit="1" sample="1">
+                    <field name="employee_id" widget="many2one_avatar_employee"/>
+                    <field name="all_employee_ids" widget="many2many_tags_avatar" decoration-muted="not active_employee"
+                           string="Employees" column_invisible="1"/>
+                    <field name="holiday_status_id" class="font-weight-bold"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'"
+                           decoration-warning="state in ('confirm','validate1')"
+                           decoration-success="state == 'validate'"/>
+                    <field name="department_id" optional="hidden"/>
+                    <field name="holiday_type" string="Mode" groups="base.group_no_one" optional="hidden"/>
+                    <field name="compensation_type" readonly="1" optional="hidden"/>
+
+                    <field name="name" readonly="1" optional="hidden"/>
+                    <field name="partner_id" optional="hidden"/>
+                    <field name="project_id" optional="hidden"/>
+
+                    <field name="duration_display" string="Duration" optional="hidden"/>
+                    <!--                    <field name="payslip_status" widget="toggle_button"-->
+                    <!--                           options="{&quot;active&quot;: &quot;Reported in last payslips&quot;, &quot;inactive&quot;: &quot;To Report in Payslip&quot;}"-->
+                    <!--                           groups="hr_holidays.group_hr_holidays_user" nolabel="1"/>-->
+
+                    <field name="active_employee" column_invisible="True" optional="hidden"/>
+                    <field name="category_id" invisible="1" optional="hidden"/>
+                    <field name="user_id" invisible="1" optional="hidden"/>
+                    <field name='amount' groups="hr_holidays.group_hr_holidays_manager" optional="hidden"/>
+                    <field name="message_needaction" invisible="1" optional="hidden"/>
+                    <button string="Approve" name="action_approve" type="object" icon="fa-thumbs-up"
+                            invisible="state != 'confirm'"
+                            groups="hr_holidays.group_hr_holidays_responsible"/>
+                    <!--                    states="confirm"-->
+                    <button string="Validate" name="action_validate" type="object" icon="fa-check"
+                            invisible="state != 'validate1'"
+                            groups="hr_holidays.group_hr_holidays_manager"/>
+                    <!--                     states="validate1"-->
+                    <button string="Refuse" name="action_refuse" type="object" icon="fa-times"
+                            invisible="state not in ['confirm','validate1']"
+                            groups="hr_holidays.group_hr_holidays_responsible"/>
+                    <!--                     states="confirm,validate1"-->
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                </tree>
+
+            </xpath>
+
+        </field>
+    </record>
+    <!--     Inherit Form View to Modify it -->
+    <record id="edit_holiday_status_form_custom" model="ir.ui.view">
+        <field name="name">edit_holiday_status_form_custom</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='company_id']" position="after">
+                <group name="compensation_group" style="margin-top:20px;">
+                    <label for="compensation" string="Compensation"/>
+                    <div>
+                        <field name="compensation" class="oe_inline"/>
+                    </div>
+                    <label for="to_be_compensation" string="To be compensated"/>
+                    <div>
+                        <field name="to_be_compensation" class="oe_inline"/>
+                    </div>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+    <!-- Inherit Form View to Modify it -->
+    <record id="hr_leave_view_form_custom" model="ir.ui.view">
+        <field name="name">hr_leave_view_form_custom</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='number_of_days_display']" position="attributes">
+                <attribute name="readonly">1</attribute>
+
+            </xpath>
+
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="to_be_compensation" invisible="1"/>
+                <field name="amount" invisible="1"/>
+                <field name="compensation_type"
+                       invisible="not to_be_compensation"
+                       required="to_be_compensation"/>
+                <!--                       attrs="{'readonly':[('id','!=',False)],'invisible':[('to_be_compensation','=',False)],'required':[('to_be_compensation','=',True)]}"/>-->
+                <!-- Add your fields or attributes here -->
+            </xpath>
+
+        </field>
+
+
+    </record>
+    overview menue
+    <menuitem
+            id="hr_holidays.menu_hr_holidays_dashboard"
+            name="Overview"
+            parent="hr_holidays.menu_hr_holidays_root"
+            groups="hr_holidays.group_hr_holidays_manager"
+            action="hr_holidays.action_hr_holidays_dashboard"/>
+
+
+</odoo>

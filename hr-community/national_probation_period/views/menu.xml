@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+
+        <menuitem name="Probation Period"
+                  id="employee_probation_period_menu_root"
+                  web_icon="national_probation_period,static/description/icon.png"
+
+        />
+
+        <menuitem name="Probation"
+                  id="employee_probation_period_menu_probation"
+                  parent="employee_probation_period_menu_root"
+                  action="employee_probation_period_action"
+                  sequence="1"
+        />
+        <menuitem name="Configration"
+                  id="employee_probation_period_menu_configration"
+                  parent="employee_probation_period_menu_root"
+                  groups="national_probation_period.group_probation_period_admin"
+                  sequence="2"
+        />
+
+        <menuitem id="employee_probation_period_menu_configration_setting" name="Settings"
+                  parent="employee_probation_period_menu_configration"
+                  action="national_probation_period.probation_config_settings_action"
+                  groups="base.group_erp_manager"
+                  sequence="1"/>
+    </data>
+</odoo>

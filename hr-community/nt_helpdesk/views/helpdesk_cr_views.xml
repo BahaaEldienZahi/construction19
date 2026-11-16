@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="helpdesk_cr_tree_view" model="ir.ui.view">
+            <field name="name">helpdesk.cr.tree.view</field>
+            <field name="model">helpdesk.cr</field>
+            <field name="arch" type="xml">
+                <tree string="Helpdesk CR" create="0" edit="0">
+                    <field name="name" required="1"/>
+                    <field name="partner_id"/>
+                    <field name="project_id"/>
+                    <field name="ticket_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="helpdesk_cr_form_view" model="ir.ui.view">
+            <field name="name">helpdesk.cr.form.view</field>
+            <field name="model">helpdesk.cr</field>
+            <field name="arch" type="xml">
+                <form string="Helpdesk CR">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" options="{'line_breaks': False}" widget="text" class="field_name"
+                                       placeholder="e.g. Helpdesk CR Name" required="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="project_id"/>
+                                <field name="ticket_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="helpdesk_cr_action" model="ir.actions.act_window">
+            <field name="name">Helpdesk CR</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">helpdesk.cr</field>
+            <field name="view_mode">tree</field>
+        </record>
+        <menuitem id="helpdesk_cr_action_menu"
+              name="Helpdesk CR"
+              action="helpdesk_cr_action"
+              parent="helpdesk_mgmt.helpdesk_ticket_config_main_menu"
+              sequence="2"/>
+    </data>
+</odoo>

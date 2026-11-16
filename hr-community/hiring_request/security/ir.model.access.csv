@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+user_access_hiring_request,hiring.request,hiring_request.model_hiring_request,hiring_request.hiring_request_user_group,1,1,1,1
+manager_access_hiring_request,hiring.request,hiring_request.model_hiring_request,hiring_request.hiring_request_manager_group,1,1,1,1
+hr_access_hiring_request,hiring.request,hiring_request.model_hiring_request,hiring_request.hiring_request_hr_group,1,1,1,1
+ceo_access_hiring_request,hiring.request,hiring_request.model_hiring_request,hiring_request.hiring_request_ceo_group,1,1,1,1
+
+user_access_hr_job,hr.job,hr.model_hr_job,hiring_request.hiring_request_user_group,1,0,0,0
+manager_access_hr_job,hr.job,hr.model_hr_job,hiring_request.hiring_request_manager_group,1,0,0,0
+hr_access_hr_job,hr.job,hr.model_hr_job,hiring_request.hiring_request_hr_group,1,0,0,0
+ceo_access_hr_job,hr.job,hr.model_hr_job,hiring_request.hiring_request_ceo_group,1,0,0,0
+
+user_access_hiring_rejection_reason_wizard,hiring.rejection.reason.wizard,model_hiring_rejection_reason_wizard,hiring_request.hiring_request_user_group,1,1,1,1
+manager_access_hiring_rejection_reason_wizard,hiring.rejection.reason.wizard,model_hiring_rejection_reason_wizard,hiring_request.hiring_request_manager_group,1,1,1,1
+hr_access_hiring_rejection_reason_wizard,hiring.rejection.reason.wizard,model_hiring_rejection_reason_wizard,hiring_request.hiring_request_hr_group,1,1,1,1
+ceo_access_hiring_rejection_reason_wizard,hiring.rejection.reason.wizard,model_hiring_rejection_reason_wizard,hiring_request.hiring_request_ceo_group,1,1,1,1
+

@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+
+        <!-- ======[smart button]===========-->
+        <record id="employee_form_view_inherit" model="ir.ui.view">
+            <field name="name">hr employee form view inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//div[@class='oe_button_box']" position="inside">
+                    <button name="get_pr_tree" string="Penalty/Reward"
+                            type="object" class="oe_stat_button" icon="fa-cubes" groups="nt_penalty_and_reward.group_penalty_reward_user,nt_penalty_and_reward.group_penalty_reward_admin"/>
+                </xpath>
+                <xpath expr="//field[@name='mobile_phone']" position="after">
+                    <!-- Add your fields or attributes here -->
+                    <field name="payslip_from"/>
+                    <field name="payslip_to"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--     Inherit Form View to Modify it -->
+    <record id="hr_applicant_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.applicant.view.form.inherit</field>
+        <field name="model">hr.applicant</field>
+        <field name="mode">primary</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+
+            <!--            <xpath expr="//field[@name='name']" position="">-->
+            <!--                &lt;!&ndash; Add your fields or attributes here &ndash;&gt;-->
+            <!--            </xpath>-->
+            <xpath expr="//field[@name='stage_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <!--            <xpath expr="//field[@name='categ_ids']" position="attributes">-->
+            <!--                 <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>-->
+            <!--            </xpath>-->
+            <xpath expr="//field[@name='type_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='team_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='medium_id']" position="after">
+                <field name="referred_partner_id" invisible="1"/>
+                <field name="hide_button" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='open_stages_applicant']" position="attributes">
+                <attribute name="invisible">hide_button</attribute>
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+                <!--                 <attribute name="attrs">{'invisible': [('hide_button', '=', True)]}</attribute>-->
+            </xpath>
+            <xpath expr="//button[@name='archive_applicant']" position="attributes">
+                <attribute name="invisible">hide_button</attribute>
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+                <!--                 <attribute name="attrs">{'invisible': [('hide_button', '=', True)]}</attribute>-->
+            </xpath>
+            <xpath expr="//button[@name='create_job_offer_from_applicant']" position="attributes">
+                <attribute name="invisible">hide_button or hide_create_action</attribute>
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+                <!--                 <attribute name="attrs">{'invisible': [('hide_button', '=', True)]}</attribute>-->
+            </xpath>
+            <xpath expr="//button[@name='send_attachment_reminder_manually']" position="attributes">
+                <attribute name="invisible">hide_button</attribute>
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+                <!--                 <attribute name="attrs">{'invisible': [('hide_button', '=', True)]}</attribute>-->
+            </xpath>
+            <xpath expr="//button[@name='action_show_job_offers']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='job_offer_ids']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <!--            <xpath expr="//field[@name='job_id']" position="attributes">-->
+            <!--                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>-->
+            <!--            </xpath>-->
+            <xpath expr="//sheet/group[1]/group[4]" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='email_cc']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='interviewer_ids']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='source_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='availability']" position="attributes">
+                <attribute name="required">0</attribute>
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='senior_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='assigned_team_leader_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='cv_link']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//page[@name='application_summary']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_server_application" model="ir.actions.act_window">
+        <field name="name">Applications</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,activity</field>
+        <field name="view_id" ref="referral_custom.hr_applicant_view_form_inherit"/>
+        <field name="context">{'hide_referal': True}</field>
+
+    </record>
+
+
+    <record id="hr_applicant_view_kanban_inherit" model="ir.ui.view">
+        <field name="name">hr.applicant.view.kanban.inherit</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="records_draggable">0</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_record_top')]" position="after">
+                <ul>
+                    <li>
+                        <field name="email_from"/>
+                    </li>
+                </ul>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_applicant_view_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.applicant.view.tree.inherit</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='create_date']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='refuse_reason_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='priority']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='interviewer_ids']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_phone']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='medium_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='source_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='salary_expected']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='salary_proposed']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='availability']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+        </field>
+    </record>
+<!--    =======-->
+    <!-- Inherit Form View to Modify it -->
+    <record id="quick_create_applicant_form_inherit" model="ir.ui.view">
+        <field name="name">hr.applicant.form.quick_create.inherit</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.quick_create_applicant_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email_from']" position="attributes">
+                <attribute name="required">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='email_from']" position="after">
+                <field name="partner_mobile"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="hr_applicant_view_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.applicant.view.tree.inherit</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='create_date']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='refuse_reason_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='priority']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='interviewer_ids']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_phone']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='medium_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='source_id']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='salary_expected']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='salary_proposed']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='availability']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="ref_employee_id" optional="show"/>
+                <field name="referral_by_email" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_applicant_view_form_2" model="ir.ui.view">
+        <field name="name">hr.applicant.view.form_2.inherit</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment_skills.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[last()]" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_applicant_view_search_bis_inherit" model="ir.ui.view">
+        <field name="name">hr.applicant.view.search.bis.inherit</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_search_bis"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/filter[@name='stage']" position="attributes">
+                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_referal_hr_application_view_inherit" model="ir.actions.act_window">
+        <field name="name">application referral</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_recruitment.crm_case_tree_view_job')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('referral_custom.hr_applicant_view_form_inherit')})]"/>
+
+    </record>
+
+
+    <!--   kanban view -->
+    <record id="hr_recruitment_report_inherit_kanban_view_inherit" model="ir.ui.view">
+        <field name="model">hr.job</field>
+        <field name="mode">primary</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//kanban" position="replace">
+                <kanban class="o_kanban_dashboard o_hr_recruitment_kanban"
+                        type="action">
+                    <field name="active"/>
+                    <field name="name"/>
+                    <field name="alias_email"/>
+                    <field name="is_favorite"/>
+                    <field name="department_id"/>
+                    <field name="no_of_recruitment"/>
+                    <field name="color"/>
+                    <field name="new_application_count"/>
+                    <field name="no_of_hired_employee"/>
+                    <field name="manager_id"/>
+                    <field name="user_id"/>
+                    <field name="application_count"/>
+                    <templates>
+                        <t t-name="kanban-menu" groups="hr_recruitment.group_hr_recruitment_user">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-6 o_kanban_card_manage_section">
+                                        <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                            <span>View</span>
+                                        </h5>
+                                        <div role="menuitem" name="menu_view_applications">
+                                            <a name="%(hr_recruitment.action_hr_job_applications)d" type="action">
+                                                Applications
+                                            </a>
+                                        </div>
+                                        <div role="menuitem">
+                                            <a name="action_open_activities" type="object">Activities</a>
+                                        </div>
+                                        <div role="menuitem">
+                                            <a name="%(hr_recruitment.action_hr_job_sources)d" type="action"
+                                               context="{'default_job_id': id}">Trackers
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 o_kanban_card_manage_section">
+                                        <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                            <span>New</span>
+                                        </h5>
+                                        <div role="menuitem" name="menu_new_applications">
+                                            <a name="%(hr_recruitment.action_hr_applicant_new)d" type="action">
+                                                Application
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 o_kanban_card_manage_section">
+                                        <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                            <span>Reporting</span>
+                                        </h5>
+                                        <div role="menuitem" name="o_kanban_job_reporting">
+                                            <a name="%(hr_recruitment.action_hr_recruitment_report_filtered_job)d"
+                                               type="action">Analysis
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_manage_settings row">
+                                    <div class="col-6" role="menuitem" aria-haspopup="true">
+                                        <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                                    </div>
+                                    <div class="col-6" role="menuitem">
+                                        <a class="dropdown-item" t-if="widget.editable" name="edit_job" type="edit">
+                                            Configuration
+                                        </a>
+                                        <a class="dropdown-item" t-if="record.active.raw_value" name="toggle_active"
+                                           type="object">Archive
+                                        </a>
+                                        <a class="dropdown-item" t-if="!record.active.raw_value" name="toggle_active"
+                                           type="object">Unarchive
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
+                                <div class="o_kanban_card_header d-flex align-items-baseline gap-1">
+                                    <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary">
+                                            <span class="o_text_overflow">
+                                                <t t-esc="record.name.value"/>
+                                            </span>
+                                        </div>
+                                        <div class="text-muted">
+                                            <field name="user_id"/>
+                                        </div>
+                                        <div class="o_secondary" groups="base.group_multi_company">
+                                            <small>
+                                                <i class="fa fa-building-o" role="img" aria-label="Company"
+                                                   title="Company"></i>
+                                                <field name="company_id"/>
+                                            </small>
+                                        </div>
+                                        <div t-if="record.alias_email.value" class="o_secondary o_job_alias">
+                                            <small>
+                                                <i class="fa fa-envelope-o" role="img" aria-label="Alias"
+                                                   title="Alias"></i>
+                                                <field name="alias_id"/>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container o_recruitment_job_container o_kanban_card_content mt-0 mt-sm-3">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <button class="btn btn-primary"
+                                                    name="%(referral_custom.action_server_application)d"
+                                                    context="{'default_job_id':active_id}"
+                                                    type="action">
+                                                <field name="new_application_count"/>
+                                                New Applications
+                                            </button>
+                                        </div>
+                                        <ul class="col-5 o_job_activities">
+                                            <button class="btn btn-fill-secondary"
+                                                    name="%(referral_custom.action_referal_hr_application_view_inherit)d"
+                                                    type="action">
+                                                <field name="application_count"/>
+                                                Applications
+                                            </button>
+
+                                        </ul>
+                                    </div>
+                                    <div name="kanban_boxes" class="row flex-nowrap"
+                                         groups="hr_recruitment.group_hr_recruitment_user"/>
+                                </div>
+
+
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </xpath>
+
+
+        </field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_clearance_setup_user,clearance.setup user,model_clearance_setup,nt_clearance.group_clearance_user,1,0,0,0
+access_clearance_setup_manager,clearance.setup manager,model_clearance_setup,nt_clearance.group_clearance_manager,1,0,0,0
+access_clearance_setup_admin,clearance.setup admin,model_clearance_setup,nt_clearance.group_clearance_admin,1,1,1,1
+
+access_clearance_request_user,clearance.request user,model_clearance_request,nt_clearance.group_clearance_user,1,0,0,0
+access_clearance_request_manager,clearance.request manager,model_clearance_request,nt_clearance.group_clearance_manager,1,1,0,0
+access_clearance_request_admin,clearance.request admin,model_clearance_request,nt_clearance.group_clearance_admin,1,1,1,1
+
+access_clearance_request_line_user,clearance.request.line user,model_clearance_request_line,nt_clearance.group_clearance_user,1,0,0,0
+access_clearance_request_line_manager,clearance.request.line manager,model_clearance_request_line,nt_clearance.group_clearance_manager,1,1,0,0
+access_clearance_request_line_admin,clearance.request.line admin,model_clearance_request_line,nt_clearance.group_clearance_admin,1,1,1,1

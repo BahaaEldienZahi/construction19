@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--        <record id="crm_rule_all_lead" model="ir.rule">-->
+        <!--        <field name="name">All Leads</field>-->
+        <!--        <field ref="model_crm_lead" name="model_id"/>-->
+        <!--        <field name="domain_force">[(1,'=',1)]</field>-->
+        <!--        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>-->
+        <!--    </record>-->
+
+        <record model="ir.rule" id="penalty_ony_his_team">
+            <field name="model_id" ref="nt_penalty_and_reward.model_employee_penalty_reward"></field>
+            <field name="name">penalty.user.user.team.only</field>
+            <field name="domain_force">['|', ('employee_id.parent_id.user_id', '=', user.id),
+                                        ('employee_id.user_id', '=', user.id)]</field>
+
+            <field name="groups" eval="(4,ref('nt_penalty_and_reward.group_penalty_reward_user'))"></field>
+        </record>
+
+
+         <record model="ir.rule" id="penalty_admin_rule">
+            <field name="model_id" ref="nt_penalty_and_reward.model_employee_penalty_reward"></field>
+            <field name="name">penalty.user.user.admin</field>
+            <field name="domain_force">[(1,'=',1)]</field>
+
+            <field name="groups" eval="(4,ref('nt_penalty_and_reward.group_penalty_reward_admin'))"></field>
+        </record>
+
+
+    </data>
+</odoo>

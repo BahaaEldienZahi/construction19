@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_hr_job_form" model="ir.ui.view">
+        <field name="name">inherit.hr.job.form</field>
+        <field name="model">hr.job</field>
+        <!--<field name="groups_id" eval="[(4, ref(''))]"/>-->
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//form" position="inside">
+                <field name="allowed_user_ids" invisible="1"/>
+            </xpath> -->
+            <xpath expr="//notebook/page[1]" position="after">
+                <page name="job_requirements" string="Job Requirements">
+<!--                    <div attrs="{'invisible': [('state', '!=', 'recruit')]}">-->
+                       <div>
+                           <label for="job_requirements"/>
+                        <field name="job_requirements"/>
+                    </div>
+                </page>
+            </xpath>
+            <div name="recruitment_target" position="after">
+                <field name="recruitment_team_id"/>
+            </div>
+
+        </field>
+    </record>
+</odoo>

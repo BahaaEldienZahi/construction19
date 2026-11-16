@@ -1,0 +1,55 @@
+<odoo>
+    <data>
+
+
+        <record id="timeoff_type_form_view_inherit" model="ir.ui.view">
+            <field name="name">TimeOff type form view inherit</field>
+            <field name="model">hr.leave.type</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='responsible_ids']" position="replace">
+                    <label for="responsible_ids" string="Notified TimeOff Officer" class="oe_inline"/>
+                        <div>
+                            <field name="responsible_ids" class="oe_inline" widget="many2many_tags" placeholder="Nobody will be notified" invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type != 'officer')"/>
+                        </div>
+                </xpath>
+
+                <xpath expr="//field[@name='request_unit']" position="replace">
+                    <label for="request_unit" string="Take TimeOff In" class="oe_inline"/>
+                        <div>
+                            <field name="request_unit" class="oe_inline"/>
+                        </div>
+                </xpath>
+
+                <xpath expr="//field[@name='support_document']" position="replace">
+                    <label for="support_document" string="Allow To Attach Supporting Document" class="oe_inline"/>
+                        <div>
+                            <field name="support_document" class="oe_inline"/>
+                        </div>
+                </xpath>
+
+                <xpath expr="//field[@name='time_type']" position="replace">
+                    <label for="time_type" string="Kind Of TimeOff" class="oe_inline"/>
+                        <div>
+                            <field name="time_type" class="oe_inline" required="1"/>
+                        </div>
+                </xpath>
+
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <group style="margin-top:20px;">
+                        <field name="auto_allocation"/>
+                        <field name="auto_allocation_days" invisible="not auto_allocation" required="auto_allocation"/>
+                        <!--                    attrs="{'invisible': [('auto_allocation', '==', False)],'required':[('auto_allocation','=',True)]}"-->
+                        <field name="probation_period"/>
+                        <field name="probation_period_days" invisible="not probation_period"
+                               required="probation_period"/>
+                        <!--                    attrs="{'invisible': [('probation_period', '==', False)],'required':[('probation_period','=',True)]}"-->
+                    </group>
+                </xpath>
+            </field>
+        </record>
+        <!-- ============================================================= -->
+
+    </data>
+</odoo>

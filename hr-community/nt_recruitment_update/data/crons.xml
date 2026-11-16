@@ -1,0 +1,82 @@
+<odoo>
+    <data>
+        <record id="cron_attachment_reminder" model="ir.cron">
+            <field name="name">Send Attachment Reminder</field>
+            <field name="model_id" ref="model_hr_applicant"/>
+            <field name="state">code</field>
+            <field name="code">model.send_attachment_reminder()</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <record id="cron_probation_period_reminder" model="ir.cron">
+            <field name="name">Probation Period Reminder</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_send_activity_reminder()</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>days</field>
+            <field name="numbercall">-1</field>
+        </record>
+
+        <record id="cron_send_acceptance_mail" model="ir.cron">
+            <field name="name">Send Acceptance Mail</field>
+            <field name="model_id" ref="model_hr_job_offer"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_send_acceptance_mail()</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>days</field>
+            <field name="numbercall">-1</field>
+        </record>
+
+        <record id="cron_send_check_employee" model="ir.cron">
+            <field name="name">Send Check New Employee Mail</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_send_check_employee()</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>days</field>
+            <field name="numbercall">-1</field>
+        </record>
+
+        <!--archive job offer link -->
+        <record id="cron_send_archive_job_offer" model="ir.cron">
+            <field name="name">archive expired job offer</field>
+            <field name="model_id" ref="model_hr_job_offer"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_archive_expired_job_offer()</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>days</field>
+            <field name="numbercall">-1</field>
+        </record>
+
+        <!--        archive rejected offer after 7 days  -->
+        <record id="_cron_archive_rejected_job_offer_after7_days" model="ir.cron">
+            <field name="name">archive rejected job offer every</field>
+            <field name="model_id" ref="model_hr_job_offer"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_archive_rejected_job_offer_after7_days()</field>
+            <field name='interval_number'>7</field>
+            <field name='interval_type'>days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <record id="_cron_send_welcom_mail" model="ir.cron">
+            <field name="name">send welcome survey mail</field>
+            <field name="model_id" ref="model_hr_job_offer"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_send_servey_in_joining_date()</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <record id="_cron_create_tickets_7days_before_joining_date" model="ir.cron">
+            <field name="name">create tickets 7days before joining date</field>
+            <field name="model_id" ref="model_hr_job_offer"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_create_tickets_7days_before_joining_date()</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>days</field>
+            <field name="numbercall">-1</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="group_mass_edit_ticket_stage" model="res.groups">
+            <field name="name">Can Mass Edit Ticket Stage</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        <record id="group_helpdesk_close_stage" model="res.groups">
+            <field name="name">Helpdesk Close Stage</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        <record id="group_helpdesk_ticket_log" model="res.groups">
+            <field name="name">Helpdesk Ticket Log</field>
+        </record>
+        <record id="group_helpdesk_technical_user" model="res.groups">
+            <field name="name">Technical User</field>
+            <field name="category_id" ref="base.module_category_services_helpdesk"/>
+            <field name="implied_ids" eval="[(4, ref('helpdesk_mgmt.group_helpdesk_user'))]"/>
+        </record>
+        <record id="helpdesk_mgmt.group_helpdesk_manager" model="res.groups">
+            <field name="implied_ids" eval="[(6,0,[ref('nt_helpdesk.group_helpdesk_technical_user')])]"/>
+        </record>
+
+        <!--  Helpdesk Ticket Rule       -->
+
+        <record id="rule_helpdesk_ticket_user" model="ir.rule">
+            <field name="name">Helpdesk: Ticket User</field>
+            <field name="model_id" ref="helpdesk_mgmt.model_helpdesk_ticket"/>
+            <field name="domain_force">['|','|',('create_uid', '=', user.id),
+                ('user_id','=',user.id),
+                ('message_partner_ids', 'in', [user.partner_id.id]),
+                ]
+            </field>
+            <field name="groups" eval="[(4, ref('helpdesk_mgmt.group_helpdesk_user'))]"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <record id="rule_helpdesk_ticket_technical_user" model="ir.rule">
+            <field name="name">Helpdesk : Technical User</field>
+            <field name="model_id" ref="helpdesk_mgmt.model_helpdesk_ticket"/>
+            <field name="domain_force">['|','|','|',('create_uid', '=', user.id),
+                ('user_id','=',user.id),
+                ('user_ids','in',[user.id]),
+                ('message_partner_ids', 'in', [user.partner_id.id]),
+                ]
+            </field>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="groups"
+                   eval="[(4, ref('nt_helpdesk.group_helpdesk_technical_user'))]"/>
+        </record>
+
+        <record id="rule_helpdesk_ticket_manager" model="ir.rule">
+            <field name="name">Helpdesk : Manger Show All ticket</field>
+            <field name="model_id" ref="helpdesk_mgmt.model_helpdesk_ticket"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('helpdesk_mgmt.group_helpdesk_manager'))]"/>
+        </record>
+
+        <!--  Helpdesk Team Rule       -->
+
+        <record id="rule_helpdesk_team_user" model="ir.rule">
+            <field name="name">NT Users : Helpdesk Team(Show Visible Teams)</field>
+            <field name="model_id" ref="helpdesk_mgmt.model_helpdesk_ticket_team"/>
+            <field name="domain_force">[(1,'=',1)]
+            </field>
+            <field name="groups"
+                   eval="[(4, ref('helpdesk_mgmt.group_helpdesk_user')),(4, ref('nt_helpdesk.group_helpdesk_technical_user'))]"/>
+        </record>
+
+        <record id="rule_helpdesk_team_manager" model="ir.rule">
+            <field name="name">NT Managers : Helpdesk Team(Show All Teams)</field>
+            <field name="model_id" ref="helpdesk_mgmt.model_helpdesk_ticket_team"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('helpdesk_mgmt.group_helpdesk_manager'))]"/>
+        </record>
+
+
+
+    </data>
+</odoo>

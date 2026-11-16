@@ -1,0 +1,27 @@
+# -*- coding: utf-8 -*-
+{
+    'name': "Referral",
+    'summary': """National Referral""",
+    'description': """Employee refer another employee""",
+    'author': "National Technology",
+    'website': "https://nt-me.com/",
+    'category': 'Hr Recruitment',
+    'version': '0.1',
+    'license': 'LGPL-3',
+    'depends': ['base', 'hr_recruitment', 'nt_recruitment_update', 'hr','mail'],
+    'data': [
+        'security/referral_security.xml',
+        'security/hr_job_security.xml',
+        'security/ir.model.access.csv',
+        'views/res_config_views.xml',
+        'views/hr_application_view.xml',
+        'views/hr_employee_view.xml',
+        # 'views/hr_job_views.xml',
+        'views/referral_bonus_view.xml',
+        'views/views.xml',
+    ],
+    'demo': [],
+    'installable': True,
+    'auto_install': False,
+    'application': True,
+}

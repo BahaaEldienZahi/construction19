@@ -1,0 +1,87 @@
+<odoo>
+    <data>
+<!--        <record id="project_project_sequence" model="ir.sequence">-->
+<!--            <field name="name">Project Project</field>-->
+<!--            <field name="code">project.project</field>-->
+<!--            <field name="prefix">P/</field>-->
+<!--            <field name="padding">5</field>-->
+<!--            <field name="number_next">1</field>-->
+<!--            <field name="number_increment">1</field>-->
+<!--            <field name="company_id" eval="False"/>-->
+<!--        </record>-->
+
+        <record id="project_project_code_sequence" model="ir.sequence">
+            <field name="name">Project code sequence</field>
+            <field name="code">project.project</field>
+            <field name="prefix">P/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="reset_neq_sequence_for_code" model="ir.actions.server">
+            <field name="name">new code sequence</field>
+            <field name="model_id" ref="nt_helpdesk.model_project_project"/>
+            <field name="binding_model_id" ref="nt_helpdesk.model_project_project"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    for record in records:
+                        action = record.reset_code_sequence_to_old_records()</field>
+        </record>
+
+        <record id="edit_project" model="ir.ui.view">
+            <field name="name">inherit.project.project.form</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='active']" position="after">
+                    <field name="code" />
+                </xpath>
+<!--                <xpath expr="//notebook" position="inside">-->
+<!--                    <page name="helpdesk" string="Helpdesk">-->
+<!--                        <group>-->
+<!--                            <group>-->
+<!--                                <field name="assigned_to_id" options="{'no_open': True, 'no_create': True}"/>-->
+<!--                            </group>-->
+<!--                            <group>-->
+<!--                                <field name="helpdesk_team_id"/>-->
+<!--                            </group>-->
+<!--                            <field name="allowed_users" nolabel="1">-->
+<!--                                <tree editable="bottom">-->
+<!--                                    <field name="user_id"/>-->
+<!--                                    <field name="email"/>-->
+<!--                                    <field name="team_member_visibility"/>-->
+<!--                                    <field name="view_all_tickets"/>-->
+<!--                                </tree>-->
+<!--                                <form>-->
+<!--                                    <group>-->
+<!--                                        <field name="email"/>-->
+<!--                                        <field name="team_member_visibility"/>-->
+<!--                                        <field name="view_all_tickets"/>-->
+<!--                                    </group>-->
+<!--                                </form>-->
+<!--                            </field>-->
+<!--                        </group>-->
+<!--                    </page>-->
+<!--                </xpath>-->
+
+            </field>
+        </record>
+
+        <record id="edit_project_list_view" model="ir.ui.view">
+            <field name="name">inherit.project.project.list</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='display_name']" position="after">
+                    <field name="code"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+
+</odoo>

@@ -1,0 +1,165 @@
+<odoo>
+    <data>
+        <!-- ============== [tree view ] ============= -->
+        <record id="employee_probation_period_tree_view" model="ir.ui.view">
+            <field name="name">employee.probation.period.tree.view</field>
+            <field name="model">employee.probation.period</field>
+            <field name="arch" type="xml">
+                <tree string="employee probation period" sample="1">
+                    <field name='probation_action' string="Action"/>
+                    <field name='employee_id'/>
+                    <field name="state" widget="badge" decoration-success="state == 'approve'"
+                           decoration-info="state == 'submit'" string="Status"/>
+                    <field name='rem_daya' string="Remain Days"/>
+                    <field name='department_id'/>
+                </tree>
+            </field>
+        </record>
+        <!-- ============== [form view ] ============= -->
+        <record id="employee_probation_period_form_view" model="ir.ui.view">
+            <field name="name">employee.probation.period.form.view</field>
+            <field name="model">employee.probation.period</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_do_submit"
+                                type="object"
+                                string="Submit"
+                                class="btn-primary"
+                                groups="national_probation_period.group_probation_period_user,national_probation_period.group_probation_period_admin"
+                                invisible="state != 'draft'"
+                        />
+<!--                        <button name="action_confirm_Extend"-->
+<!--                                type="object"-->
+<!--                                string="Confirm"-->
+<!--                                class="btn-primary"-->
+<!--                                groups="national_probation_period.group_probation_period_user,national_probation_period.group_probation_period_admin"-->
+<!--                                invisible="state != 'extend'"-->
+<!--                        />-->
+
+                        <button name="action_do_wait"
+                                type="object"
+                                string="Start Survey"
+                                class="btn-primary"
+                                groups="national_probation_period.group_probation_period_user,national_probation_period.group_probation_period_admin"
+                                invisible="probation_action == '1' or state != 'wait'"
+                        />
+
+                        <button name="action_do_confirm"
+                                type="object"
+                                string="Confirm"
+                                class="btn-primary"
+                                invisible="state not in ['confirm','extend']"
+                                groups="national_probation_period.group_probation_period_hr_approve"
+
+                        />
+                        <button name="action_do_approve"
+                                type="object"
+                                string="Approve"
+                                class="btn-primary"
+                                invisible="state != 'approve'"
+                                groups="national_probation_period.group_probation_period_admin"
+
+                        />
+
+                        <button name="action_salary_approve"
+                                type="object"
+                                string="Approve"
+                                class="btn-primary"
+                                invisible="hide_approve_button"/>
+
+                        <button name="action_salary_reject"
+                                type="object"
+                                string="Reject"
+                                class="btn-primary"
+                                invisible="hide_approve_button"/>
+
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button"
+                                    name="get_surveys" icon="fa-check-square-o"
+                                    string="Surveys" type="object">
+                                <field name="no_of_surveys" string="Surveys" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="hide_approve_button" invisible="1"/>
+                                <field name="hide_draft_button" invisible="1"/>
+                                <field name="is_readonly" invisible="1"/>
+                                <field name="employee_id" options="{'no_create': True, 'no_create_edit':True}"
+                                       readonly="is_readonly"/>
+                                <field name="department_id" readonly="1"/>
+                                <field name="survey_id" options="{'no_create': True, 'no_create_edit':True}"
+                                       readonly="is_readonly"
+                                       invisible="probation_action != '0' and probation_action != '2' "
+                                       required="probation_action != '1'"/>
+                                <field name="is_resignation" invisible="1"/>
+                                <field name="answer_done_count" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="probation_action" readonly="is_readonly"/>
+                                <field name="extend_month" invisible="probation_action != '1'" readonly="is_readonly"
+                                       required="probation_action == '1'"/>
+                                <field name="date_to" invisible="probation_action != '0'" readonly="is_readonly"
+                                       required="probation_action == '0'"/>
+                                <field name="salary_action" invisible="probation_action != '2'" readonly="is_readonly"
+                                       required="probation_action == '2'"/>
+
+                                <field name="old_salary" invisible="probation_action != '2' or salary_action != 'new' "/>
+                                <field name="new_salary" invisible="probation_action != '2' or salary_action != 'new' "
+                                       readonly="is_readonly"
+                                       required="salary_action == 'new'"/>
+<!--                                <field name="date_from" readonly="is_readonly"-->
+<!--                                       invisible="probation_action != '2' or salary_action != 'new' "/>-->
+                                <field name="date_from" invisible="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+
+            </field>
+        </record>
+
+        <record id="employee_probation_period_search_view" model="ir.ui.view">
+            <field name="name">employee employee.probation.period search</field>
+            <field name="model">employee.probation.period</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name='employee_id'/>
+                    <field name='state'/>
+
+                    <filter string="Archived" name="active" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" name="employee_id" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Department" name="department" domain="[]" context="{'group_by':'department_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ============== [employee penalty reward action] ============= -->
+        <record model="ir.actions.act_window" id="employee_probation_period_action">
+            <field name="name">Probation period</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.probation.period</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <!--            <field name="domain">[('employee_id.department_id','=',user.employee_id.department_id.id)]</field>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Probation Period !
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

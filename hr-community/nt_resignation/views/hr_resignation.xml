@@ -1,0 +1,218 @@
+<odoo>
+
+    <odoo>
+
+        <record id="view_tree_hr_resignation" model="ir.ui.view">
+            <field name="name">hr.resignation.tree</field>
+            <field name="model">hr.resignation</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="resignation_date"/>
+                    <field name="last_working_day" optional="show"/>
+                    <field name="new_salary"/>
+                    <field name="new_company_name"/>
+                    <field name="state" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_form_hr_resignation" model="ir.ui.view">
+            <field name="name">hr.resignation.form</field>
+            <field name="model">hr.resignation</field>
+            <field name="arch" type="xml">
+                <form string="Employee Resignation">
+                    <header>
+                        <field name="buttons_visibility" invisible="1"/>
+                        <field name="no_of_surveys" invisible="1"/>
+                        <field name="no_of_exit_surveys" invisible="1"/>
+                        <field name="is_manager" invisible="1"/>
+                        <field name="answer_done_count" invisible="1"/>
+                        <button string="Submit" type="object" name="action_submit"
+                                invisible=" state != 'draft'" class="oe_highlight"/>
+
+
+                        <!--                        <button string="Manager Approval" type="object" name="action_manager_approve"-->
+                        <!--                                groups="nt_resignation.group_resignation_manger"-->
+                        <!--                                invisible=" state !=  'submit'" class="oe_highlight"/>-->
+                        <button string="Approve" type="object" name="action_hr_confirm"
+                                groups="nt_resignation.group_resignation_manger"
+                                invisible=" state != 'manager_approval'" class="oe_highlight"/>
+                        <button string="Done" type="object" name="action_done"
+                                groups="nt_resignation.group_resignation_manger"
+                                invisible="state != 'confirmed' " class="oe_highlight"/>
+                        <button string="Confirm" type="object" name="action_confirm"
+                                groups="nt_resignation.group_resignation_hr"
+                                invisible=" state !=  'clearance'" class="oe_highlight"/>
+                        <!--                        invisible=" state !=  'confirmed' or no_of_surveys > 0" class="oe_highlight"-->
+                        <button string="Start Survey" type="object" name="action_do_wait_survey"
+                                invisible="1"/>
+                        <button string="Exit Interview" type="object" name="action_do_exit_interview"
+                                invisible=" state !=  'confirmed' or no_of_exit_surveys > 0" class="oe_highlight"
+                                groups="nt_resignation.group_resignation_create_exit_interview"/>
+                        <button string="Confirm" type="object" name="action_confirm"
+                                invisible=" state !=  'hr_confirmation'" class="oe_highlight" groups="nt_resignation.group_resignation_hr"
+                                />
+                        <button string="Reject" type="object" name="action_reject"
+                                groups="nt_resignation.group_resignation_manger"
+                                invisible="state not in ['manager_approval'] or not buttons_visibility"
+                                class="oe_button_box"/>
+                        <button string="Rejoin" type="object" name="action_cancel"
+                                invisible=" state not in ['confirmed']"
+                                class="oe_button_box" groups="nt_resignation.group_resignation_hr"/>
+                        <button string="Change Date" type="object" name="change_date"
+                                invisible="state not in ['submit','hr_confirmation','confirmed']"
+                                groups="nt_resignation.group_resignation_manger"
+                                class="oe_button_box"/>
+                        <button string="Penalties &amp; Rewards" type="object" name="create_employee_penalty_reward"
+                                invisible="state not in ['hr_confirmation','confirmed']"
+                                groups="nt_resignation.group_resignation_hr"
+                                confirm="Penalties &amp; Rewards Added Successfully!"
+                                class="oe_highlight"/>
+
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,manager_approval,hr_confirmation,confirmed,done"/>
+                        <button string="Set To Draft" type="object" name="action_draft"
+                                invisible=" state == 'draft'" class="oe_button_box" groups="nt_resignation.group_resignation_hr"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <!--                            <button class="oe_stat_button"-->
+                            <!--                                    name="get_surveys" icon="fa-check-square-o"-->
+                            <!--                                    string="Surveys" type="object">-->
+                            <!--                                <field name="no_of_surveys" string="Surveys" widget="statinfo"/>-->
+                            <!--                            </button>-->
+                            <button class="oe_stat_button"
+                                    name="get_exit_interview_result" icon="fa-check-square-o"
+                                    invisible=" state not in ['confirmed','done']"
+                                    groups="nt_resignation.group_resignation_show_exit_interview"
+                                    string="Exit Interviews" type="object">
+                                <field name="no_of_exit_surveys" string="Exit Interviews" widget="statinfo"/>
+                            </button>
+                            <button class="oe_stat_button"
+                                    name="get_employee_penalty_reward" icon="fa-check-square-o"
+                                    invisible=" state not in ['done','hr_confirmation','confirmed']"
+                                    string="Penalties &amp; Rewards" type="object">
+                                <field name="no_of_employee_penalty_reward" string="Penalties &amp; Rewards" widget="statinfo"/>
+                            </button>
+                            <button class="oe_stat_button"
+                                    name="get_employee_clearance" icon="fa-check-square-o"
+                                    invisible=" state not in ['done','confirmed']"
+                                    string="Clearance" type="object">
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <!--                                <field name="name"/>-->
+                                <field name="employee_id" readonly="1" force_save="1"/>
+                                <field name="department_id" readonly="1"/>
+                                <field name="new_company_name" required="1"/>
+                                <field name="new_job_title" required="1"/>
+                                <field name="new_salary" required="1"/>
+                                <!--                                invisible="state not in ['confirmed','hr_confirmation']"-->
+                                <field name="survey_id" invisible="1"/>
+                                <field name="exit_survey_id" invisible="state not in ['confirmed','hr_confirmation']"/>
+                                <!--                                <field name="related_request" readonly="1"/>-->
+                                <field name="is_resignation" invisible="1"/>
+                                <field name="change_date_flag" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="resignation_date_readonly" invisible="1"/>
+                                <field name="resignation_date" required="1"
+                                       readonly="resignation_date_readonly and state != 'draft'"/>
+                                <field name="end_notice_period"/>
+                                <field name="last_working_day" readonly="not change_date_flag and not is_manager"
+                                       required="state == 'manager_approval' "/>
+                                <field name="is_clearance" readonly="1"/>
+                                <field name="is_resignation_exit" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="reason_id"/>
+                                <field name="reason"/>
+                            </group>
+                            <group>
+                                    <table class="o_list_view table table-bordered">
+                                        <thead>
+                                            <tr>
+
+                                                <th>Plan</th>
+                                                <th>Actual</th>
+                                                <th>Diff</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <field name="plan_days"/>
+                                                </td>
+                                                <td>
+                                                    <field name="actual_days"/>
+                                                </td>
+                                                <td>
+                                                    <field name="difference_days" readonly="1"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="hr_resignation_view_search" model="ir.ui.view">
+            <field name="name">hr_resignation_view_search</field>
+            <field name="model">hr.resignation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name='employee_id'/>
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" name="employee_id" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Department" name="department" domain="[]"
+                                context="{'group_by':'department_id'}"/>
+                        <filter string="New Salary" name="new_salary" domain="[]" context="{'group_by':'new_salary'}"/>
+                        <filter string="Resignation Reason" name="reason_id" domain="[]" context="{'group_by':'reason_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="hr_resignation_pivot_view" model="ir.ui.view">
+            <field name="name">hr.resignation.pivot.view</field>
+            <field name="model">hr.resignation</field>
+            <field name="arch" type="xml">
+                <pivot string="Resignation Analysis">
+                    <field name="department_id" type="row"/>
+                    <field name="employee_id" type="row"/>
+                    <field name="state" type="col"/>
+
+                    <field name="new_salary" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+    </odoo>
+
+
+    <record model="ir.actions.act_window" id="action_hr_resignation">
+        <field name="name">Request for Resignation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.resignation</field>
+        <field name="view_mode">tree,form,pivot</field>
+    </record>
+
+
+    <menuitem id="hr_resignation_menu_root" name="Resignation" action="action_hr_resignation"
+              web_icon="nt_resignation,static/description/icon.png">
+
+    </menuitem>
+
+</odoo>

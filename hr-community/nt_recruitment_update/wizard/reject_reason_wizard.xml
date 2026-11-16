@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="recruitment_reject_offer_wizard">
+
+        <field name="name">reject reason form</field>
+        <field name="model">hr.job.reject.reason</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="reason" string="Reject Reason" required="1"> </field>
+                </group>
+                <group >
+                    <field name="user_id" invisible="1">
+                    </field>
+                    <field name="job_offer" readonly="1" force_save="1"></field>
+                    <field name="reject_stage" force_save="1"></field>
+                </group>
+
+            </form>
+
+        </field>
+
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_reject_reason_form">
+        <field name="name">job reject reason</field>
+        <field name="res_model">hr.job.reject.reason</field>
+        <field name="view_mode">form,tree</field>
+
+    </record>
+</odoo>

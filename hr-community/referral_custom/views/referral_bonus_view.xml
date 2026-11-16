@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="referral_bonus_view_tree" model="ir.ui.view">
+        <field name="name">Referral Bonus Tree</field>
+        <field name="model">referral.bonus</field>
+        <field name="arch" type="xml">
+            <tree string="" editable="bottom">
+                <field name="name"/>
+                <field name="amount"/>
+            </tree>
+        </field>
+    </record>
+
+
+</odoo>

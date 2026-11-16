@@ -1,0 +1,77 @@
+<odoo>
+    <!-- Inherit Penalty Reward Form -->
+    <record id="view_employee_penalty_reward_form_inherit_category" model="ir.ui.view">
+        <field name="name">employee.penalty.reward.form.inherit.category</field>
+        <field name="model">employee.penalty.reward</field>
+        <field name="inherit_id" ref="nt_penalty_and_reward.employee_penalty_reword_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[1]" position="before">
+                <page string="Categories">
+                    <field name="employee_category_ids">
+                        <tree editable="bottom">
+<!--                            <field name="penalty_reward_id"/>-->
+                            <field name="category_id"/>
+                            <field name="subcategory_id" domain="[('category_id', '=', category_id)]"/>
+                            <field name="amount_day"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_employee_category_form" model="ir.ui.view">
+        <field name="name">employee.category.form</field>
+        <field name="model">employee.category</field>
+        <field name="arch" type="xml">
+            <tree string="Categories" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Category Action -->
+    <record id="action_employee_category" model="ir.actions.act_window">
+        <field name="name">Categories</field>
+        <field name="res_model">employee.category</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="supcategory_employee_category" model="ir.ui.view">
+        <field name="name">Sub Categories</field>
+        <field name="model">employee.subcategory</field>
+        <field name="arch" type="xml">
+            <tree string="Sub Categories" editable="bottom">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="amount_day"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+    <!-- Sub Category Action -->
+    <record id="action_employee_subcategory" model="ir.actions.act_window">
+        <field name="name">Sub Categories</field>
+        <field name="res_model">employee.subcategory</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem
+        id="category_configurations"
+        name="Category"
+        sequence="10"
+        parent="nt_penalty_and_reward.penalty_reward_configurations"
+        action="action_employee_category"
+    />
+
+    <menuitem
+        id="sub_category_configurations"
+        name="Sub Category"
+        sequence="20"
+        parent="nt_penalty_and_reward.penalty_reward_configurations"
+        action="action_employee_subcategory"
+    />
+
+</odoo>

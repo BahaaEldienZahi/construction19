@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+
+        <!--        ############### recruitment stages mail template ############## -->
+
+
+        <record id="initial_screening_template" model="mail.template">
+            <field name="name">Applicant: Initial Screening "Acknowledge"</field>
+            <field name="model_id" ref="nt_recruitment_update.model_hr_applicant"/>
+            <field name="subject">Your Job Application: {{object.job_id.name}}</field>
+<!--            <field name="email_from">{{user.email_formatted or object.company_id.email or object.user_id.email}}</field>-->
+            <field name="email_from">{{object.company_id.email}}</field>
+            <field name="email_to">{{object.email_from}}</field>
+            <field name="body_html" type="html">
+                <p>
+                    <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                        Dear :
+                        <span>
+                            <t t-out="object.name or ''"/>
+                        </span>
+                        <br/>
+                        <br/>
+                        Thank you for applying to National Technology for Software.
+                        <br/>
+                        We are pleased that you are interested in joining us for the position of<t
+                            t-out="object.job_id.name or ''"/>.
+                        <br/>
+                        <br/>
+                        Will get back to you shortly.
+                        <br/>
+                        <br/>
+
+
+                        Best Regards,
+                        <br/>
+
+                        HR Team
+                        <br/>
+
+                        National Technology for Software
+                        <br/>
+
+                    </div>
+                </p>
+
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+        </record>
+        <record id="technically_shortlisted_template" model="mail.template">
+            <field name="name">Applicant: Technically Shortlisted</field>
+            <field name="model_id" ref="nt_recruitment_update.model_hr_applicant"/>
+            <field name="subject">Your Job Application: {{object.job_id.name}}</field>
+<!--            <field name="email_from">{{user.email_formatted or object.company_id.email or object.user_id.email}}</field>-->
+            <field name="email_from">{{object.company_id.email}}</field>
+            <field name="email_to">{{object.email_from}}</field>
+            <field name="body_html" type="html">
+                <p>
+                    <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                        Dear :
+                        <span>
+                            <t t-out="object.name or ''"/>
+
+                        </span>
+                        <br/>
+                        <br/>
+                        Congratulations!
+                        <br/>
+
+
+                        Your application has been short-listed, and one of our HR team will contact you to arrange an
+                        interview.
+                        <br/>
+                        <br/>
+
+                        See you soon,
+                        <br/>
+                        <br/>
+
+
+                        Best Regards,
+                        <br/>
+
+                        HR Team
+                        <br/>
+
+                        National Technology for Software
+                        <br/>
+
+                    </div>
+                </p>
+
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+
+        </record>
+        <record id="1st_technical_interview_template" model="mail.template">
+            <field name="name">Applicant: 1st Technical Interview</field>
+            <field name="model_id" ref="nt_recruitment_update.model_hr_applicant"/>
+            <field name="subject">Your Job Application: {{object.job_id.name}}</field>
+<!--            <field name="email_from">{{user.email_formatted or object.company_id.email or object.user_id.email}}</field>-->
+            <field name="email_from">{{object.company_id.email}}</field>
+            <field name="email_to">{{object.email_from}}</field>
+            <field name="body_html" type="html">
+                <p>
+                    <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                        Dear :
+                        <span>
+                            <t t-out="object.name or ''"/>
+
+                        </span>
+                        <br/>
+                        <br/>
+                        Congratulations!
+                        <br/>
+
+
+                        You have passed the HR interview , your technical interview will be on
+                        <t t-out="format_datetime(object.interview_date, tz=object.user_id.tz, dt_format=&quot;yyyy-MM-dd HH:mm:ss'&quot;)"/>
+                        as<t t-out="object.job_id.name or ''"/>.
+                        <br/>
+                        <br/>
+
+                        See you soon,
+                        <br/>
+                        <br/>
+
+
+                        Best Regards,
+                        <br/>
+
+                        HR Team
+                        <br/>
+
+                        National Technology for Software
+                        <br/>
+
+                    </div>
+                </p>
+
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+
+        </record>
+
+        <record id="2nd_technical_interview_template" model="mail.template">
+            <field name="name">Applicant: 2nd Technical Interview</field>
+            <field name="model_id" ref="nt_recruitment_update.model_hr_applicant"/>
+            <field name="subject">Your Job Application: {{object.job_id.name}}</field>
+<!--            <field name="email_from">{{user.email_formatted or object.company_id.email or object.user_id.email}}</field>-->
+            <field name="email_from">{{object.company_id.email}}</field>
+            <field name="email_to">{{object.email_from}}</field>
+            <field name="body_html" type="html">
+                <p>
+                    <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                        Dear :
+                        <span>
+                            <t t-out="object.name or ''"/>
+
+                        </span>
+                        <br/>
+                        <br/>
+                        Congratulations!
+                        <br/>
+
+
+                        You have passed the first interview, your second technical interview will be on
+                        <t t-out="format_datetime(object.interview_date, tz=object.user_id.tz, dt_format=&quot;yyyy-MM-dd HH:mm:ss'&quot;)"/>
+                        as<t t-out="object.job_id.name or ''"/>.
+                        <br/>
+                        <br/>
+
+                        See you soon,
+                        <br/>
+                        <br/>
+
+
+                        Best Regards,
+                        <br/>
+
+                        HR Team
+                        <br/>
+
+                        National Technology for Software
+                        <br/>
+
+                    </div>
+                </p>
+
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+
+        </record>
+        <record id="refuse_applicant_template" model="mail.template">
+            <field name="name">Applicant: Refuse</field>
+            <field name="model_id" ref="nt_recruitment_update.model_hr_applicant"/>
+            <field name="subject">Your Job Application: {{object.job_id.name}}</field>
+<!--            <field name="email_from">{{user.email_formatted or object.company_id.email or object.user_id.email}}</field>-->
+            <field name="email_from">{{object.company_id.email}}</field>
+            <field name="email_to">{{object.email_from}}</field>
+            <field name="body_html" type="html">
+                <p>
+                    <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                        Dear :
+                        <span>
+                            <t t-out="object.name or ''"/>
+
+                        </span>
+                        <br/>
+                        <br/>
+                        Thank you for your interest in joining National Technology as a<t
+                            t-out="object.job_id.name or ''"/>.
+                        <br/>
+                        After careful consideration, we regret to inform you that you have not been selected for this
+                        role.
+                        <br/>
+                        The selection process was very competitive and there are currently a limited number of
+                        vacancies.
+                        <br/>
+                        We encourage you to regularly review our career page for all available vacancies for which you
+                        qualify.
+                        <br/>
+
+                        We wish you all the best during your job search. ,
+                        <br/>
+                        <br/>
+
+
+                        Best Regards,
+                        <br/>
+
+                        HR Team
+                        <br/>
+
+                        National Technology for Software
+                        <br/>
+
+                    </div>
+                </p>
+
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+
+        </record>
+        <record id="employed_applicant_template" model="mail.template">
+            <field name="name">Applicant: Employed</field>
+            <field name="model_id" ref="nt_recruitment_update.model_hr_applicant"/>
+            <field name="subject">Your Job Application: {{object.job_id.name}}</field>
+<!--            <field name="email_from">{{user.email_formatted or object.company_id.email or object.user_id.email}}</field>-->
+            <field name="email_from">{{object.company_id.email}}</field>
+            <field name="email_to">{{object.email_from}}</field>
+            <field name="body_html" type="html">
+                <p>
+                    <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                        Dear :
+                        <span>
+                            <t t-out="object.name or ''"/>
+
+                        </span>
+                        <br/>
+                        <br/>
+                        Congratulations on starting your new journey with us.
+                        <br/>
+
+
+                        Upon our agreement, kindly find attached the required working documents that are needed from you
+                        in your first working day with National Technology.
+                        <br/>
+
+                        waiting for you<t t-out="object.availability or ''"/>.
+                        <br/>
+                        <br/>
+
+                        See you soon,
+                        <br/>
+                        <br/>
+
+
+                        Best Regards,
+                        <br/>
+
+                        HR Team
+                        <br/>
+
+                        National Technology for Software
+                        <br/>
+
+                    </div>
+                </p>
+
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+
+        </record>
+        <record id="final_interview_template" model="mail.template">
+            <field name="name">Applicant: Final Interview</field>
+            <field name="model_id" ref="nt_recruitment_update.model_hr_applicant"/>
+            <field name="subject">Your Job Application: {{object.job_id.name}}</field>
+<!--            <field name="email_from">{{user.email_formatted or object.company_id.email or object.user_id.email}}</field>-->
+            <field name="email_from">{{object.company_id.email}}</field>
+            <field name="email_to">{{object.email_from}}</field>
+            <field name="body_html" type="html">
+                <p>
+                    <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                        Dear :
+                        <span>
+                            <t t-out="object.name or ''"/>
+
+                        </span>
+                        <br/>
+                        <br/>
+                        Congratulations!
+                        <br/>
+
+                        You have passed the second interview and your final interview will be on
+                        <t t-out="format_datetime(object.interview_date, tz=object.user_id.tz, dt_format=&quot;yyyy-MM-dd HH:mm:ss'&quot;)"/>
+                        as<t t-out="object.job_id.name or ''"/>.
+                        <br/>
+                        <br/>
+
+                        See you soon,
+                        <br/>
+                        <br/>
+
+
+                        Best Regards,
+                        <br/>
+
+                        HR Team
+                        <br/>
+
+                        National Technology for Software
+                        <br/>
+
+                    </div>
+                </p>
+
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+
+        </record>
+
+        <record id="hr_interview_template" model="mail.template">
+            <field name="name">Applicant: Hr Interview</field>
+            <field name="model_id" ref="nt_recruitment_update.model_hr_applicant"/>
+            <field name="subject">Your Job Application: {{object.job_id.name}}</field>
+<!--            <field name="email_from">{{user.email_formatted or object.company_id.email or object.user_id.email}}</field>-->
+            <field name="email_from">{{object.company_id.email}}</field>
+            <field name="email_to">{{object.email_from}}</field>
+            <field name="body_html" type="html">
+                <p>
+                    <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                        Dear :
+                        <span>
+                            <t t-out="object.name or ''"/>
+
+                        </span>
+                        <br/>
+                        <br/>
+                        As per our conversation, kindly find the interview appointment below:
+                        <br/>
+                        Your Interview will be on
+                        <t t-out="format_datetime(object.interview_date, tz=object.user_id.tz, dt_format=&quot;yyyy-MM-dd HH:mm:ss'&quot;)"/>
+                        as<t t-out="object.job_id.name or ''"/>.
+                        <br/>
+
+                        Please note that you have to:
+                        <br/>
+                        1- Fill the attached "Application Form".
+                        <br/>
+                        2- Answer the attached "Disc Assessment".
+                        <br/>
+
+                        • Read the assessment’s instructions carefully before answering it.
+                        <br/>
+                        • Choose only one language to answer the assessment, Arabic or English.
+                        <br/>
+
+                        <br/>
+                        You have to send both "The Application" and "The Assessment" by choosing Reply to all.
+                        <br/>
+                        This step reduces the time consumed in the interview’s day and helps us get a better time
+                        management among all the applied candidates, so please commit to this as it is not an optional
+                        action.
+                        <br/>
+                        <br/>
+                        Extremely important note:
+                        <br/>
+                        <br/>
+                        The attached "Disc Assessment" and "Application Form" are only for Business Use and Not allowed
+                        to
+                        be shared personally with others out of this context, they’re COPYRIGHTED © to National
+                        Technology.
+                        <br/>
+                        Company Website: www.nt-me.com
+
+                        <br/>
+                        Company Address: 18 شارع احمد الزمر امام بوابة معهد بحوث البترول الدور الرابع مدينة نصر بجوار
+                        شركة انبى
+
+                        <br/>
+                        https://www.google.com.eg/maps/place/National+Technology/@30.045382,31.3422346,15z/data=!4m2!3m1!1s0x0:0xb29cd668cb5f63b2
+                        <br/>
+                        Wishing you best of luck
+
+                        <br/>
+
+
+                        Best Regards,
+                        <br/>
+
+                        HR Team
+                        <br/>
+
+                        National Technology for Software
+                        <br/>
+
+                    </div>
+                </p>
+
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+
+        </record>
+    </data>
+</odoo>

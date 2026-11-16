@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <!--Email template -->
+    <record id="template_of_exit_interview_email" model="mail.template">
+        <field name="name">Exit Interview - Send by Email</field>
+        <field name="subject">Exit Interview</field>
+<!--        <field name="email_from">{{ object.company_id.email}}</field>-->
+        <field name="email_from"></field>
+        <field name="email_to">{{ object.employee_id.user_id.partner_id.email}}</field>
+        <field name="model_id" ref="nt_resignation.model_hr_resignation"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+            <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello
+                    <span>
+                        <t t-out="object.employee_id.name or ''"/>
+                    </span>
+                    ,
+                </p>
+                <p>Please fill this Exit survey :
+                    <!--                    <a href="${object.exit_survey_id.url}">-->
+                    <!--                        <t t-out="object.exit_survey_id.url or ''"/>-->
+                    <!--                    </a>-->
+                     <a t-att-href="object.exit_survey_id.url or ''" >CLICK HERE </a>
+<!--                    <a t-out="object.exit_survey_id.url or ''">CLICK HERE </a>-->
+                </p>
+            </div>
+            <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
+                <span style="color: #222; margin-bottom: 5px; display: block; ">
+                    <t t-if="object.company_id.street">
+                        Street :
+                        <t t-out="object.company_id.street or ''"/>
+                    </t>
+                    <br/>
+                    <t t-if="object.company_id.street2">
+                        Street 2:
+                        <t t-out="object.company_id.street2 or ''"/>
+                    </t>
+                    <br/>
+                    <t t-if="object.company_id.city or object.company_id.zip">
+                        City And Zip Code:
+                        <t t-out="object.company_id.zip or object.company_id.city"/>
+                    </t>
+                    <br/>
+                    <t t-if="object.company_id.country_id">
+                        Country :
+                        <t t-out="object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''"/>
+                        <t t-out="object.company_id.country_id.name or ''"/>
+                    </t>
+                    <br/>
+                </span>
+                <t t-if="object.company_id.phone">
+                    <div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; ">
+                        Phone:&#160;
+                        <t t-out="object.company_id.phone or ''"/>
+                    </div>
+                </t>
+                <t t-if="object.company_id.website">
+                    <div>
+                        Web :&#160;<a href="${object.company_id.website}">
+                        <t t-out="object.company_id.website or ''"/>
+                    </a>
+                    </div>
+                </t>
+                <p></p>
+            </div>
+        </field>
+        <field name="lang">{{ object.employee_id.user_id.partner_id.lang }}</field>
+    </record>
+</odoo>

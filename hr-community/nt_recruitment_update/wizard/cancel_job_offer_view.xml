@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="cancel_job_offer_wizard">
+
+        <field name="name">cancel job offer wizard</field>
+        <field name="model">cancel.job.offer.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Cancel Done Job Offer">
+                <group>
+<!--                    <field name="done_offer_no" widget="many2many_tags"/>-->
+                    <field name="cancel_reason"/>
+                </group>
+                <footer>
+                    <button name="cancel_job_offer" string="Cancel offer" type="object" class="btn btn-sm btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_cancel_job_offer">
+        <field name="name">cancel job offer</field>
+        <field name="res_model">cancel.job.offer.wiz</field>
+        <field name="view_mode">form,tree</field>
+
+    </record>
+</odoo>

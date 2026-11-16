@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.module.category" id="module_category_national_probation_period">
+            <field name="name">Probation Period</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="group_probation_period_user" model="res.groups">
+            <field name="name">Team leader</field>
+            <field name="category_id" ref="module_category_national_probation_period"/>
+        </record>
+
+        <record id="group_probation_period_admin" model="res.groups">
+            <field name="name">Admin</field>
+            <field name="category_id" ref="module_category_national_probation_period"/>
+        </record>
+        <record id="group_probation_period_hr_approve" model="res.groups">
+            <field name="name">HR Approve</field>
+            <field name="category_id" ref="module_category_national_probation_period"/>
+        </record>
+        <record id="group_probation_period_gm_approve" model="res.groups">
+            <field name="name">CEO Approve</field>
+            <field name="category_id" ref="module_category_national_probation_period"/>
+        </record>
+
+        <record id="probation_period_hide_archive_rule" model="ir.rule">
+            <field name="name">probation period hide archived</field>
+            <field ref="model_employee_probation_period" name="model_id"/>
+            <field name="domain_force">[('employee_id.active', '=', True)]</field>
+        </record>
+
+        <record id="group_probation_period_user_rule" model="ir.rule">
+            <field name="name">team leader rule</field>
+            <field ref="model_employee_probation_period" name="model_id"/>
+            <field name="domain_force">[('employee_id.parent_id.user_id', '=', user.id )]</field>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="groups" eval="[(4, ref('group_probation_period_user'))]"/>
+        </record>
+
+        <record id="group_probation_period_hr_gm_rule" model="ir.rule">
+            <field name="name">Gm and Hr Approve  rule</field>
+            <field ref="model_employee_probation_period" name="model_id"/>
+            <field name="domain_force">[(1, '=', 1 )]</field>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="groups" eval="[(4, ref('group_probation_period_gm_approve')),(4, ref('group_probation_period_hr_approve'))]"/>
+        </record>
+
+
+    </data>
+</odoo>
+

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_public_holiday_view_form" model="ir.ui.view">
+        <field name="name">hr.public.holiday.view.form</field>
+        <field name="model">hr.public.holiday</field>
+        <field name="arch" type="xml">
+            <form string="Public Holidays">
+                <header>
+                    <field clickable="1" name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label class="oe_edit_only" for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Holiday Reason"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <label for="date_from" string="Period"/>
+                        <div>
+                            <field class="oe_inline" name="date_from"/>
+                            -
+                            <field class="oe_inline" name="date_to"/>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="type_select" string="Apply On"/>
+                        <field name="type_select" nolabel="1" widget="radio"/>
+                        <field invisible="type_select != 'emp'" name="emp_ids" widget="many2many_tags"/>
+                        <field invisible="type_select != 'dep'" name="dep_ids" widget="many2many_tags"/>
+                        <field invisible="type_select != 'tag'" name="cat_ids" widget="many2many_tags"/>
+                    </group>
+                    <label for="note"/>
+                    <field name="note" placeholder="Notes"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form></field>
+    </record>
+    <record id="hr_public_holiday_view_tree" model="ir.ui.view">
+        <field name="name">hr.public.holiday.view.tree</field>
+        <field name="model">hr.public.holiday</field>
+        <field name="arch" type="xml">
+            <tree string="Public Holidays">
+                <field name="name"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+            </tree></field>
+    </record>
+    <record id="action_hr_public_holiday" model="ir.actions.act_window">
+        <field name="name">Public Holidays</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.public.holiday</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new public holiday
+            </p></field>
+    </record>
+    <menuitem groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user" id="menu_hr_public_holiday" name="Public Holidays" parent="hr_holidays.menu_hr_holidays_root" sequence="4"/>
+    <menuitem action="action_hr_public_holiday" id="menu_action_public_holiday" name="Public Holidays" parent="menu_hr_public_holiday" sequence="96"/>
+</odoo>

@@ -1,0 +1,1 @@
+from . import nt_mail_notfication_mixin

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- statusbar clickable للـ manager بس + can_edit_state -->
+    <record id="hr_contract_form_inherit_nt_hr_custom" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit.nt.hr.custom</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header" position="replace">
+                <header invisible="not id">
+                    <!-- غير المانجر: للعرض فقط -->
+                    <field name="state"
+                           groups="!nt_hr_custom.group_nt_hr_custom_contract_manager"
+                           widget="statusbar"/>
+                    <!-- المانجر: قابلة للنقر -->
+                    <field name="state"
+                           groups="nt_hr_custom.group_nt_hr_custom_contract_manager"
+                           widget="statusbar"
+                           options="{'clickable': '1'}"/>
+                </header>
+            </xpath>
+
+            <xpath expr="//sheet" position="inside">
+                <field name="can_edit_state" invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

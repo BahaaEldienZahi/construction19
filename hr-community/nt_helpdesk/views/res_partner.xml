@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_sequence" model="ir.sequence">
+        <field name="name">Res Partner</field>
+        <field name="code">res.partner</field>
+        <field name="prefix">CUST/</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_crm_customer" model="ir.sequence">
+        <field name="name">CRM Customer</field>
+        <field name="prefix">CR</field>
+        <field name="code">crm.customer</field>
+        <field name="prefix"></field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+
+    <record id="inherit_res_partner_form" model="ir.ui.view">
+        <field name="name">inherit.res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="helpdesk" string="Helpdesk">
+                    <sheet>
+
+                        <field name="allowed_users" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="team_domain" column_invisible="True"/>
+                                <field name="user_id"
+                                       force_save="1"
+                                       options="{'no_open': True, 'no_create': True}"
+                                       required="1"/>
+                                <field name="email"/>
+                                <field name="team_id"
+                                       required="1"
+                                       domain="team_domain"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="user_ids" widget="many2many_tags" invisible="1"/>
+                                <field name="assigned_to"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="view_all_tickets"/>
+
+
+                            </tree>
+
+                        </field>
+
+                    </sheet>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='website']" position="before">
+                <field name="secondary_mail" widget="email" context="{'gravatar_image': True}"/>
+                <field name="is_company" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='vat']" position="before">
+
+                <!-- Editable -->
+                <field name="ref" string="Ref"
+                       groups="helpdesk_mgmt.group_helpdesk_manager"/>
+
+                <!-- Readonly -->
+                <field name="ref" string="Ref"
+                       readonly="1"
+                       groups="!helpdesk_mgmt.group_helpdesk_manager"/>
+
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="res_partner_view_search" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="ref"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

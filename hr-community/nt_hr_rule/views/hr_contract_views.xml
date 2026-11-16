@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.cug</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+
+
+            <xpath expr="//group[@name='allowances']" position="inside">
+                <label for="monthly_additions"/>
+                <div class="o_row">
+                    <field name="monthly_additions" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='salary_info']" position="after">
+                 <group string="Bracket" name='bractet'>
+                     <label for="donot_tax_bracket"/>
+                     <div class="o_row" width="100%">
+                         <field name="donot_tax_bracket"/>
+                     </div>
+                      <label for="second_tax_bracket"/>
+                        <div class="o_row" width="100%">
+                            <field name="second_tax_bracket"/>
+                            <field name="second_checked"/>
+                        </div>
+                     <label for="third_tax_bracket"/>
+                        <div class="o_row" width="100%">
+                            <field name="third_tax_bracket"/>
+                            <field name="third_checked"/>
+                        </div>
+                     <label for="fourth_tax_bracket"/>
+                        <div class="o_row" width="100%">
+                            <field name="fourth_tax_bracket"/>
+                            <field name="fourth_checked"/>
+                        </div>
+                     <label for="fiveth_tax_bracket"/>
+                        <div class="o_row" width="100%">
+                            <field name="fiveth_tax_bracket"/>
+                            <field name="fiveth_checked"/>
+                        </div>
+                     <label for="sixth_tax_bracket"/>
+                        <div class="o_row" width="100%">
+                            <field name="sixth_tax_bracket"/>
+                            <field name="sixth_checked"/>
+                        </div>
+                     <label for="seven_tax_bracket"/>
+                        <div class="o_row" width="100%">
+                            <field name="seven_tax_bracket"/>
+                            <field name="seven_checked"/>
+                        </div>
+                 </group>
+            </xpath>
+            <xpath expr="//group[@name='allowances']" position="inside">
+                <label for="profits"/>
+                <div class="o_row">
+
+                    <field name="profits" nolabel="1"/>
+                </div>
+                <label for="vacation_allowance"/>
+                <div class="o_row">
+
+                    <field name="vacation_allowance" nolabel="1"/>
+                </div>
+                <label for="insurance_salary"/>
+                <div class="o_row">
+
+                    <field name="insurance_salary" nolabel="1"/>
+                </div>
+
+            </xpath>
+            <xpath expr="//group[@name='salary']" position="after">
+                <group string="Salary Details" name='salary_details'>
+                    <field name="payroll_type"/>
+                    <field name="basic_salary"/>
+                    <field name="day_wage"/>
+                    <field name="hour_wage"/>
+                    <field name="allowance"/>
+                    <field name="major_allowance"/>
+                    <field name="kpi"/>
+                    <field name="target" invisible="payroll_type == 'employee'"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
+

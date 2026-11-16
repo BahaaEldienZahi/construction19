@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_resignation_user,hr_resignation_user,model_hr_resignation,nt_resignation.group_resignation_user,1,1,1,1
+access_hr_resignation_cancel,hr_resignation_cancel_user,model_hr_resignation_cancel,nt_resignation.group_resignation_user,1,1,1,1
+access_resignation_reason,resignation_reason,model_resignation_reason,nt_resignation.group_resignation_user,1,1,1,1

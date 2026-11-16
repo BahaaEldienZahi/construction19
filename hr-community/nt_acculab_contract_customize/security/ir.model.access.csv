@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_contract_allowance,contract_allowance,model_contract_allowance,base.group_user,1,1,1,1
+access_hr_contract_allowance,hr_contract_allowance,model_hr_contract_allowance,base.group_user,1,1,1,1
+
+access_contract_deduction,contract_deduction,model_contract_deduction,base.group_user,1,1,1,1
+access_hr_contract_deduction,hr_contract_deduction,model_hr_contract_deduction,base.group_user,1,1,1,1

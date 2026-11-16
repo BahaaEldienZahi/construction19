@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+        <record id="customer_bank_statement_view_search" model="ir.ui.view">
+            <field name="name">account.bank.statement.form.customer.inherit</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="domain">[('contact_type', '=', 'customer')]</attribute>
+                   <separator/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo> 

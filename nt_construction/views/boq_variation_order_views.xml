@@ -1,56 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
+    <!-- Variation order (أمر تغيير): 2-level approval, then applied to the BOQ and the contract value. -->
     <record id="view_boq_variation_order_form" model="ir.ui.view">
         <field name="name">boq.variation.order.form</field>
         <field name="model">boq.variation.order</field>
         <field name="arch" type="xml">
             <form string="Variation Order">
                 <header>
-                    <button name="action_submit_for_approval" groups="nt_construction.group_construction_quantity_surveyor,nt_construction.group_construction_project_manager,project.group_project_manager" string="Submit for Approval" type="object"
-                            class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="action_approve_l1" groups="nt_construction.group_construction_approver_l1,project.group_project_manager" string="Approve (L1)" type="object"
-                            class="btn-primary" invisible="state != 'submitted'"
-                    />
-                    <button name="action_approve_l2" groups="nt_construction.group_construction_approver_l2,project.group_project_manager" string="Final Approve (L2)" type="object"
-                            class="btn-success" invisible="state != 'approved_l1'"
-                    />
-                    <button name="action_reject" groups="nt_construction.group_construction_approver_l1,project.group_project_manager" string="Reject" type="object"
-                            invisible="state not in ('submitted', 'approved_l1')"/>
-                    <button name="action_reset_draft" groups="nt_construction.group_construction_quantity_surveyor,nt_construction.group_construction_project_manager,project.group_project_manager" string="Reset to Draft" type="object"
-                            invisible="state != 'rejected'"/>
-                    <field name="state" widget="statusbar"
-                           statusbar_visible="draft,submitted,approved_l1,approved"/>
+                    <button name="action_submit_for_approval" string="Submit for Approval" type="object" class="btn-primary"
+                            invisible="state != 'draft'"
+                            groups="nt_construction.group_construction_quantity_surveyor,nt_construction.group_construction_project_manager,project.group_project_manager"/>
+                    <button name="action_approve_l1" string="Approve (Level 1)" type="object" class="btn-primary"
+                            invisible="state != 'submitted'"
+                            groups="nt_construction.group_construction_approver_l1,project.group_project_manager"/>
+                    <button name="action_approve_l2" string="Final Approval (Level 2)" type="object" class="btn-primary"
+                            invisible="state != 'approved_l1'"
+                            groups="nt_construction.group_construction_approver_l2,project.group_project_manager"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-secondary"
+                            invisible="state not in ('submitted', 'approved_l1')" confirm="Reject this variation order?"
+                            groups="nt_construction.group_construction_approver_l1,project.group_project_manager"/>
+                    <button name="action_cancel" string="Cancel" type="object" class="btn-secondary"
+                            invisible="state != 'draft'" confirm="Cancel this variation order?"
+                            groups="nt_construction.group_construction_quantity_surveyor,nt_construction.group_construction_project_manager,project.group_project_manager"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object" class="btn-secondary"
+                            invisible="state not in ('rejected', 'cancelled')"
+                            groups="nt_construction.group_construction_quantity_surveyor,nt_construction.group_construction_project_manager,project.group_project_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved_l1,approved"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_project" type="object" class="oe_stat_button" icon="fa-building">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Project</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger" invisible="state != 'rejected'"/>
+                    <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-secondary" invisible="state != 'cancelled'"/>
+                    <widget name="web_ribbon" title="Applied" bg_color="text-bg-success" invisible="not applied"/>
                     <div class="oe_title">
                         <h1><field name="name" readonly="1"/></h1>
                     </div>
                     <group>
-                        <group>
-                            <field name="project_id" readonly="state != 'draft'"/>
-                            <field name="date"/>
+                        <group name="who">
+                            <field name="project_id" readonly="state != 'draft'" options="{'no_create': True}"/>
                         </group>
-                        <group>
-                            <field name="total_delta_amount"/>
-                            <field name="applied" invisible="not applied"/>
+                        <group name="when_value">
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="total_delta_amount" class="fw-bold"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="applied" invisible="1"/>
                         </group>
                     </group>
-                    <group string="Reason">
-                        <field name="reason" nolabel="1" placeholder="سبب أمر التغيير..."/>
-                    </group>
-                    <field name="line_ids" readonly="state != 'draft'">
-                        <list editable="bottom">
-                            <field name="boq_line_id"/>
-                            <field name="parent_boq_line_id"/>
-                            <field name="code"/>
-                            <field name="name"/>
-                            <field name="uom_id"/>
-                            <field name="delta_qty"/>
-                            <field name="unit_price"/>
-                            <field name="delta_amount" sum="Total"/>
-                        </list>
-                    </field>
+                    <notebook>
+                        <page string="Lines" name="lines">
+                            <field name="line_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="boq_line_id" options="{'no_create': True}"
+                                           domain="[('project_id', '=', parent.project_id), ('is_group', '=', False)]"/>
+                                    <field name="parent_boq_line_id" optional="hide" options="{'no_create': True}"
+                                           domain="[('project_id', '=', parent.project_id)]"/>
+                                    <field name="code" optional="show"/>
+                                    <field name="name"/>
+                                    <field name="uom_id" optional="hide"/>
+                                    <field name="delta_qty"/>
+                                    <field name="unit_price" optional="show"/>
+                                    <field name="delta_amount" sum="Total"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Justification" name="justification">
+                            <field name="reason" nolabel="1" readonly="state != 'draft'"
+                                   placeholder="Why the scope changes: client instruction, design change, site condition..."/>
+                        </page>
+                        <page string="Approval" name="approval" invisible="state == 'draft'">
+                            <group>
+                                <group>
+                                    <field name="approver_l1_id" widget="many2one_avatar_user"/>
+                                    <field name="approval_l1_date"/>
+                                </group>
+                                <group>
+                                    <field name="approver_l2_id" widget="many2one_avatar_user"/>
+                                    <field name="approval_l2_date"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Other Info" name="other_info" groups="base.group_multi_company">
+                            <group>
+                                <group>
+                                    <field name="company_id"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
                 <chatter/>
             </form>
@@ -61,47 +104,52 @@
         <field name="name">boq.variation.order.list</field>
         <field name="model">boq.variation.order</field>
         <field name="arch" type="xml">
-            <list string="Variation Orders" decoration-success="state == 'approved'"
-                  decoration-danger="state == 'rejected'">
+            <list string="Variation Orders" multi_edit="0">
+                <field name="date"/>
                 <field name="name"/>
                 <field name="project_id"/>
-                <field name="date"/>
-                <field name="total_delta_amount" sum="Total"/>
+                <field name="total_delta_amount" string="Net Change" sum="Total"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'approved'"
                        decoration-danger="state == 'rejected'"
+                       decoration-muted="state == 'cancelled'"
                        decoration-info="state in ('submitted', 'approved_l1')"/>
             </list>
         </field>
     </record>
 
-<!--    <record id="view_boq_variation_order_search" model="ir.ui.view">-->
-<!--        <field name="name">boq.variation.order.search</field>-->
-<!--        <field name="model">boq.variation.order</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <search string="Search Variation Orders">-->
-<!--                <field name="name"/>-->
-<!--                <field name="project_id"/>-->
-<!--                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>-->
-<!--                <filter-->
-<!--                        string="Pending Approval"-->
-<!--                        name="pending"-->
-<!--                        domain="[('state','in',['submitted','approved_l1'])]"-->
-<!--                />-->
-<!--                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>-->
-<!--                <group expand="0" string="Group By">-->
-<!--                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>-->
-<!--                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>-->
-<!--                </group>-->
-<!--            </search>-->
-<!--        </field>-->
-<!--    </record>-->
+    <record id="view_boq_variation_order_search" model="ir.ui.view">
+        <field name="name">boq.variation.order.search</field>
+        <field name="model">boq.variation.order</field>
+        <field name="arch" type="xml">
+            <search string="Search Variation Orders">
+                <field name="name"/>
+                <field name="project_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Waiting Approval" name="pending" domain="[('state', 'in', ('submitted', 'approved_l1'))]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <separator/>
+                <filter string="Not Cancelled" name="not_cancelled" domain="[('state', '!=', 'cancelled')]"/>
+                <filter string="Date" name="filter_date" date="date"/>
+                <group>
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
     <record id="action_boq_variation_order" model="ir.actions.act_window">
         <field name="name">Variation Orders</field>
         <field name="res_model">boq.variation.order</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_boq_variation_order_search"/>
+        <field name="context">{'search_default_not_cancelled': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Record a variation order</p>
+            <p>Quantity or price changes to the contract BOQ. Applied to the BOQ and the contract value after final approval.</p>
+        </field>
     </record>
-
-
 </odoo>

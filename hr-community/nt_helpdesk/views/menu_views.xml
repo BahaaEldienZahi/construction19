@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem
+            id="helpdesk_ticket_reporting_nt"
+            name="Reporting"
+            sequence="20"
+            parent="helpdesk_mgmt.helpdesk_ticket_main_menu"
+            groups="helpdesk_mgmt.group_helpdesk_manager"/>
+
+    <menuitem
+            id="helpdesk_config_nt"
+            name="Configuration"
+            sequence="100"
+            parent="helpdesk_mgmt.helpdesk_ticket_main_menu"
+            groups="base.group_erp_manager"/>
+
+</odoo>

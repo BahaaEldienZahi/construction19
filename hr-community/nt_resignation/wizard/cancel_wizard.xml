@@ -1,0 +1,38 @@
+<odoo>
+
+    <record model="ir.ui.view" id="resignation_form_wizard">
+        <field name="name">resignation.cancel.form</field>
+        <field name="model">hr.resignation.cancel</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+
+                    <field name="cancel_reason" widget="radio" string="Rejoin Action"/>
+                    <field name="old_salary" invisible=" cancel_reason != 'counter_offer' "/>
+                    <field name="new_salary" invisible=" cancel_reason != 'counter_offer' "/>
+                    <field name="date_from" invisible=" cancel_reason != 'counter_offer' "/>
+<!--                    <field name="new_date_request" invisible=" cancel_reason != 'change_date' "-->
+<!--                           required=" cancel_reason == 'change_date' "/>-->
+
+                </group>
+
+                <field name="resignation_id" readonly="True" force_save="1" invisible="1"/>
+                <footer>
+                    <button type="object" name="action_confirm" string="Confirm" class="oe_highlight"></button>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_hr_resignation_cancel_form" model="ir.actions.act_window">
+        <field name="name">Resignation Cancel
+        </field>
+        <field name="type"></field>
+        <field name="res_model">hr.resignation.cancel</field>
+        <field name="type">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+</odoo>

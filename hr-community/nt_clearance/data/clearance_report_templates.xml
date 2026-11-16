@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="paperformat_clearance" model="report.paperformat">
+        <field name="name">Clearance A4</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">15</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">15</field>
+        <field name="margin_right">15</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_clearance_pdf" model="ir.actions.report">
+        <field name="name">Clearance Form</field>
+        <field name="model">clearance.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">nt_clearance.report_clearance_pdf</field>
+        <field name="report_file">nt_clearance.report_clearance_pdf</field>
+        <field name="paperformat_id" ref="nt_clearance.paperformat_clearance"/>
+        <field name="print_report_name">'Clearance - %s' % (object.employee_id.name)</field>
+    </record>
+
+    <template id="report_clearance_pdf">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+
+                    <style type="text/css">
+                        .page-wrap {
+                        direction: rtl;
+                        font-family: 'DejaVu Sans', Arial, sans-serif;
+                        font-size: 14px;
+                        color: #000;
+                        padding: 20px;
+                        }
+                        .clearance-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-bottom: 15px;
+                        table-layout: fixed;
+                        direction: rtl;
+                        }
+                        .clearance-table th,
+                        .clearance-table td {
+                        border: 1px solid black;
+                        padding: 6px 5px;
+                        vertical-align: middle;
+                        word-wrap: break-word;
+                        overflow-wrap: break-word;
+                        direction: rtl;
+                        }
+                        .clearance-table th {
+                        background-color: #ebebeb;
+                        font-weight: bold;
+                        text-align: center;
+                        font-size: 13px;
+                        }
+                        .clearance-table .en-cell {
+                        direction: ltr;
+                        text-align: center;
+                        }
+                        .clearance-table .ar-cell {
+                        direction: rtl;
+                        text-align: right;
+                        }
+                        .clearance-table .center-cell {
+                        text-align: center;
+                        }
+                        .body-text {
+                        text-align: right;
+                        font-size: 15px;
+                        margin-bottom: 15px;
+                        line-height: 2;
+                        direction: rtl;
+                        }
+                        /* جدول مخصص للسطر الذي يحتوي اسم + وظيفة */
+                        .name-line-table {
+                        width: 100%;
+                        border: none;
+                        border-collapse: collapse;
+                        margin-bottom: 15px;
+                        direction: rtl;
+                        }
+                        .name-line-table td {
+                        border: none;
+                        padding: 2px 3px;
+                        vertical-align: middle;
+                        font-size: 15px;
+                        line-height: 2;
+                        }
+                        .name-line-table .ar-part {
+                        direction: rtl;
+                        text-align: right;
+                        white-space: nowrap;
+                        }
+                        .name-line-table .en-part {
+                        direction: ltr;
+                        text-align: left;
+                        white-space: nowrap;
+                        font-weight: bold;
+                        }
+                    </style>
+
+                    <div>
+                        <table style="text-align:left; font-size:16px; font-weight:bold; margin-bottom:15px; direction:ltr;border-bottom:2px solid #000;
+">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span t-esc="o.create_date.strftime('%Y/%m/%d')"/>
+                                    </td>
+                                    <td>
+                                        <span>: تحريراً في</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- العنوان -->
+                        <div style="text-align:center; font-weight:bold; font-size:22px; margin-bottom:15px; padding-bottom:8px; direction:rtl;">
+                            <span style="border-bottom:2px solid black; margin-bottom:2px">إخلاء طرف</span>
+                        </div>
+                        <div style="text-align:center; font-weight:bold; font-size:22px; margin-bottom:15px; padding-bottom:8px; direction:rtl;">
+                            <span style="border-bottom:2px solid black; margin-bottom:2px">تحية طيبة و بعد,,,,,,,,
+                            </span>
+                        </div>
+
+                        <table style="font-size:16px; font-weight:bold; margin-bottom:15px;text-align:right; width:100%">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span style="border-bottom:1px solid #000">: السادة / مديري الإدارات</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- نص الطلب - نستخدم جدول بدون حدود لنتحكم في اتجاه كل جزء -->
+                        <table style="width:100%;text-align:right">
+                            <tr>
+                                <td>
+                                    <t t-esc="o.employee_id.job_title"/>
+                                    / هو الذي يشغل وظيفة
+                                    <t t-esc="o.employee_id.name"/>
+                                    / برجاء التكرم بإفادتنا بموقف
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    من حيث وجود عهد او التزامات في ذمته من عدمها أو أنه قد قام بتسليمها للإدارة و في حالة وجودها نرجو ذكرها
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="clearance-table">
+                            <colgroup>
+                                <col style="width:5%;"/>
+                                <col style="width:15%;"/>
+                                <col style="width:32%;"/>
+                                <col style="width:14%;"/>
+                                <col style="width:18%;"/>
+                                <col style="width:16%;"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>م</th>
+                                    <th>الإدارة</th>
+                                    <th colspan="2">موقف الموظف<br/>"لدية عهد أم لا"
+                                    </th>
+                                    <th>ملاحظات</th>
+                                    <th>توقيع المدير</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="setups"
+                                   t-value="o.env['clearance.setup'].sudo().search([], order='sequence asc, id asc')"/>
+                                <t t-set="row_no" t-value="0"/>
+                                <t t-set="seen_dept_ids" t-value="[]"/>
+
+                                <t t-foreach="setups" t-as="setup">
+                                    <t t-set="dept" t-value="setup.department_id"/>
+                                    <t t-if="dept and dept.id not in seen_dept_ids">
+                                        <t t-set="seen_dept_ids" t-value="seen_dept_ids + [dept.id]"/>
+                                        <t t-set="lines"
+                                           t-value="o.line_ids.filtered(lambda l: l.department_id and l.department_id.id == dept.id).sorted(key=lambda l: (l.sequence, l.id))"/>
+                                        <t t-if="lines">
+                                            <t t-set="idx" t-value="0"/>
+                                            <t t-foreach="lines" t-as="line">
+                                                <t t-set="row_no" t-value="row_no + 1"/>
+                                                <t t-set="idx" t-value="idx + 1"/>
+                                                <t t-if="idx == 1">
+                                                    <tr>
+                                                        <td class="center-cell">
+                                                            <span t-esc="row_no"/>
+                                                        </td>
+                                                        <td class="en-cell">
+                                                            <span t-esc="dept.name"/>
+                                                        </td>
+                                                        <td class="center-cell" style="font-size:16px;">
+                                                            نعم (
+                                                            <t t-if="line.is_done">&#10003;</t>
+                                                            )
+                                                        </td>
+
+                                                        <td class="center-cell" style="font-size:16px;">
+                                                            لا (
+                                                            <t t-if="line.not_done">&#10003;</t>
+                                                            )
+                                                        </td>
+                                                        <td class="ar-cell">
+                                                            <span t-esc="line.note or ''"/>
+                                                        </td>
+                                                        <td >
+                                                            <!-- first owner user for this department -->
+                                                            <t t-set="mgr_user"
+                                                               t-value="setup.owner_ids[:1] and setup.owner_ids[0] or False"/>
+                                                            <t t-set="mgr_emp"
+                                                               t-value="mgr_user and mgr_user.employee_id or False"/>
+
+                                                            <img t-if="mgr_emp and mgr_emp.signature"
+                                                                 t-att-src="image_data_uri(mgr_emp.signature)"
+                                                                 style="height:40px; width:auto; display:block; margin:auto;"/>
+                                                        </td>
+
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+                        <table style="text-align:right ;font-size:15px; width:100%; margin-bottom:15px; direction:rtl;">
+                            <tbody>
+                                <tr>
+
+                                </tr>
+                                <tr>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        في حالة عدم إتساع المكان المخصص بالجدول لبيان نوع العهدة يذكر في هذا الفراغ باقي العهدة :-
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>
+                                        ....................................................................................................................................................................
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- الملاحظة القانونية -->
+                        <div style="text-align:right; font-size:13px; margin-bottom:20px; line-height:1.9; border:1px solid #bbb; padding:8px; background-color:#f9f9f9; direction:rtl;">
+
+                            ملاحظة:- في حالة توقيع مدير الإدارة بخلو ذمة الموظف من أية عهد في ذمته يعد هذا إبراء لذمة
+                            الموظف
+                            ويصبح مدير الإدارة
+                            <br/>
+                            الموقع علي النموذج أو من وقع علي النموذج نيابة عنه مسؤول في حالة ثبوت عكس هذا
+                        </div>
+
+                        <!-- الاعتماد -->
+                        <div style="text-align:center; font-size:16px; margin-bottom:15px; direction:rtl;">
+                            يعتمد ,,,,,,,,,,
+                        </div>
+
+                        <!-- التوقيع -->
+                        <div style="text-align:left; font-size:15px; margin-left:40px; margin-top:30px; direction:ltr; line-height:2.2;">
+                            رئيس مجلس الإدارة
+                            <br/>
+                            محمد علي
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

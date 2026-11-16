@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="group_nt_hr_custom_contract_manager" model="res.groups">
+            <field name="name">Contract State Manager</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="comment">Can manually change the state of employee contracts.</field>
+        </record>
+
+        <record id="group_nt_hr_custom_hiring_hr" model="res.groups">
+            <field name="name">Hiring HR User</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="comment">Can mark hiring requests as Done.</field>
+        </record>
+
+    </data>
+</odoo>

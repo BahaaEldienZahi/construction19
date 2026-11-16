@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.module.category" id="module_category_hiring_request">
+            <field name="name">Hiring Request</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="hiring_request_user_group" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="hiring_request.module_category_hiring_request"/>
+        </record>
+
+        <record id="hiring_request_manager_group" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="hiring_request.module_category_hiring_request"/>
+            <field name="implied_ids" eval="[(4, ref('hiring_request.hiring_request_user_group'))]"/>
+        </record>
+
+        <record id="hiring_request_hr_group" model="res.groups">
+            <field name="name">HR</field>
+            <field name="category_id" ref="hiring_request.module_category_hiring_request"/>
+            <field name="implied_ids" eval="[(4, ref('hiring_request.hiring_request_user_group'))]"/>
+        </record>
+
+        <record id="hiring_request_ceo_group" model="res.groups">
+            <field name="name">CEO</field>
+            <field name="category_id" ref="hiring_request.module_category_hiring_request"/>
+            <field name="implied_ids" eval="[(4, ref('hiring_request.hiring_request_user_group'))]"/>
+        </record>
+
+        <record id="hiring_request_user_rule" model="ir.rule">
+            <field name="name">User can see his/her own requests</field>
+            <field name="model_id" ref="hiring_request.model_hiring_request"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('hiring_request.hiring_request_user_group'))]"/>
+        </record>
+
+        <record id="hiring_request_manager_rule" model="ir.rule">
+            <field name="name">Manage Hiring Requests</field>
+            <field name="model_id" ref="hiring_request.model_hiring_request"/>
+            <field name="domain_force">[('create_uid.employee_id', 'in', user.employee_id.child_ids.ids)]</field>
+            <field name="groups" eval="[(4, ref('hiring_request.hiring_request_manager_group'))]"/>
+        </record>
+
+        <record id="hiring_request_admin_rule" model="ir.rule">
+            <field name="name">See all requests</field>
+            <field name="model_id" ref="hiring_request.model_hiring_request"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups"
+                   eval="[(4, ref('hiring_request.hiring_request_ceo_group')), (4, ref('hiring_request.hiring_request_hr_group'))]"/>
+        </record>
+
+        <record id="hiring_request_see_all_job_positions" model="ir.rule">
+            <field name="name">See all Job Positions</field>
+            <field name="model_id" ref="hr.model_hr_job"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups"
+                   eval="[(4, ref('hiring_request.hiring_request_user_group'))]"/>
+        </record>
+
+    </data>
+</odoo>

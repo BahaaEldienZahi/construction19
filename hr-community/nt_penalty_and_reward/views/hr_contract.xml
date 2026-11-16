@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_contract_view_form" model="ir.ui.view">
+            <field name="name">hr.contract.view.form</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[1]//group[2]/field[@name='hr_responsible_id']" position="after">
+                    <field name="leave_value" string="ضريبة كسب العمل"/>
+                </xpath>
+                <xpath expr="//field[@name='hra']" position="attributes">
+                    <attribute name="string">ترخيص معمل</attribute>
+                </xpath>
+                <xpath expr="//field[@name='da']" position="attributes">
+                    <attribute name="string">زكاة مال</attribute>
+                </xpath>
+                <xpath expr="//field[@name='other_allowance']" position="attributes">
+                    <attribute name="string">بدلات و مكافأت</attribute>
+                </xpath>
+                <xpath expr="//field[@name='meal_allowance']" position="attributes">
+                    <attribute name="string">تأمينات</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+        <menuitem name="Penalties &amp; Rewards"
+                  id="penalty_reward_employee_menu_root"
+                  web_icon="nt_penalty_and_reward,static/description/icon.png"
+                  groups="group_penalty_reward_admin,group_penalty_reward_user"
+        />
+        <menuitem
+                id="penalty_reward_configurations"
+                name="Configuration"
+                parent="penalty_reward_employee_menu_root"
+                sequence="100"
+                groups="group_penalty_reward_admin"
+        />
+
+         <menuitem
+                id="penalty_reward_setting"
+                name="setting"
+                sequence="1"
+                parent="penalty_reward_configurations"
+                groups="group_penalty_reward_admin"
+                action="nt_penalty_and_reward.settings_action"
+        />
+
+        <menuitem
+                id="penalty_configurations"
+                name="Penalties"
+                parent="penalty_reward_configurations"
+                action="employee_penalty_action"
+                groups="group_penalty_reward_admin"
+        />
+        <menuitem
+                id="reward_configurations"
+                name="Rewards"
+                parent="penalty_reward_configurations"
+                action="employee_reward_action"
+                groups="group_penalty_reward_admin"
+        />
+        <menuitem name="Penalties &amp; Rewards"
+                  id="employee_penalty_reward_menu"
+                  parent="penalty_reward_employee_menu_root"
+                  action="employee_penalty_reward_action"
+                  groups="group_penalty_reward_admin,group_penalty_reward_user"
+        />
+        <menuitem name="Batch"
+                  id="employee_penalty_reward_batch_menu"
+                  parent="penalty_reward_employee_menu_root"
+                  action="penalty_reward_by_employees_action"
+                  groups="group_penalty_reward_admin,group_penalty_reward_user"
+        />
+    </data>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.module.category" id="module_category_nt_penalty_and_rewards">
+            <field name="name">Penalty And Rewards</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="group_penalty_reward_admin" model="res.groups">
+            <field name="name">Admin</field>
+            <field name="category_id" ref="module_category_nt_penalty_and_rewards"/>
+        </record>
+
+        <record id="group_penalty_reward_user" model="res.groups">
+            <field name="name">user</field>
+            <field name="category_id" ref="module_category_nt_penalty_and_rewards"/>
+        </record>
+        <record id="user_penality" model="ir.rule">
+            <field name="name">User Penality</field>
+            <field ref="model_employee_penalty_reward" name="model_id"/>
+            <field name="domain_force">[('employee_id', '=', user.employee_id.id)]</field>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+            <!-- You can attach this rule to a specific group, Or make it Global -->
+            <field name="groups" eval="[(4, ref('group_penalty_reward_user'))]"/>
+            <!--<field name="global" eval="1"/> -->
+        </record>
+
+
+
+    </data>
+</odoo>
+

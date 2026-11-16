@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Restructure Loan Wizard Form -->
+        <record id="hr_loan_restructure_wizard_form" model="ir.ui.view">
+            <field name="name">hr.loan.restructure.wizard.form</field>
+            <field name="model">hr.loan.restructure.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Restructuring Loan">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="loan_id" readonly="1"/>
+                                <field name="balance_amount"/>
+                                <field name="date"/>
+                                <field name="amount_to_pay" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="account_id" options="{'no_create': True}"/>
+                                <field name="journal_id"/>
+                                <field name="memo"/>
+                            </group>
+                        </group>
+
+                        <!-- Installment Lines -->
+                        <separator string="Installment Lines"/>
+                        <group>
+                            <field name="select_all" string="Select All" />
+                        </group>
+                        <field name="line_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="loan_line_id" invisible="1" force_save="1" optional="hide"/>
+                                <field name="is_selected" string="Select"/>
+                                <field name="date" string="Payment Date" readonly="1"/>
+                                <field name="employee_id" string="Employee" readonly="1"/>
+                                <field name="amount" string="Installment Amount" readonly="1"/>
+                                <field name="pay_amount" string="Pay Now"/>
+                            </tree>
+                        </field>
+
+                    </sheet>
+                    <footer>
+                        <button string="Restructure" name="action_restructure" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_hr_loan_restructure_wizard" model="ir.actions.act_window">
+            <field name="name">Restructuring Loan</field>
+            <field name="res_model">hr.loan.restructure.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_loan_restructure_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

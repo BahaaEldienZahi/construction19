@@ -48,6 +48,10 @@ class BoqVariationOrder(models.Model):
         for vo in self:
             vo.total_delta_amount = sum(vo.line_ids.mapped('delta_amount'))
 
+    def action_view_project(self):
+        self.ensure_one()
+        return self.project_id._get_records_action(name=self.env._('Project'))
+
     def _on_final_approval(self):
         for vo in self:
             if vo.applied:

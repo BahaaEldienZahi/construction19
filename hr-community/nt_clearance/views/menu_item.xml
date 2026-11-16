@@ -1,0 +1,17 @@
+<odoo>
+    <menuitem id="menu_clearance_root" name="Clearance" web_icon="nt_clearance,static/description/icon.png"/>
+
+    <menuitem id="menu_clearance_overview"
+            name="Overview"
+            parent="menu_clearance_root"
+            action="action_clearance_request"/>
+     <menuitem id="menu_clearance_configuration"
+              name="Configuration"
+              parent="menu_clearance_root"/>
+    <menuitem id="menu_clearance_setup"
+              name="Setup"
+              parent="menu_clearance_configuration"
+              action="action_clearance_setup"/>
+
+
+</odoo>

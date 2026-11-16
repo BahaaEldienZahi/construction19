@@ -1,0 +1,71 @@
+<odoo>
+    <record id="view_clearance_request_tree" model="ir.ui.view">
+        <field name="name">clearance.request.tree</field>
+        <field name="model">clearance.request</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="resignation_date"/>
+                <field name="end_of_notice_period"/>
+                <field name="last_working_day"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Form -->
+    <record id="view_clearance_request_form" model="ir.ui.view">
+        <field name="name">clearance.request.form</field>
+        <field name="model">clearance.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"/>
+                    <field name="has_selected_lines" invisible="1"/>
+                    <field name="has_done_lines" invisible="1"/>
+                    <button name="confirmed_clearance_sheet" string="Confirm" type="object" class="oe_highlight"
+                            invisible="state == 'done' or not has_done_lines "/>
+                    <button name="%(nt_clearance.action_clearance_pdf)d" string="Print Clearance" type="action"
+                            class="btn-primary" invisible="state != 'done'"/>
+                    <button name="action_draft" string="Set To Draft" type="object" class="oe_button_box"
+                            invisible="state == 'draft' "/>
+                    <button name="action_select_all_lines" type="object" string="Select All"
+                            invisible="state == 'done' or has_selected_lines"/>
+
+                    <button name="action_unselect_all_lines" type="object" string="Unselect All"
+                            invisible="state == 'done' or not has_selected_lines"/>
+
+                    <button name="action_mark_selected_done" type="object" string="Approve Selected"
+                            class="oe_highlight"
+                            invisible="state == 'done' or not has_selected_lines"/>
+                </header>
+                <sheet>
+                    <group>
+                        <!--                        <field name="resignation_id"/>-->
+                        <field name="employee_id"/>
+                        <field name="department_id"/>
+                    </group>
+                    <group>
+                        <!--            <field name="resignation_reason"/>-->
+                        <field name="resignation_date"/>
+                        <field name="end_of_notice_period"/>
+                        <field name="last_working_day"/>
+                    </group>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_clearance_request" model="ir.actions.act_window">
+        <field name="name">Clearance</field>
+        <field name="res_model">clearance.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

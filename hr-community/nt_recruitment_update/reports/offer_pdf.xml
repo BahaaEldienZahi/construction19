@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<record id="job_offer_pdf" model="ir.actions.report">
+            <field name="name">Job Offer</field>
+            <field name="model">hr.job.offer</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">nt_recruitment_update.template_job_offer</field>
+            <field name="report_file">nt_recruitment_update.templates</field>
+            <field name="binding_model_id" ref="model_hr_job_offer"/>
+            <field name="binding_type">report</field>
+        </record>
+
+<!--        <report-->
+<!--                id="job_offer_pdf"-->
+<!--                model="hr.job.offer"-->
+<!--                report_type="qweb-pdf"-->
+<!--                string="Job Offer"-->
+<!--                name="nt_recruitment_update.template_job_offer"-->
+<!--                file="nt_recruitment_update.templates"-->
+<!--        />-->
+    </data>
+</odoo>

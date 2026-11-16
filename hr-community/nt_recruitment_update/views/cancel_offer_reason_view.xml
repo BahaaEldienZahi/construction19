@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="cancel_offer_reason_tree" model="ir.ui.view">
+            <field name="name">Cancel Offer Reason</field>
+            <field name="model">cancel.offer.reason</field>
+            <field name="arch" type="xml">
+                <tree string="Cancel Reason">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="cancel_offer_action" model="ir.actions.act_window">
+            <field name="name">Cancel Offer Reason</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cancel.offer.reason</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Reasons yet!
+                </p>
+            </field>
+        </record>
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="cancel_offer_menu" name="Cancel Offer Reason" parent="hr_recruitment.menu_hr_recruitment_config_jobs"
+                  action="cancel_offer_action" sequence="34"/>
+    </data>
+</odoo>

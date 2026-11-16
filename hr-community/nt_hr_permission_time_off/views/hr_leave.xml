@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_hr_leave_form" model="ir.ui.view">
+        <field name="name">inherit.hr.leave.form</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
+        <field name="arch" type="xml">
+            <!--            <xpath expr="//field[@name='department_id']" position="attributes">-->
+            <!--                <attribute name="invisible">1</attribute>-->
+            <!--            </xpath>-->
+            <xpath expr="//field[@name='name']" position="after">
+                <field invisible="1" name="required_attachment"/>
+                <field name="attachment" required="required_attachment == True"/>
+                <!--                       required=" required_attachment == True"-->
+                <field invisible="1" name="mission"/>
+                <field invisible="is_mission == False" name="partner_id" options="{'no_create': True, 'no_open': True}" required="is_mission == True"/>
+                <!--                       invisible=" is_mission != True"-->
+                <!--                       required="is_mission == True"-->
+                <field invisible="1" name="is_mission"/>
+                <field invisible="is_mission == False" name="project_id" required="is_mission == True"/>
+                <!--                invisible=" is_mission != True" required="is_mission == True"-->
+            </xpath>
+            <xpath expr="//field[@name='holiday_type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath></field>
+    </record>
+    <record id="hr_holidays.menu_open_allocation" model="ir.ui.menu">
+        <field eval="[(6,0,[ref('hr_holidays.group_hr_holidays_manager')])]" name="groups_id"/>
+    </record>
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="job_offer_CEO_rule" model="ir.rule">
+        <field name="name">Job Offer CEO</field>
+        <field name="model_id" ref="nt_recruitment_update.model_hr_job_offer"/>
+        <field name="groups" eval="[(4, ref('nt_recruitment_update.group_hr_recruitment_ceo'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="job_offer_leader_approve" model="ir.rule">
+        <field name="name">Job Offer Expected and proposed Salary</field>
+        <field name="model_id" ref="nt_recruitment_update.model_hr_job_offer"/>
+        <field name="groups" eval="[(4, ref('nt_recruitment_update.expected_and_proposed_salary'))]"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+    </record>
+
+</odoo>

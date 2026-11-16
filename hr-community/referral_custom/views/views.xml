@@ -1,0 +1,56 @@
+<odoo>
+    <record id="action_server_job" model="ir.actions.act_window">
+        <field name="name">Jobs</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.job</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="referral_custom.hr_recruitment_report_inherit_kanban_view_inherit"/>
+<!--        <field name="view_ids" eval="[(5, 0, 0),-->
+<!--                (0, 0, {'view_mode': 'kanban', 'view_id': ref('referral_custom.hr_recruitment_report_inherit_kanban_view_inherit')}),-->
+<!--                (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_recruitment.hr_job_view_tree_inherit')}),-->
+<!--                (0, 0, {'view_mode': 'form', 'view_id': ref('referral_custom.hr_recruitment_report_inherit_kanban_view_inherit')})]"/>-->
+
+        <field name="domain">[('is_published', '=', True)]</field>
+        <!--      <field name="context">{'search_default_department_id': active_id,-->
+        <!--
+               'default_department_id': active_id}</field>-->
+    </record>
+
+
+
+
+
+
+
+
+
+    <menuitem name="Referral" id="referral_custom.menu_root" sequence="55"
+              groups="referral_custom.group_referral_hr_user,referral_custom.group_referral_hr_Manager"
+              web_icon="referral_custom,static/description/icon.png"/>
+
+    <menuitem name="Dashboard" id="referral_custom.menu_application" parent="referral_custom.menu_root"/>
+
+    <menuitem name="View Vacancy" id="referral_custom.view_job" parent="referral_custom.menu_application"
+              action="referral_custom.action_server_job"/>
+    <menuitem name="Applications" id="referral_custom.view_application"
+              parent="referral_custom.menu_application"
+              action="referral_custom.action_server_application"/>
+    <!-- This Menu Item must have a parent and an action -->
+
+    <record id="referral_bonus_view" model="ir.actions.act_window">
+        <field name="name">Referral Bonus</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">referral.bonus</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                <!-- Add Text Here -->
+            </p>
+            <p>
+                <!-- More details about what a user can do with this object will be OK -->
+            </p>
+        </field>
+    </record>
+    <menuitem id="referral_bonus_menu" name="Referral Bonus " parent="hr.menu_config_recruitment"
+              action="referral_custom.referral_bonus_view" sequence="3"/>
+</odoo>

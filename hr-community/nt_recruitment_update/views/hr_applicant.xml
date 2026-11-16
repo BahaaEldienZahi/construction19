@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_hr_applicant_form" model="ir.ui.view">
+        <field name="name">inherit.hr.applicant.form</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='partner_mobile']" position="after">
+                <field name="work_email" widget="email"/>
+            </xpath>
+
+            <xpath expr="//field[@name='salary_expected']" position="attributes">
+                <attribute name="groups">nt_recruitment_update.expected_and_proposed_salary</attribute>
+            </xpath>
+            <xpath expr="//field[@name='salary_proposed']" position="attributes">
+                <attribute name="groups">nt_recruitment_update.expected_and_proposed_salary</attribute>
+            </xpath>
+
+            <xpath expr="//group[@name='recruitment_contract']" position="attributes">
+                <attribute name="groups">nt_recruitment_update.expected_and_proposed_salary</attribute>
+            </xpath>
+
+
+            <xpath expr="//field[contains(@name, 'job_id')]" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='job_id']" position="after">
+                <field name="attachment_cv_id" widget="many2many_binary" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//header//field[@name='stage_id']" position="attributes">
+                <attribute name="options">"{'clickable': '1'}"</attribute>
+            </xpath>
+            <xpath expr="//sheet/group" position="inside">
+                <group>
+                    <field name="team_id" required="1"/>
+                    <field name="senior_id" widget="many2one_avatar_user"/>
+                    <field name="team_leader_ids" invisible="1"/>
+                    <field name="assigned_team_leader_id" widget="many2one_avatar_user"
+                           options="{'no_open': True, 'no_create': True}"/>
+                    <field name="cv_link" widget="url"/>
+                </group>
+                <group/>
+            </xpath>
+            <xpath expr="//button[@name='create_employee_from_applicant']" position="attributes">
+                <attribute name="groups">hr_recruitment.group_hr_recruitment_user</attribute>
+            </xpath>
+            <xpath expr="//button[@name='create_employee_from_applicant']" position="after">
+                <button name="open_stages_applicant" string="Stage Move" type="object" class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//field[@name='description']" position="after">
+                <notebook>
+                    <page name="Feedback" string="Feedback">
+                        <field name="feedback_applicant_ids">
+                            <tree>
+                                <field name="user_id"/>
+                                <field name="feedback" required="1"/>
+                                <field name="stage_id"/>
+                            </tree>
+                            <form>
+                                <group>
+                                    <group>
+                                        <field name="user_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="feedback"/>
+                                    </group>
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+            <xpath expr="//field[@name='email_from']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <!--            <xpath expr="//field[@name='availability']" position="attributes">-->
+            <!--                <attribute name="required"></attribute>-->
+            <!--            </xpath>-->
+            <xpath expr="//field[@name='partner_mobile']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_name']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <!--            @todo referal by email :done by context-->
+            <xpath expr="//field[@name='medium_id']" position="after">
+                <field name="ref_employee_id" options="{'no_create': True , 'no_create_edit': True}" readonly="1"/>
+                <field name="referral_by_email" widget="email" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='availability']" position="after">
+                <field name="years_of_experience"/>
+            </xpath>
+
+            <xpath expr="//field[@name='stage_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <!--            <xpath expr="//field[@name='categ_ids']" position="attributes">-->
+            <!--                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>-->
+            <!--            </xpath>-->
+            <!--            <xpath expr="//group/group[2]" position="attributes">-->
+            <!--                <attribute name="groups">referral_custom.group_referral_hr_Manager</attribute>-->
+            <!--            </xpath>-->
+            <xpath expr="//field[@name='partner_phone']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='linkedin_profile']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='priority']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='medium_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+    <!--                     hr.recruitment.stage                         -->
+
+
+    <record id="inherit_hr_recruitment_stage_form" model="ir.ui.view">
+        <field name="name">inherit.hr.recruitment.stage.form</field>
+        <field name="model">hr.recruitment.stage</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_recruitment_stage_form"/>
+        <field name="arch" type="xml">
+
+
+            <xpath expr="//field[@name='job_ids']" position="after">
+                <field name="allow_team_leader" string="Allow to Team Leader"/>
+                <field name="allow_recruiter" string="Allow to recruiter"/>
+                <field name="allow_interviewer"/>
+                <field name="feedback_required"/>
+                <field name="required_activity"/>
+                <field name="activity_type_id" required="required_activity"/>
+            </xpath>
+        </field>
+    </record>
+    <!--                             Menus                                  -->
+    <record id="hr_recruitment.menu_hr_recruitment_root" model="ir.ui.menu">
+        <field name="groups_id"
+               eval="[(4,ref('nt_recruitment_update.group_interviewer')),(4,ref('nt_recruitment_update.group_hr_recruitment_ceo'))]"/>
+    </record>
+    <record id="hr_recruitment.menu_crm_case_categ0_act_job" model="ir.ui.menu">
+        <field name="groups_id"
+               eval="[(4,ref('hr_recruitment.group_hr_recruitment_user')),(4,ref('nt_recruitment_update.group_interviewer'))]"/>
+    </record>
+    <record id="hr_recruitment.menu_crm_case_categ_all_app" model="ir.ui.menu">
+        <field name="groups_id"
+               eval="[(4,ref('hr_recruitment.group_hr_recruitment_user')),(4,ref('nt_recruitment_update.group_interviewer'))]"/>
+    </record>
+    <record id="hr_recruitment.menu_hr_job_position" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4,ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+    </record>
+    <record id="hr_recruitment.report_hr_recruitment" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4,ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+    </record>
+    <record id="hr_recruitment.menu_hr_recruitment_configuration" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4,ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+    </record>
+    <!--    -->
+    <record id="inherit_applicant_get_refuse_reason_form" model="ir.ui.view">
+        <field name="name">inherit.applicant.get.refuse.reason.form</field>
+        <field name="model">applicant.get.refuse.reason</field>
+        <!--<field name="groups_id" eval="[(4, ref(''))]"/>-->
+        <field name="inherit_id" ref="hr_recruitment.applicant_get_refuse_reason_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='applicant_ids']" position="after">
+                <field name="applicant_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

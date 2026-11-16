@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_address_book_form" model="ir.ui.view">
+            <field name="name">address.book.form</field>
+            <field name="model">address.book</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="mobile_phone"/>
+                            <field name="work_email"/>
+                        </group>
+                        <group>
+                            <field name="department_id" string="Department"/>
+                            <field name="job_id" string="Job Position"/>
+                            <field name="parent_id" widget="many2one_avatar_user" string="Manager"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_address_book_tree" model="ir.ui.view">
+            <field name="name">address.book.tree</field>
+            <field name="model">address.book</field>
+            <field name="arch" type="xml">
+                <tree editable="top">
+                    <field name="name"/>
+                    <field name="mobile_phone"/>
+                    <field name="work_email"/>
+                    <field name="department_id" string="Department"/>
+                    <field name="job_id" string="Job Position"/>
+                    <field name="parent_id" widget="many2one_avatar_user" string="Manager"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_address_book_search" model="ir.ui.view">
+            <field name="name">address.book.search</field>
+            <field name="model">address.book</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="mobile_phone"/>
+                    <field name="work_email"/>
+                    <field name="department_id" string="Department"/>
+                    <field name="job_id" string="Job Position"/>
+                    <field name="parent_id" widget="many2one_avatar_user" string="Manager"/>
+
+                    <group string="Group By">
+                        <filter string="Employee Name" name="employee_name" domain="[]" context="{'group_by': 'name'}"/>
+                        <filter string="Work Mobile" name="work_mobile" domain="[]"
+                                context="{'group_by': 'mobile_phone'}"/>
+                        <filter string="Work Email" name="email" domain="[]" context="{'group_by': 'work_email'}"/>
+                        <filter string="Department" name="department" domain="[]"
+                                context="{'group_by': 'department_id'}"/>
+                        <filter string="Job Position" name="job_position" domain="[]" context="{'group_by': 'job_id'}"/>
+                        <filter string="Manager" name="manager" domain="[]" context="{'group_by': 'parent_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_address_book" model="ir.actions.act_window">
+            <field name="name">Address Book</field>
+            <field name="res_model">address.book</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_address_book_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No addresses for now!
+                </p>
+            </field>
+            <field name="context">{'create':0,'group_by':'department_id'}</field>
+        </record>
+
+        <menuitem
+                id="menu_address_book_root"
+                name="Address Book"
+                action="action_address_book"
+                web_icon="hr,static/description/icon.png"/>
+    </data>
+</odoo>

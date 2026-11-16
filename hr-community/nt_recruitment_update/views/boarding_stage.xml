@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="boarding_stage_form" model="ir.ui.view">
+        <field name="name">Boarding Stage</field>
+        <field name="model">boarding.stage</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+<!--                            <field name="sequence"/>-->
+                            <field name="help_desk_team"/>
+                            <field name="category"/>
+                            <field name="ticket_type_id"/>
+
+
+                        </group>
+                        <group>
+                            <field name="responsible_id"/>
+                            <field name="user_id"/>
+                            <field name="department_id"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="boarding_stage_tree" model="ir.ui.view">
+        <field name="name">Boarding Stage</field>
+        <field name="model">boarding.stage</field>
+        <field name="arch" type="xml">
+            <tree string="">
+                <field name="name"/>
+                <field name="sequence"/>
+                <field name="responsible_id"/>
+                <field name="help_desk_team"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="boarding_stage_action" model="ir.actions.act_window">
+        <field name="name">Boarding Stage</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">boarding.stage</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('boarding_stage_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('boarding_stage_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
+    </record>
+
+    <!-- This Menu Item must have a parent and an action -->
+    <menuitem id="boarding_stage_menu" name="Boarding Stage" parent="hr_recruitment.menu_hr_recruitment_config_jobs"
+              action="boarding_stage_action" sequence="33"/>
+</odoo>
