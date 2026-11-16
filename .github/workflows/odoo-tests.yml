@@ -1,0 +1,67 @@
+name: Odoo 19 Tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: odoo-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      db:
+        image: postgres:16
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install and test nt_construction
+        run: |
+          set -o pipefail
+          docker run --rm \
+            --network ${{ job.services.db.network }} \
+            -v ${{ github.workspace }}:/mnt/extra-addons \
+            odoo:19 \
+            odoo --db_host=db --db_port=5432 \
+                 --db_user=odoo --db_password=odoo \
+                 -d test_db \
+                 -i nt_construction \
+                 --test-enable \
+                 --stop-after-init \
+                 --log-level=test \
+                 --without-demo=False \
+            2>&1 | tee odoo.log
+
+      - name: Check log for errors
+        if: always()
+        run: |
+          if grep -E " (ERROR|CRITICAL) " odoo.log; then
+            echo "❌ Tests failed - see errors above"
+            exit 1
+          fi
+          echo "✅ All tests passed"
+
+      - name: Upload log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: odoo-test-log
+          path: odoo.log
